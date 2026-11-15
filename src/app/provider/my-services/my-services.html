@@ -1,0 +1,34 @@
+<div class="pv-head">
+  <div>
+    <h1>My services</h1>
+    <p>{{ items().length }} active service{{ items().length === 1 ? '' : 's' }} customers can book</p>
+  </div>
+  <a class="pv-btn" routerLink="/provider/services/new">+ Add service</a>
+</div>
+
+@if (error()) { <div class="pv-alert error">{{ error() }}</div> }
+
+@if (loading()) {
+  <app-loader />
+} @else if (items().length === 0) {
+  <app-empty-state icon="🧰" title="No services yet" text="Add the services you offer, with a price and duration, so customers can start booking you.">
+    <a class="pv-btn" routerLink="/provider/services/new">Add your first service</a>
+  </app-empty-state>
+} @else {
+  <div class="grid">
+    @for (s of items(); track s.id) {
+      <article class="pv-card svc">
+        <span class="chip">{{ s.category.name }}</span>
+        <h3>{{ s.title }}</h3>
+        <p class="desc">{{ s.description || 'No description added.' }}</p>
+        <div class="foot">
+          <div class="price"><b>₹{{ s.price | number }}</b><small>{{ duration(s.durationMin) }}</small></div>
+          <div class="btns">
+            <a class="pv-btn ghost sm" [routerLink]="['/provider/services', s.id, 'edit']">Edit</a>
+            <button type="button" class="pv-btn danger sm" [disabled]="busyId() === s.id" (click)="remove(s)">Delete</button>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+}

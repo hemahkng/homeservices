@@ -1,0 +1,267 @@
+
+<a class="cu-detail-back" routerLink="/customer/services">
+  <i class="fa-solid fa-arrow-left"></i>
+  <span>Back to services</span>
+</a>
+
+@if (loading()) {
+  <app-loader />
+} @else if (error()) {
+  <div class="cu-alert error">{{ error() }}</div>
+} @else if (service(); as s) {
+  <div class="cu-detail-layout">
+
+    <main class="cu-detail-main">
+
+      <!-- Service heading -->
+      <section class="cu-detail-hero">
+        <div class="cu-detail-hero-top">
+          <div class="cu-detail-icon">{{ icon() }}</div>
+
+          <div class="cu-detail-heading">
+            <span class="cu-detail-category">
+              <i class="fa-solid fa-layer-group"></i>
+              {{ s.category.name }}
+            </span>
+
+            <h1>{{ s.title }}</h1>
+
+            <div class="cu-detail-meta">
+              <span>
+                <i class="fa-regular fa-clock"></i>
+                {{ duration() }}
+              </span>
+
+              @if (prov(); as p) {
+                <span>
+                  <i class="fa-solid fa-circle-check"></i>
+                  {{ p.completedJobs }} job{{ p.completedJobs === 1 ? '' : 's' }} completed
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="cu-detail-hero-bottom">
+          <div>
+            <small>Service price</small>
+            <strong>₹{{ s.price | number }}</strong>
+          </div>
+          <span class="cu-detail-verified">
+            <i class="fa-solid fa-shield-halved"></i>
+            Trusted service booking
+          </span>
+        </div>
+      </section>
+
+      <!-- About service -->
+      <section class="cu-detail-section">
+        <div class="cu-detail-section-heading">
+          <div class="cu-detail-section-icon">
+            <i class="fa-regular fa-file-lines"></i>
+          </div>
+          <div>
+            <h2>About this service</h2>
+            <p>Everything you need to know</p>
+          </div>
+        </div>
+
+        <p class="cu-detail-description">
+          {{ s.description || 'The provider has not added a description yet.' }}
+        </p>
+
+        <div class="cu-detail-highlights">
+          <div>
+            <i class="fa-solid fa-clock"></i>
+            <span>
+              <b>Duration</b>
+              <small>{{ duration() }}</small>
+            </span>
+          </div>
+
+          <div>
+            <i class="fa-solid fa-wallet"></i>
+            <span>
+              <b>Service price</b>
+              <small>₹{{ s.price | number }}</small>
+            </span>
+          </div>
+
+          <div>
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>
+              <b>Easy booking</b>
+              <small>Book in a few steps</small>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Provider -->
+      <a class="cu-detail-provider"
+         [routerLink]="['/customer/providers', s.provider.id]">
+
+        <div class="cu-detail-provider-top">
+          <div class="cu-detail-provider-avatar">
+            {{ s.provider.name.charAt(0).toUpperCase() }}
+          </div>
+
+          <div class="cu-detail-provider-info">
+            <span class="cu-detail-eyebrow">YOUR SERVICE PROFESSIONAL</span>
+            <h3>{{ s.provider.name }}</h3>
+
+            @if (s.provider.providerProfile; as pp) {
+              <p>
+                <i class="fa-solid fa-location-dot"></i>
+                {{ pp.city }}
+                <span class="cu-detail-dot">·</span>
+                {{ pp.experienceYears }} yr{{ pp.experienceYears === 1 ? '' : 's' }} experience
+              </p>
+
+              <div class="cu-detail-provider-rating">
+                @if (pp.ratingAvg > 0) {
+                  <app-rating-stars [value]="pp.ratingAvg" [size]="14" />
+                  <b>{{ pp.ratingAvg | number: '1.1-1' }}</b>
+                } @else {
+                  <span>New provider</span>
+                }
+              </div>
+            }
+          </div>
+
+          <span class="cu-detail-provider-arrow">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </span>
+        </div>
+
+        <div class="cu-detail-provider-footer">
+          <span>View provider profile</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </div>
+      </a>
+
+      <!-- Reviews -->
+      <section class="cu-detail-section cu-detail-reviews">
+        <div class="cu-detail-section-heading">
+          <div class="cu-detail-section-icon">
+            <i class="fa-regular fa-star"></i>
+          </div>
+          <div>
+            <h2>Customer reviews</h2>
+            <p>Feedback from people who booked this service</p>
+          </div>
+        </div>
+
+        @if (reviews().length === 0) {
+          <div class="cu-detail-no-reviews">
+            <div><i class="fa-regular fa-comment-dots"></i></div>
+            <b>No reviews yet</b>
+            <p>Be the first to share your experience with this service.</p>
+          </div>
+        }
+
+        @for (r of reviews(); track r.id) {
+          <article class="cu-detail-review">
+            <div class="cu-detail-review-top">
+              <div class="cu-detail-review-avatar">
+                {{ r.customer.name.charAt(0).toUpperCase() }}
+              </div>
+
+              <div class="cu-detail-review-customer">
+                <b>{{ r.customer.name }}</b>
+                <small>{{ r.createdAt | date: 'd MMM y' }}</small>
+              </div>
+
+              <app-rating-stars [value]="r.rating" [size]="14" />
+            </div>
+
+            @if (r.comment) {
+              <p class="cu-detail-review-comment">{{ r.comment }}</p>
+            }
+
+            <small class="cu-detail-review-service">
+              <i class="fa-solid fa-check-circle"></i>
+              {{ r.booking.service.title }}
+            </small>
+          </article>
+        }
+
+        @if ((prov()?.reviewCount ?? 0) > 3) {
+          <a class="cu-detail-more-reviews"
+             [routerLink]="['/customer/providers', s.provider.id]">
+            See all {{ prov()?.reviewCount }} reviews
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        }
+      </section>
+    </main>
+
+    <!-- Booking sidebar -->
+    <aside class="cu-detail-sidebar">
+
+      <section class="cu-detail-booking-card">
+        <div class="cu-detail-booking-label">
+          <i class="fa-solid fa-tag"></i>
+          SERVICE PRICE
+        </div>
+
+        <div class="cu-detail-price">
+          <strong>₹{{ s.price | number }}</strong>
+          <span>/ {{ duration() }}</span>
+        </div>
+
+        <div class="cu-detail-booking-divider"></div>
+
+        <div class="cu-detail-booking-includes">
+          <div>
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Easy online booking</span>
+          </div>
+          <div>
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Provider confirmation</span>
+          </div>
+          <div>
+            <i class="fa-solid fa-circle-check"></i>
+            <span>No advance payment required</span>
+          </div>
+        </div>
+
+        <a class="cu-detail-book-button"
+           [routerLink]="['/customer/book', s.id]">
+          Book this service
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+        <p class="cu-detail-payment-note">
+          <i class="fa-solid fa-lock"></i>
+          You pay only after the provider accepts your booking.
+        </p>
+      </section>
+
+      <div class="cu-detail-help-card">
+        <div class="cu-detail-help-icon">
+          <i class="fa-solid fa-headset"></i>
+        </div>
+        <div>
+          <b>Need a helping hand?</b>
+          <p>Review the service details before confirming your booking.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Mobile sticky booking bar -->
+  <div class="cu-detail-mobile-cta">
+    <div class="cu-detail-mobile-price">
+      <small>Starting from</small>
+      <strong>₹{{ s.price | number }}</strong>
+      <span>{{ duration() }}</span>
+    </div>
+
+    <a [routerLink]="['/customer/book', s.id]">
+      Book now
+      <i class="fa-solid fa-arrow-right"></i>
+    </a>
+  </div>
+}

@@ -1,0 +1,1 @@
+import{Ca as o,Va as r,Wa as a,fb as m}from"./chunk-76P4NMAR.js";import"./chunk-2VMXMS7J.js";var n=class t{static \u0275fac=function(e){return new(e||t)};static \u0275cmp=o({type:t,selectors:[["app-category-form"]],decls:2,vars:0,template:function(e,c){e&1&&(r(0,"p"),m(1,"category-form works!"),a())},encapsulation:2})};export{n as CategoryForm};

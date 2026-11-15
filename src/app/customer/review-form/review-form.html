@@ -1,0 +1,34 @@
+<a class="cu-back" routerLink="/customer/my-bookings">← My bookings</a>
+
+@if (loading()) {
+  <app-loader />
+} @else {
+  <div class="cu-card box">
+    <h1>Rate your experience</h1>
+
+    @if (booking(); as b) {
+      <p class="for">{{ b.service.title }} · {{ b.provider.name }}</p>
+    }
+
+    @if (error()) {
+      <div class="cu-alert error">{{ error() }}</div>
+    } @else {
+      <div class="stars" (mouseleave)="hover.set(0)">
+        @for (n of stars; track n) {
+          <button type="button" class="star" [class.on]="n <= (hover() || rating())" (mouseenter)="hover.set(n)" (click)="rating.set(n)" [attr.aria-label]="n + ' stars'">★</button>
+        }
+      </div>
+      <div class="lbl">{{ label() }}</div>
+
+      <div class="cu-form">
+        <div class="cu-field">
+          <label for="c">Your review (optional)</label>
+          <textarea id="c" rows="4" maxlength="500" placeholder="What went well? Anything others should know?" [ngModel]="comment()" (ngModelChange)="comment.set($event)"></textarea>
+          <span class="hint">{{ comment().length }}/500</span>
+        </div>
+      </div>
+
+      <button type="button" class="cu-btn block" [disabled]="saving()" (click)="submit()">{{ saving() ? 'Submitting…' : 'Submit review' }}</button>
+    }
+  </div>
+}

@@ -1,0 +1,1 @@
+import{Ca as n,Va as s,Wa as i,fb as o}from"./chunk-76P4NMAR.js";import"./chunk-2VMXMS7J.js";var a=class e{static \u0275fac=function(t){return new(t||e)};static \u0275cmp=n({type:e,selectors:[["app-settings"]],decls:2,vars:0,template:function(t,p){t&1&&(s(0,"p"),o(1,"settings works!"),i())},encapsulation:2})};export{a as Settings};

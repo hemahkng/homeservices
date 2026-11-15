@@ -1,0 +1,259 @@
+<div class="cu-home">
+
+  <!-- Hero -->
+  <section class="cu-home-hero">
+    <div class="cu-home-hero-content">
+      <span class="cu-home-eyebrow">
+        <i class="fa-solid fa-sparkles"></i>
+        YOUR HOME, MADE BETTER
+      </span>
+
+      <h1>
+        Hi {{ firstName() }} 👋
+        <br />
+        Let's take care of <span>your home.</span>
+      </h1>
+
+      <p>
+        From quick fixes to home improvements, find the right professional
+        and get things done without the hassle.
+      </p>
+
+      <div class="cu-home-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="text"
+          placeholder="Try AC repair, plumbing, cleaning..."
+          [(ngModel)]="q"
+          (keyup.enter)="go()"
+        />
+        <button type="button" (click)="go()">
+          Find a service
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="cu-home-trust">
+        <span><i class="fa-solid fa-circle-check"></i> Verified experts</span>
+        <span><i class="fa-solid fa-shield-halved"></i> Safe payments</span>
+        <span><i class="fa-solid fa-clock"></i> Easy booking</span>
+      </div>
+    </div>
+
+    <div class="cu-home-hero-visual">
+      <div class="cu-home-hero-orbit cu-home-hero-orbit-one"></div>
+      <div class="cu-home-hero-orbit cu-home-hero-orbit-two"></div>
+
+      <div class="cu-home-hero-main-icon">
+        <i class="fa-solid fa-house-chimney"></i>
+        <span class="cu-home-hero-tool tool-one">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+        </span>
+        <span class="cu-home-hero-tool tool-two">
+          <i class="fa-solid fa-bolt"></i>
+        </span>
+        <span class="cu-home-hero-tool tool-three">
+          <i class="fa-solid fa-paint-roller"></i>
+        </span>
+      </div>
+
+      <div class="cu-home-hero-note cu-home-hero-note-top">
+        <span class="cu-home-note-icon"><i class="fa-solid fa-star"></i></span>
+        <span><strong>Trusted service</strong><small>Quality professionals</small></span>
+      </div>
+
+      <div class="cu-home-hero-note cu-home-hero-note-bottom">
+        <span class="cu-home-note-icon success"><i class="fa-solid fa-check"></i></span>
+        <span><strong>Booking made easy</strong><small>Just a few simple steps</small></span>
+      </div>
+    </div>
+
+    <div class="cu-home-hero-decoration"></div>
+  </section>
+
+  @if (loading()) {
+    <div class="cu-home-loading">
+      <app-loader />
+    </div>
+  } @else {
+
+    <!-- Payment alert -->
+    @if (due() > 0) {
+      <div class="cu-home-payment">
+        <div class="cu-home-payment-icon">
+          <i class="fa-solid fa-wallet"></i>
+        </div>
+
+        <div class="cu-home-payment-info">
+          <strong>Payment pending</strong>
+          <span>
+            {{ due() }} booking{{ due() === 1 ? '' : 's' }} waiting for payment.
+          </span>
+        </div>
+
+        <a routerLink="/customer/my-bookings">
+          View bookings
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    }
+
+    <!-- Upcoming booking -->
+    @if (next(); as b) {
+      <section class="cu-home-next">
+        <div class="cu-home-section-heading">
+          <div>
+            <span class="cu-home-kicker">COMING UP</span>
+            <h2>Your next appointment</h2>
+          </div>
+
+          <a routerLink="/customer/my-bookings">
+            All bookings <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <a class="cu-home-booking" [routerLink]="['/customer/bookings', b.id]">
+          <div class="cu-home-date">
+            <span>{{ b.scheduledAt | date: 'MMM' }}</span>
+            <strong>{{ b.scheduledAt | date: 'd' }}</strong>
+            <small>{{ b.scheduledAt | date: 'EEE' }}</small>
+          </div>
+
+          <div class="cu-home-booking-info">
+            <span class="cu-home-booking-label">YOUR NEXT SERVICE</span>
+            <strong>{{ b.service.title }}</strong>
+
+            <div class="cu-home-booking-meta">
+              <span><i class="fa-solid fa-user"></i> {{ b.provider.name }}</span>
+              <span><i class="fa-regular fa-clock"></i> {{ b.scheduledAt | date: 'h:mm a' }}</span>
+            </div>
+          </div>
+
+          <div class="cu-home-booking-status">
+            <app-status-badge [status]="b.status" />
+            <span class="cu-home-booking-arrow">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </span>
+          </div>
+        </a>
+      </section>
+    }
+
+    <!-- Categories -->
+    <section class="cu-home-section">
+      <div class="cu-home-section-heading">
+        <div>
+          <span class="cu-home-kicker">BROWSE CATEGORIES</span>
+          <h2>What does your home need?</h2>
+          <p>Find the right help for every corner of your home.</p>
+        </div>
+
+        <a routerLink="/customer/services">
+          Explore all <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      @if (categories().length === 0) {
+        <p class="cu-home-empty">No categories available yet.</p>
+      } @else {
+        <div class="cu-home-categories">
+          @for (c of categories(); track c.id) {
+            <a
+              class="cu-home-category"
+              routerLink="/customer/services"
+              [queryParams]="{ categoryId: c.id }"
+            >
+              <span class="cu-home-category-icon">
+                {{ icon(c.name) }}
+              </span>
+
+              <span class="cu-home-category-info">
+                <strong>{{ c.name }}</strong>
+                <small>Find a professional</small>
+              </span>
+
+              <span class="cu-home-category-arrow">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </span>
+            </a>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Popular services -->
+    <section class="cu-home-section cu-home-popular">
+      <div class="cu-home-section-heading">
+        <div>
+          <span class="cu-home-kicker">POPULAR RIGHT NOW</span>
+          <h2>Services worth checking out</h2>
+          <p>Discover highly rated professionals for your next task.</p>
+        </div>
+
+        <a routerLink="/customer/services">
+          View all services <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      @if (top().length === 0) {
+        <div class="cu-home-empty-card">
+          <span class="cu-home-empty-icon">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </span>
+          <strong>No services available yet</strong>
+          <p>Please check back soon for available professionals.</p>
+        </div>
+      } @else {
+        <div class="cu-home-services">
+          @for (s of top(); track s.id) {
+            <app-service-card [service]="s" />
+          }
+        </div>
+      }
+    </section>
+
+    <!-- How it works -->
+    <section class="cu-home-how">
+      <div class="cu-home-how-top">
+        <div class="cu-home-how-heading">
+          <span class="cu-home-kicker">HOW IT WORKS</span>
+          <h2>Home services, made simple.</h2>
+          <p>Getting the help you need is only three steps away.</p>
+        </div>
+
+        <div class="cu-home-how-decoration">
+          <i class="fa-solid fa-house-circle-check"></i>
+        </div>
+      </div>
+
+      <div class="cu-home-steps">
+        <div class="cu-home-step">
+          <span class="cu-home-step-number">01</span>
+          <div class="cu-home-step-icon">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <strong>Choose a service</strong>
+          <p>Explore services and find the right professional for your needs.</p>
+        </div>
+
+        <div class="cu-home-step">
+          <span class="cu-home-step-number">02</span>
+          <div class="cu-home-step-icon">
+            <i class="fa-regular fa-calendar-check"></i>
+          </div>
+          <strong>Schedule a booking</strong>
+          <p>Pick a date and time that works best for your schedule.</p>
+        </div>
+
+        <div class="cu-home-step">
+          <span class="cu-home-step-number">03</span>
+          <div class="cu-home-step-icon">
+            <i class="fa-solid fa-house-circle-check"></i>
+          </div>
+          <strong>Enjoy peace of mind</strong>
+          <p>Let the professional handle the work while you relax.</p>
+        </div>
+      </div>
+    </section>
+  }
+</div>

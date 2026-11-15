@@ -1,0 +1,396 @@
+
+<div class="dashboard-page">
+
+  <!-- WELCOME HEADER -->
+  <header class="dashboard-header">
+    <div class="welcome-content">
+      <span class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        PROVIDER OVERVIEW
+      </span>
+
+      <h1>{{ greeting() }}, {{ firstName() }} <span class="wave">👋</span></h1>
+      <p>Here's what's happening with your business today.</p>
+    </div>
+
+    <a class="add-service-btn" routerLink="/provider/services/new">
+      <i class="fa-solid fa-plus"></i>
+      <span>Add new service</span>
+    </a>
+  </header>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <app-loader />
+      <p>Loading your dashboard...</p>
+    </div>
+  } @else if (error()) {
+    <div class="dashboard-error">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>{{ error() }}</span>
+    </div>
+  } @else if (stats(); as s) {
+
+    <!-- SETUP CHECKLIST -->
+    @if (s.services === 0 || !s.availabilitySet) {
+      <section class="setup-card">
+        <div class="setup-top">
+          <div class="setup-icon">
+            <i class="fa-solid fa-rocket"></i>
+          </div>
+
+          <div class="setup-heading">
+            <span class="section-eyebrow">GETTING STARTED</span>
+            <h2>Complete your profile setup</h2>
+            <p>Finish these steps to start receiving customer bookings.</p>
+          </div>
+        </div>
+
+        <div class="setup-progress">
+          <div class="progress-track">
+            <span
+              [style.width]="(s.services > 0 && s.availabilitySet) ? '100%' : (s.services > 0 || s.availabilitySet) ? '50%' : '0%'"
+            ></span>
+          </div>
+
+          <small>
+            {{ (s.services > 0 ? 1 : 0) + (s.availabilitySet ? 1 : 0) }}/2 completed
+          </small>
+        </div>
+
+        <div class="setup-steps">
+
+          <div class="setup-step" [class.completed]="s.services > 0">
+            <div class="step-check">
+              @if (s.services > 0) {
+                <i class="fa-solid fa-check"></i>
+              } @else {
+                <span>01</span>
+              }
+            </div>
+
+            <div class="step-info">
+              <strong>Add your first service</strong>
+              <small>Tell customers what services you provide.</small>
+            </div>
+
+            @if (s.services === 0) {
+              <a routerLink="/provider/services/new" class="step-action">
+                Add service <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            } @else {
+              <span class="completed-label">Completed</span>
+            }
+          </div>
+
+          <div class="setup-step" [class.completed]="s.availabilitySet">
+            <div class="step-check">
+              @if (s.availabilitySet) {
+                <i class="fa-solid fa-check"></i>
+              } @else {
+                <span>02</span>
+              }
+            </div>
+
+            <div class="step-info">
+              <strong>Set your working hours</strong>
+              <small>Choose when customers can book you.</small>
+            </div>
+
+            @if (!s.availabilitySet) {
+              <a routerLink="/provider/availability" class="step-action">
+                Set hours <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            } @else {
+              <span class="completed-label">Completed</span>
+            }
+          </div>
+
+        </div>
+      </section>
+    }
+
+    <!-- STATISTICS -->
+    <section class="stats-section">
+      <div class="section-heading">
+        <div>
+          <span class="section-eyebrow">BUSINESS PERFORMANCE</span>
+          <h2>Your overview</h2>
+        </div>
+
+        <span class="live-indicator">
+          <span></span> Live overview
+        </span>
+      </div>
+
+      <div class="stats-grid">
+
+        <a class="stat-card pending-card" routerLink="/provider/requests">
+          <div class="stat-top">
+            <div class="stat-icon">
+              <i class="fa-solid fa-inbox"></i>
+            </div>
+            <span class="stat-arrow">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </span>
+          </div>
+
+          <div class="stat-value">{{ s.pending }}</div>
+          <div class="stat-label">New requests</div>
+          <div class="stat-foot">Waiting for your response</div>
+        </a>
+
+        <a class="stat-card upcoming-card" routerLink="/provider/requests">
+          <div class="stat-top">
+            <div class="stat-icon">
+              <i class="fa-regular fa-calendar-check"></i>
+            </div>
+            <span class="stat-arrow">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </span>
+          </div>
+
+          <div class="stat-value">{{ s.accepted + s.inProgress }}</div>
+          <div class="stat-label">Upcoming jobs</div>
+          <div class="stat-foot">Accepted and in progress</div>
+        </a>
+
+        <a class="stat-card completed-card" routerLink="/provider/requests">
+          <div class="stat-top">
+            <div class="stat-icon">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <span class="stat-arrow">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </span>
+          </div>
+
+          <div class="stat-value">{{ s.completed }}</div>
+          <div class="stat-label">Completed jobs</div>
+          <div class="stat-foot">Successfully delivered</div>
+        </a>
+
+        <a class="stat-card earnings-card" routerLink="/provider/earnings">
+          <div class="stat-top">
+            <div class="stat-icon">
+              <i class="fa-solid fa-wallet"></i>
+            </div>
+            <span class="stat-arrow">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </span>
+          </div>
+
+          <div class="stat-value money">₹{{ s.net | number }}</div>
+          <div class="stat-label">Net earnings</div>
+          <div class="stat-foot">Your total net earnings</div>
+        </a>
+
+        <a class="stat-card rating-card" routerLink="/provider/reviews">
+          <div class="stat-top">
+            <div class="stat-icon">
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <span class="stat-arrow">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </span>
+          </div>
+
+          <div class="stat-value">
+            {{ s.rating ? (s.rating | number: '1.1-1') : '–' }}
+            @if (s.rating) {
+              <span class="rating-star">★</span>
+            }
+          </div>
+
+          <div class="stat-label">Customer rating</div>
+          <div class="stat-foot">
+            {{ s.reviews }} review{{ s.reviews === 1 ? '' : 's' }} received
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <div class="dashboard-content">
+
+      <!-- UPCOMING JOBS -->
+      <section class="content-card jobs-card">
+
+        <div class="card-header">
+          <div>
+            <span class="section-eyebrow">YOUR SCHEDULE</span>
+            <h2>Upcoming jobs</h2>
+            <p>Stay on top of your accepted bookings.</p>
+          </div>
+
+          <a routerLink="/provider/requests" class="view-all">
+            View requests
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
+        @if (s.upcoming.length === 0) {
+          <div class="empty-jobs">
+            <div class="empty-icon">
+              <i class="fa-regular fa-calendar"></i>
+            </div>
+            <h3>No upcoming jobs yet</h3>
+            <p>When customers book your services and you accept their requests, they'll appear here.</p>
+            <a routerLink="/provider/requests" class="empty-link">
+              Check requests <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        } @else {
+
+          <div class="jobs-list">
+            @for (j of s.upcoming; track j.id) {
+              <a class="job-item" [routerLink]="['/provider/jobs', j.id]">
+
+                <div class="job-date">
+                  <strong>{{ j.scheduledAt | date: 'd' }}</strong>
+                  <span>{{ j.scheduledAt | date: 'MMM' }}</span>
+                </div>
+
+                <div class="job-details">
+                  <strong class="job-title">{{ j.service.title }}</strong>
+
+                  <div class="job-meta">
+                    <span>
+                      <i class="fa-regular fa-user"></i>
+                      {{ j.customer.name }}
+                    </span>
+
+                    <span>
+                      <i class="fa-regular fa-clock"></i>
+                      {{ j.scheduledAt | date: 'h:mm a' }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="job-status">
+                  <app-status-badge [status]="j.status" />
+                </div>
+
+                <div class="job-open">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </div>
+
+              </a>
+            }
+          </div>
+        }
+
+      </section>
+
+      <!-- RIGHT SIDEBAR -->
+      <aside class="dashboard-sidebar">
+
+        <section class="content-card quick-card">
+          <div class="card-header">
+            <div>
+              <span class="section-eyebrow">SHORTCUTS</span>
+              <h2>Quick actions</h2>
+            </div>
+          </div>
+
+          <div class="quick-actions">
+
+            <a routerLink="/provider/requests" class="quick-action">
+              <span class="quick-icon purple">
+                <i class="fa-solid fa-inbox"></i>
+              </span>
+
+              <span class="quick-text">
+                <strong>Review requests</strong>
+                <small>Manage customer bookings</small>
+              </span>
+
+              <i class="fa-solid fa-chevron-right action-arrow"></i>
+            </a>
+
+            <a routerLink="/provider/services" class="quick-action">
+              <span class="quick-icon blue">
+                <i class="fa-solid fa-toolbox"></i>
+              </span>
+
+              <span class="quick-text">
+                <strong>Manage services</strong>
+                <small>Update your service listings</small>
+              </span>
+
+              <i class="fa-solid fa-chevron-right action-arrow"></i>
+            </a>
+
+            <a routerLink="/provider/availability" class="quick-action">
+              <span class="quick-icon green">
+                <i class="fa-regular fa-calendar-days"></i>
+              </span>
+
+              <span class="quick-text">
+                <strong>Working hours</strong>
+                <small>Manage your availability</small>
+              </span>
+
+              <i class="fa-solid fa-chevron-right action-arrow"></i>
+            </a>
+
+            <a routerLink="/provider/profile" class="quick-action">
+              <span class="quick-icon orange">
+                <i class="fa-regular fa-user"></i>
+              </span>
+
+              <span class="quick-text">
+                <strong>Edit profile</strong>
+                <small>Update your business details</small>
+              </span>
+
+              <i class="fa-solid fa-chevron-right action-arrow"></i>
+            </a>
+
+          </div>
+        </section>
+
+        <!-- RATING SUMMARY -->
+        <section class="rating-summary-card">
+          <div class="rating-summary-top">
+            <div>
+              <span class="section-eyebrow">CUSTOMER FEEDBACK</span>
+              <h3>Your reputation</h3>
+            </div>
+
+            <div class="rating-summary-icon">
+              <i class="fa-solid fa-star"></i>
+            </div>
+          </div>
+
+          @if (s.rating) {
+            <div class="rating-summary-value">
+              {{ s.rating | number: '1.1-1' }}
+              <span>/ 5</span>
+            </div>
+
+            <app-rating-stars [value]="s.rating" [size]="18" />
+
+            <p>
+              Based on {{ s.reviews }}
+              customer review{{ s.reviews === 1 ? '' : 's' }}.
+            </p>
+          } @else {
+            <div class="no-rating">
+              <i class="fa-regular fa-star"></i>
+              <p>No ratings yet. Complete jobs and collect customer feedback.</p>
+            </div>
+          }
+
+          <a routerLink="/provider/reviews" class="rating-link">
+            View customer reviews
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </section>
+
+      </aside>
+
+    </div>
+  }
+</div>

@@ -1,0 +1,1 @@
+import{Ca as t,Va as i,Wa as a,fb as s}from"./chunk-76P4NMAR.js";import"./chunk-2VMXMS7J.js";var r=class n{static \u0275fac=function(e){return new(e||n)};static \u0275cmp=t({type:n,selectors:[["app-earnings"]],decls:2,vars:0,template:function(e,p){e&1&&(i(0,"p"),s(1,"earnings works!"),a())},encapsulation:2})};export{r as Earnings};

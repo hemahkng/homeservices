@@ -1,0 +1,38 @@
+<div class="pv-head">
+  <div>
+    <h1>Earnings</h1>
+    <p>Money from paid bookings, after the platform fee.</p>
+  </div>
+</div>
+
+@if (loading()) {
+  <app-loader />
+} @else if (error()) {
+  <div class="pv-alert error">{{ error() }}</div>
+} @else if (data(); as d) {
+  <div class="cards">
+    <div class="sum main"><span>Net earnings</span><b>₹{{ d.net | number }}</b><small>from ₹{{ d.gross | number }} paid</small></div>
+    <div class="sum"><span>This month</span><b>₹{{ d.thisMonth | number }}</b><small>net</small></div>
+    <div class="sum"><span>Awaiting payment</span><b>₹{{ d.awaitingPayment | number }}</b><small>completed, not yet paid</small></div>
+    <div class="sum"><span>Platform fee</span><b>₹{{ d.fee | number }}</b><small>{{ d.commissionPercent }}% of each payment</small></div>
+  </div>
+
+  @if (d.items.length === 0) {
+    <app-empty-state icon="💰" title="No payments yet" text="Once customers pay for completed or accepted jobs, your earnings will be listed here." />
+  } @else {
+    <div class="pv-card table">
+      <h2>Payment history</h2>
+      <div class="tr th"><span>Date</span><span>Service</span><span>Customer</span><span class="r">Amount</span><span class="r">Fee</span><span class="r">Net</span></div>
+      @for (i of d.items; track i.id) {
+        <div class="tr">
+          <span data-l="Date">{{ i.paidAt | date: 'd MMM y' }}</span>
+          <span data-l="Service"><a [routerLink]="['/provider/jobs', i.booking.id]">{{ i.booking.service.title }}</a></span>
+          <span data-l="Customer">{{ i.booking.customer.name }}</span>
+          <span class="r" data-l="Amount">₹{{ i.amount | number }}</span>
+          <span class="r fee" data-l="Fee">−₹{{ i.fee | number }}</span>
+          <span class="r net" data-l="Net">₹{{ i.net | number }}</span>
+        </div>
+      }
+    </div>
+  }
+}

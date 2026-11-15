@@ -1,0 +1,19 @@
+@use '../pv';
+@include pv.page-head;
+@include pv.card;
+@include pv.buttons;
+@include pv.alerts;
+
+:host { display: block; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; }
+.svc { display: flex; flex-direction: column; gap: 8px; transition: transform .1s; &:hover { transform: translateY(-2px); } }
+.chip { align-self: flex-start; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--pv-primary-soft); color: var(--pv-primary); }
+h3 { margin: 4px 0 0; font-size: 17px; }
+.desc {
+  margin: 0; flex: 1; color: var(--pv-muted); font-size: 14px; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 12px; border-top: 1px solid var(--pv-line); }
+.price { b { display: block; font-size: 20px; } small { color: var(--pv-muted); } }
+.btns { display: flex; gap: 8px; }

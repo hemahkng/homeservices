@@ -1,0 +1,1 @@
+import{Ca as o,Va as i,Wa as a,fb as n}from"./chunk-76P4NMAR.js";import"./chunk-2VMXMS7J.js";var l=class t{static \u0275fac=function(e){return new(e||t)};static \u0275cmp=o({type:t,selectors:[["app-job-detail"]],decls:2,vars:0,template:function(e,p){e&1&&(i(0,"p"),n(1,"job-detail works!"),a())},encapsulation:2})};export{l as JobDetail};

@@ -1,0 +1,206 @@
+
+<div class="payments-page">
+
+  <!-- Page Header -->
+  <div class="payments-header">
+    <div class="header-content">
+      <div class="eyebrow">
+        <i class="fa-solid fa-wallet"></i>
+        FINANCE MANAGEMENT
+      </div>
+      <h1>Payments</h1>
+      <p>Track transactions, monitor collections and review payment activity.</p>
+    </div>
+
+    <div class="header-icon">
+      <i class="fa-solid fa-money-bill-transfer"></i>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card">
+      <app-loader />
+    </div>
+  } @else if (error()) {
+    <div class="payment-error">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>{{ error() }}</span>
+    </div>
+  } @else if (data(); as d) {
+
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+
+      <div class="summary-card received">
+        <div class="summary-top">
+          <div class="summary-icon">
+            <i class="fa-solid fa-indian-rupee-sign"></i>
+          </div>
+          <span class="summary-label">TOTAL RECEIVED</span>
+        </div>
+        <div class="summary-value">₹{{ d.paidTotal | number }}</div>
+        <div class="summary-description">
+          <i class="fa-solid fa-circle-check"></i>
+          Successfully collected
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-top">
+          <div class="summary-icon green">
+            <i class="fa-solid fa-check-double"></i>
+          </div>
+          <span class="summary-label">SUCCESSFUL PAYMENTS</span>
+        </div>
+        <div class="summary-value">{{ d.paidCount }}</div>
+        <div class="summary-description">
+          Payments completed successfully
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-top">
+          <div class="summary-icon orange">
+            <i class="fa-solid fa-clock"></i>
+          </div>
+          <span class="summary-label">NOT COMPLETED</span>
+        </div>
+        <div class="summary-value">{{ d.pendingCount }}</div>
+        <div class="summary-description">
+          Awaiting payment completion
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Transactions Section -->
+    <section class="transactions-section">
+
+      <div class="section-heading">
+        <div>
+          <h2>Transaction history</h2>
+          <p>View and manage all customer payment attempts.</p>
+        </div>
+
+        <div class="transaction-count">
+          <i class="fa-solid fa-receipt"></i>
+          {{ visible().length }} transactions
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-bar">
+        <div class="filter-tabs">
+          @for (t of tabs; track t.key) {
+            <button
+              type="button"
+              class="filter-tab"
+              [class.active]="tab() === t.key"
+              (click)="tab.set(t.key)">
+              {{ t.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      @if (visible().length === 0) {
+        <div class="empty-wrapper">
+          <app-empty-state
+            icon="💳"
+            title="No payments found"
+            text="Payment transactions will appear here once customers make a payment." />
+        </div>
+      } @else {
+
+        <div class="table-container">
+          <div class="table-scroll">
+            <table class="payments-table">
+              <thead>
+                <tr>
+                  <th>TRANSACTION DATE</th>
+                  <th>BOOKING</th>
+                  <th>CUSTOMER</th>
+                  <th>PROVIDER</th>
+                  <th>TRANSACTION ID</th>
+                  <th class="amount-column">AMOUNT</th>
+                  <th>STATUS</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (p of visible(); track p.id) {
+                  <tr>
+                    <td>
+                      <div class="date-cell">
+                        <span class="date-main">
+                          {{ (p.paidAt || p.createdAt) | date: 'd MMM y' }}
+                        </span>
+                        <span class="date-time">
+                          <i class="fa-regular fa-clock"></i>
+                          {{ (p.paidAt || p.createdAt) | date: 'h:mm a' }}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="booking-cell">
+                        <a [routerLink]="['/admin/bookings', p.booking.id]">
+                          #{{ p.booking.id }}
+                          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                        <span>{{ p.booking.service.title }}</span>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="person-cell">
+                        <div class="person-avatar customer-avatar">
+                          {{ p.booking.customer.name.charAt(0) }}
+                        </div>
+                        <span>{{ p.booking.customer.name }}</span>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="person-cell">
+                        <div class="person-avatar provider-avatar">
+                          {{ p.booking.provider.name.charAt(0) }}
+                        </div>
+                        <span>{{ p.booking.provider.name }}</span>
+                      </div>
+                    </td>
+
+                    <td>
+                      <span class="transaction-id">
+                        {{ p.txnId || '—' }}
+                      </span>
+                    </td>
+
+                    <td class="amount-column">
+                      <span class="amount-value">
+                        ₹{{ p.amount | number }}
+                      </span>
+                    </td>
+
+                    <td>
+                      <span
+                        class="payment-status"
+                        [attr.data-status]="p.status === 'paid' ? 'paid' : 'pending'">
+                        <i
+                          class="fa-solid"
+                          [class.fa-circle-check]="p.status === 'paid'"
+                          [class.fa-clock]="p.status !== 'paid'">
+                        </i>
+                        {{ p.status === 'paid' ? 'Paid' : 'Not completed' }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+    </section>
+  }
+</div>

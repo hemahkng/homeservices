@@ -1,0 +1,238 @@
+
+<div class="cu-services-page">
+
+  <!-- Hero -->
+  <section class="cu-services-hero">
+    <div class="cu-services-hero-content">
+      <div class="cu-services-eyebrow">
+        <span class="cu-services-eyebrow-dot"></span>
+        YOUR HOME, IN GOOD HANDS
+      </div>
+
+      <h1>
+        Home services,<br />
+        <span>made simple.</span>
+      </h1>
+
+      <p>
+        From everyday fixes to bigger projects, find skilled local
+        professionals you can count on.
+      </p>
+
+      <div class="cu-services-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="text"
+          placeholder="What do you need help with today?"
+          [(ngModel)]="term"
+          (keyup.enter)="search()"
+        />
+        <button type="button" (click)="search()">
+          Find services
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="cu-services-trust">
+        <span><i class="fa-solid fa-circle-check"></i> Verified professionals</span>
+        <span><i class="fa-solid fa-star"></i> Quality service</span>
+        <span><i class="fa-solid fa-lock"></i> Safe booking</span>
+      </div>
+    </div>
+
+    <div class="cu-services-hero-visual">
+      <div class="cu-services-visual-backdrop"></div>
+
+      <div class="cu-services-house-card">
+        <div class="cu-services-house-icon">
+          <i class="fa-solid fa-house-chimney"></i>
+        </div>
+        <div class="cu-services-house-label">
+          <span>HOME CARE</span>
+          <strong>Everything your home needs.</strong>
+        </div>
+      </div>
+
+      <div class="cu-services-float-card cu-services-float-top">
+        <span class="cu-services-float-icon green">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+        </span>
+        <span>
+          <strong>Expert repairs</strong>
+          <small>Professional help</small>
+        </span>
+      </div>
+
+      <div class="cu-services-float-card cu-services-float-bottom">
+        <span class="cu-services-float-icon yellow">
+          <i class="fa-solid fa-bolt"></i>
+        </span>
+        <span>
+          <strong>Quick solutions</strong>
+          <small>At your convenience</small>
+        </span>
+      </div>
+
+      <div class="cu-services-visual-decoration decoration-one"></div>
+      <div class="cu-services-visual-decoration decoration-two"></div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="cu-services-category-section">
+    <div class="cu-services-section-heading">
+      <div>
+        <span class="cu-services-kicker">BROWSE SERVICES</span>
+        <h2>What can we help you with?</h2>
+        <p>Choose a category to explore available services.</p>
+      </div>
+      <span class="cu-services-category-count">
+        <i class="fa-solid fa-layer-group"></i>
+        All categories
+      </span>
+    </div>
+
+    <div class="cu-services-chips">
+      <button
+        type="button"
+        class="cu-services-chip"
+        [class.active]="categoryId() === 0"
+        (click)="search(0)"
+      >
+        <i class="fa-solid fa-border-all"></i>
+        All services
+      </button>
+
+      @for (c of categories(); track c.id) {
+        <button
+          type="button"
+          class="cu-services-chip"
+          [class.active]="categoryId() === c.id"
+          (click)="search(c.id)"
+        >
+          <span class="cu-services-chip-icon">{{ icon(c.name) }}</span>
+          {{ c.name }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Service results -->
+  <section class="cu-services-results">
+
+    <div class="cu-services-results-heading">
+      <div>
+        <span class="cu-services-kicker">THE RIGHT PROFESSIONAL FOR YOU</span>
+        <h2>Explore available services</h2>
+        <p>Compare options and find the right expert for your needs.</p>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="cu-services-toolbar">
+      <div class="cu-services-filter-group">
+        <div class="cu-services-filter">
+          <label for="cu-services-sort">SORT BY</label>
+          <div class="cu-services-select-wrap">
+            <i class="fa-solid fa-arrow-down-wide-short"></i>
+            <select
+              id="cu-services-sort"
+              [ngModel]="sort()"
+              (ngModelChange)="sort.set($event)"
+              aria-label="Sort services"
+            >
+              <option value="relevance">Newest first</option>
+              <option value="rating">Top rated</option>
+              <option value="price_asc">Price: low to high</option>
+              <option value="price_desc">Price: high to low</option>
+            </select>
+            <i class="fa-solid fa-chevron-down cu-services-select-arrow"></i>
+          </div>
+        </div>
+
+        <div class="cu-services-filter">
+          <label for="cu-services-max-price">MAXIMUM PRICE</label>
+          <div class="cu-services-price-input">
+            <span>₹</span>
+            <input
+              id="cu-services-max-price"
+              type="number"
+              min="0"
+              placeholder="Any price"
+              [ngModel]="maxPrice()"
+              (ngModelChange)="maxPrice.set($event || null)"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (error()) {
+      <div class="cu-services-error cu-alert error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{ error() }}
+      </div>
+    }
+
+    @if (loading()) {
+      <div class="cu-services-loading">
+        <app-loader />
+      </div>
+    } @else if (visible().length === 0) {
+      <div class="cu-services-empty">
+        <app-empty-state
+          icon="🔍"
+          title="No services found"
+          text="We couldn't find any services matching your filters. Try changing your search."
+        >
+          <button type="button" class="cu-services-clear" (click)="clear()">
+            <i class="fa-solid fa-rotate-left"></i>
+            Clear all filters
+          </button>
+        </app-empty-state>
+      </div>
+    } @else {
+      <div class="cu-services-list-heading">
+        <div>
+          <strong>{{ visible().length }}</strong>
+          <span>
+            service{{ visible().length === 1 ? '' : 's' }} available
+          </span>
+        </div>
+        <span class="cu-services-live-label">
+          <span></span>
+          Available listings
+        </span>
+      </div>
+
+      <div class="cu-services-grid">
+        @for (s of visible(); track s.id) {
+          <app-service-card [service]="s" />
+        }
+      </div>
+    }
+  </section>
+
+  <!-- Bottom information banner -->
+  <section class="cu-services-bottom-banner">
+    <div class="cu-services-banner-art">
+      <i class="fa-solid fa-house-circle-check"></i>
+    </div>
+
+    <div class="cu-services-banner-content">
+      <span>YOUR HOME. YOUR WAY.</span>
+      <h3>Good help makes all the difference.</h3>
+      <p>
+        Find the right professional for your next home project.
+        Simple, convenient and reliable.
+      </p>
+    </div>
+
+    <div class="cu-services-banner-decoration">
+      <i class="fa-solid fa-screwdriver-wrench"></i>
+      <i class="fa-solid fa-paint-roller"></i>
+      <i class="fa-solid fa-plug"></i>
+    </div>
+  </section>
+
+</div>

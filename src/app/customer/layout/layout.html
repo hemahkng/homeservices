@@ -1,0 +1,38 @@
+<header class="cu-top">
+  <div class="cu-bar">
+    <a class="cu-brand" routerLink="/customer/home">
+      <span class="cu-logo">🏠</span><b>HomeServices</b>
+    </a>
+
+    <div class="cu-links">
+      @for (l of links; track l.path) {
+        <a class="cu-link" [routerLink]="l.path" routerLinkActive="active">{{ l.label }}</a>
+      }
+    </div>
+
+    <div class="cu-right">
+      <a class="cu-bell" routerLink="/customer/notifications" aria-label="Notifications">
+        🔔
+        @if (unread() > 0) { <span class="cu-dot">{{ unread() > 9 ? '9+' : unread() }}</span> }
+      </a>
+      <a class="cu-me" routerLink="/customer/profile">
+        <span class="cu-avatar">{{ initial() }}</span>
+        <span class="cu-name">{{ firstName() }}</span>
+      </a>
+      <button type="button" class="cu-out" (click)="auth.logout()">Logout</button>
+    </div>
+  </div>
+</header>
+
+<main class="cu-page"><router-outlet /></main>
+
+<div class="cu-tabs">
+  @for (t of tabs; track t.path) {
+    <a class="cu-tab" [routerLink]="t.path" routerLinkActive="active">
+      <span class="ic">{{ t.icon }}</span>{{ t.label }}
+      @if (t.path === '/customer/notifications' && unread() > 0) {
+        <span class="cu-dot tab">{{ unread() > 9 ? '9+' : unread() }}</span>
+      }
+    </a>
+  }
+</div>

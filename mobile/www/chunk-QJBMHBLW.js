@@ -1,0 +1,1 @@
+import{Ca as o,Va as i,Wa as n,fb as a}from"./chunk-76P4NMAR.js";import"./chunk-2VMXMS7J.js";var l=class t{static \u0275fac=function(e){return new(e||t)};static \u0275cmp=o({type:t,selectors:[["app-booking-detail"]],decls:2,vars:0,template:function(e,m){e&1&&(i(0,"p"),a(1,"booking-detail works!"),n())},encapsulation:2})};export{l as BookingDetail};

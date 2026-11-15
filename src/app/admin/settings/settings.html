@@ -1,0 +1,199 @@
+
+<div class="settings-page">
+
+  <div class="settings-heading">
+    <div>
+      <span class="eyebrow">PLATFORM CONFIGURATION</span>
+      <h1>Settings</h1>
+      <p>Manage your platform identity, support details and commission structure.</p>
+    </div>
+
+    <div class="heading-icon">
+      <i class="fa-solid fa-sliders"></i>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <app-loader />
+  } @else {
+
+    @if (error()) {
+      <div class="settings-alert error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>{{ error() }}</span>
+      </div>
+    }
+
+    @if (saved()) {
+      <div class="settings-alert success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Settings saved successfully.</span>
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="settings-form">
+
+      <!-- General Settings -->
+      <section class="settings-card">
+
+        <div class="section-heading">
+          <div class="section-icon blue">
+            <i class="fa-solid fa-building"></i>
+          </div>
+          <div>
+            <h2>General information</h2>
+            <p>Configure your platform name and customer support details.</p>
+          </div>
+        </div>
+
+        <div class="section-body">
+
+          <div class="settings-field full">
+            <label for="pn">Platform name <span>*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-store"></i>
+              <input
+                id="pn"
+                type="text"
+                formControlName="platformName"
+                placeholder="Enter platform name"
+              />
+            </div>
+            @if (bad('platformName')) {
+              <span class="field-error">
+                Enter a name (2 to 60 characters).
+              </span>
+            }
+          </div>
+
+          <div class="settings-grid">
+
+            <div class="settings-field">
+              <label for="em">Support email <span>*</span></label>
+              <div class="input-wrap">
+                <i class="fa-regular fa-envelope"></i>
+                <input
+                  id="em"
+                  type="email"
+                  formControlName="supportEmail"
+                  placeholder="help@example.com"
+                />
+              </div>
+              @if (bad('supportEmail')) {
+                <span class="field-error">Enter a valid email address.</span>
+              }
+            </div>
+
+            <div class="settings-field">
+              <label for="ph">Support phone <span>*</span></label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-phone"></i>
+                <input
+                  id="ph"
+                  type="tel"
+                  formControlName="supportPhone"
+                  placeholder="Digits only"
+                />
+              </div>
+              @if (bad('supportPhone')) {
+                <span class="field-error">Enter 10 to 15 digits.</span>
+              }
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Commission Settings -->
+      <section class="settings-card">
+
+        <div class="section-heading">
+          <div class="section-icon purple">
+            <i class="fa-solid fa-percent"></i>
+          </div>
+          <div>
+            <h2>Commission configuration</h2>
+            <p>Manage the platform's commission percentage on bookings.</p>
+          </div>
+        </div>
+
+        <div class="section-body">
+
+          <div class="commission-layout">
+
+            <div class="settings-field commission-input">
+              <label for="cm">Platform commission <span>*</span></label>
+
+              <div class="input-wrap percent-input">
+                <i class="fa-solid fa-percent"></i>
+                <input
+                  id="cm"
+                  type="number"
+                  min="0"
+                  max="50"
+                  step="0.5"
+                  formControlName="commissionPercent"
+                  placeholder="Enter percentage"
+                />
+                <span class="percent-suffix">%</span>
+              </div>
+
+              @if (bad('commissionPercent')) {
+                <span class="field-error">Enter a value between 0 and 50.</span>
+              }
+
+              <span class="field-hint">
+                Allowed commission range: 0% to 50%.
+              </span>
+            </div>
+
+            <div class="commission-example">
+              <div class="example-icon">
+                <i class="fa-solid fa-calculator"></i>
+              </div>
+              <div>
+                <strong>How commission works</strong>
+                <p>
+                  The configured percentage is deducted from paid booking amounts
+                  before calculating provider earnings.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="commission-warning">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div>
+              <strong>Important: Existing earnings</strong>
+              <p>
+                Changes apply to all earnings and payout balances, including past
+                payments. Review the impact before saving a new commission rate.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Save Actions -->
+      <div class="settings-footer">
+        <div class="footer-info">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Your platform configuration is managed securely.</span>
+        </div>
+
+        <button type="submit" class="save-btn" [disabled]="saving()">
+          @if (saving()) {
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Saving settings...
+          } @else {
+            <i class="fa-solid fa-floppy-disk"></i>
+            Save settings
+          }
+        </button>
+      </div>
+
+    </form>
+  }
+</div>

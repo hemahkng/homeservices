@@ -1,0 +1,488 @@
+
+<div class="profile-page">
+
+  <!-- PAGE HEADER -->
+  <div class="profile-header">
+    <div>
+      <span class="page-eyebrow">ACCOUNT SETTINGS</span>
+      <h1>My Profile</h1>
+      <p>Manage your professional information and account security.</p>
+    </div>
+
+    <div class="header-icon">
+      <i class="fa-solid fa-user-gear"></i>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <app-loader />
+    </div>
+  } @else {
+
+    <div class="profile-layout">
+
+      <!-- LEFT PROFILE OVERVIEW -->
+      <aside class="profile-sidebar">
+
+        @if (info(); as p) {
+          <div class="profile-card">
+
+            <div class="profile-cover">
+              <span class="cover-decoration decoration-one"></span>
+              <span class="cover-decoration decoration-two"></span>
+
+              <span class="cover-label">
+                <i class="fa-solid fa-user-check"></i>
+                Professional account
+              </span>
+            </div>
+
+            <div class="profile-identity">
+
+              <div class="avatar">
+                {{ p.name.charAt(0).toUpperCase() }}
+              </div>
+
+              <h2>{{ p.name }}</h2>
+
+              <p class="profile-category">
+                <i class="fa-solid fa-briefcase"></i>
+                {{ p.providerProfile?.category?.name || 'Service Provider' }}
+              </p>
+
+              <!-- FIX: Safely check providerProfile before accessing city -->
+              @if (p.providerProfile; as profile) {
+                @if (profile.city) {
+                  <p class="profile-location">
+                    <i class="fa-solid fa-location-dot"></i>
+                    {{ profile.city }}
+                  </p>
+                }
+              }
+
+              <div class="rating-wrapper">
+                <app-rating-stars
+                  [value]="p.providerProfile?.ratingAvg ?? 0"
+                  [size]="20"
+                />
+                <span>Professional rating</span>
+              </div>
+
+            </div>
+
+            <div class="profile-divider"></div>
+
+            <div class="profile-details">
+
+              <div class="detail-item">
+                <span class="detail-icon">
+                  <i class="fa-regular fa-envelope"></i>
+                </span>
+
+                <div>
+                  <small>Email address</small>
+                  <strong>{{ p.email }}</strong>
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <span class="detail-icon">
+                  <i class="fa-solid fa-circle-check"></i>
+                </span>
+
+                <div>
+                  <small>Account status</small>
+                  <strong class="account-status">
+                    <span class="status-dot"></span>
+                    {{ p.status }}
+                  </strong>
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <span class="detail-icon">
+                  <i class="fa-regular fa-calendar"></i>
+                </span>
+
+                <div>
+                  <small>Member since</small>
+                  <strong>{{ p.createdAt | date: 'MMMM y' }}</strong>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="profile-tip">
+              <i class="fa-solid fa-lightbulb"></i>
+
+              <div>
+                <strong>Profile tip</strong>
+                <p>
+                  Keep your business details updated to help customers
+                  know more about your services.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        }
+
+      </aside>
+
+      <!-- RIGHT CONTENT -->
+      <main class="profile-main">
+
+        <!-- BUSINESS INFORMATION -->
+        <section class="content-card">
+
+          <div class="card-heading">
+
+            <div class="heading-icon blue">
+              <i class="fa-solid fa-briefcase"></i>
+            </div>
+
+            <div>
+              <h2>Business information</h2>
+              <p>Update your personal and professional details.</p>
+            </div>
+
+          </div>
+
+          @if (error()) {
+            <div class="alert alert-error">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              {{ error() }}
+            </div>
+          }
+
+          @if (saved()) {
+            <div class="alert alert-success">
+              <i class="fa-solid fa-circle-check"></i>
+              Your profile has been updated successfully.
+            </div>
+          }
+
+          <form [formGroup]="form" (ngSubmit)="save()">
+
+            <div class="form-grid">
+
+              <!-- NAME -->
+              <div class="field">
+                <label for="name">
+                  Full name <span>*</span>
+                </label>
+
+                <div class="input-box">
+                  <i class="fa-regular fa-user"></i>
+
+                  <input
+                    id="name"
+                    type="text"
+                    formControlName="name"
+                    placeholder="Enter your full name"
+                  />
+                </div>
+
+                @if (bad('form', 'name')) {
+                  <small class="field-error">
+                    Please enter a valid name.
+                  </small>
+                }
+              </div>
+
+              <!-- PHONE -->
+              <div class="field">
+                <label for="phone">Phone number</label>
+
+                <div class="input-box">
+                  <i class="fa-solid fa-phone"></i>
+
+                  <input
+                    id="phone"
+                    type="tel"
+                    formControlName="phone"
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+
+                @if (bad('form', 'phone')) {
+                  <small class="field-error">
+                    Enter 10 to 15 digits.
+                  </small>
+                }
+              </div>
+
+              <!-- CATEGORY -->
+              <div class="field">
+                <label for="cat">
+                  Main service category <span>*</span>
+                </label>
+
+                <div class="input-box select-box">
+                  <i class="fa-solid fa-layer-group"></i>
+
+                  <select id="cat" formControlName="categoryId">
+                    <option [ngValue]="0" disabled>
+                      Select category
+                    </option>
+
+                    @for (c of categories(); track c.id) {
+                      <option [ngValue]="c.id">
+                        {{ c.name }}
+                      </option>
+                    }
+                  </select>
+                </div>
+
+                @if (bad('form', 'categoryId')) {
+                  <small class="field-error">
+                    Please select a category.
+                  </small>
+                }
+              </div>
+
+              <!-- CITY -->
+              <div class="field">
+                <label for="city">
+                  City / service area <span>*</span>
+                </label>
+
+                <div class="input-box">
+                  <i class="fa-solid fa-location-dot"></i>
+
+                  <input
+                    id="city"
+                    type="text"
+                    formControlName="city"
+                    placeholder="Enter your city"
+                  />
+                </div>
+
+                @if (bad('form', 'city')) {
+                  <small class="field-error">
+                    Please enter your city.
+                  </small>
+                }
+              </div>
+
+              <!-- EXPERIENCE -->
+              <div class="field">
+                <label for="exp">
+                  Years of experience <span>*</span>
+                </label>
+
+                <div class="input-box">
+                  <i class="fa-solid fa-award"></i>
+
+                  <input
+                    id="exp"
+                    type="number"
+                    min="0"
+                    max="60"
+                    formControlName="experienceYears"
+                    placeholder="Years of experience"
+                  />
+                </div>
+
+                @if (bad('form', 'experienceYears')) {
+                  <small class="field-error">
+                    Enter a value between 0 and 60.
+                  </small>
+                }
+              </div>
+
+              <!-- BIO -->
+              <div class="field full-width">
+                <label for="bio">About your business</label>
+
+                <div class="textarea-box">
+                  <textarea
+                    id="bio"
+                    rows="5"
+                    maxlength="500"
+                    formControlName="bio"
+                    placeholder="Describe your skills, experience and the services you provide..."
+                  ></textarea>
+                </div>
+
+                <div class="textarea-footer">
+                  <small>
+                    Introduce yourself to potential customers.
+                  </small>
+
+                  <span>
+                    {{ form.controls.bio.value.length }}/500
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="form-footer">
+
+              <span class="required-note">
+                <span>*</span> Required fields
+              </span>
+
+              <button
+                type="submit"
+                class="primary-button"
+                [disabled]="saving()"
+              >
+                @if (saving()) {
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                  Saving changes...
+                } @else {
+                  <i class="fa-solid fa-floppy-disk"></i>
+                  Save changes
+                }
+              </button>
+
+            </div>
+
+          </form>
+        </section>
+
+        <!-- PASSWORD SECTION -->
+        <section class="content-card security-card">
+
+          <div class="card-heading">
+
+            <div class="heading-icon green">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div>
+              <h2>Account security</h2>
+              <p>Change your password to keep your account secure.</p>
+            </div>
+
+          </div>
+
+          @if (pwdError()) {
+            <div class="alert alert-error">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              {{ pwdError() }}
+            </div>
+          }
+
+          @if (pwdOk()) {
+            <div class="alert alert-success">
+              <i class="fa-solid fa-circle-check"></i>
+              Your password has been changed successfully.
+            </div>
+          }
+
+          <form [formGroup]="pwd" (ngSubmit)="changePassword()">
+
+            <div class="form-grid">
+
+              <!-- CURRENT PASSWORD -->
+              <div class="field full-width">
+                <label for="cur">
+                  Current password <span>*</span>
+                </label>
+
+                <div class="input-box">
+                  <i class="fa-solid fa-lock"></i>
+
+                  <input
+                    id="cur"
+                    type="password"
+                    autocomplete="current-password"
+                    formControlName="currentPassword"
+                    placeholder="Enter current password"
+                  />
+                </div>
+
+                @if (bad('pwd', 'currentPassword')) {
+                  <small class="field-error">
+                    Current password is required.
+                  </small>
+                }
+              </div>
+
+              <!-- NEW PASSWORD -->
+              <div class="field">
+                <label for="np">
+                  New password <span>*</span>
+                </label>
+
+                <div class="input-box">
+                  <i class="fa-solid fa-key"></i>
+
+                  <input
+                    id="np"
+                    type="password"
+                    autocomplete="new-password"
+                    formControlName="newPassword"
+                    placeholder="Enter new password"
+                  />
+                </div>
+
+                @if (bad('pwd', 'newPassword')) {
+                  <small class="field-error">
+                    Minimum 6 characters required.
+                  </small>
+                }
+              </div>
+
+              <!-- CONFIRM PASSWORD -->
+              <div class="field">
+                <label for="cf">
+                  Confirm new password <span>*</span>
+                </label>
+
+                <div class="input-box">
+                  <i class="fa-solid fa-lock"></i>
+
+                  <input
+                    id="cf"
+                    type="password"
+                    autocomplete="new-password"
+                    formControlName="confirm"
+                    placeholder="Confirm new password"
+                  />
+                </div>
+
+                @if (bad('pwd', 'confirm')) {
+                  <small class="field-error">
+                    Please confirm your password.
+                  </small>
+                }
+              </div>
+
+            </div>
+
+            <div class="form-footer">
+
+              <span class="security-note">
+                <i class="fa-solid fa-shield-halved"></i>
+                Keep your password private.
+              </span>
+
+              <button
+                type="submit"
+                class="primary-button security-button"
+                [disabled]="pwdSaving()"
+              >
+                @if (pwdSaving()) {
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                  Updating...
+                } @else {
+                  <i class="fa-solid fa-lock"></i>
+                  Update password
+                }
+              </button>
+
+            </div>
+
+          </form>
+        </section>
+
+      </main>
+
+    </div>
+  }
+</div>

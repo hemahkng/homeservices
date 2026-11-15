@@ -1,0 +1,163 @@
+
+<div class="pv-shell">
+
+  <!-- Mobile overlay -->
+  @if (open()) {
+    <div class="pv-overlay" (click)="open.set(false)"></div>
+  }
+
+  <!-- Sidebar -->
+  <aside class="pv-side" [class.open]="open()">
+
+    <!-- Brand -->
+    <div class="pv-brand">
+      <div class="pv-logo">
+        <i class="fa-solid fa-house-chimney"></i>
+      </div>
+
+      <div class="pv-brand-text">
+        <b>HomeServices</b>
+        <small>PROVIDER PORTAL</small>
+      </div>
+
+      <!-- Mobile close button -->
+      <button
+        type="button"
+        class="pv-close"
+        (click)="open.set(false)"
+        aria-label="Close menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="pv-nav-heading">WORKSPACE</div>
+
+    <nav class="pv-nav">
+      @for (l of links; track l.path) {
+        <a
+          class="pv-link"
+          [routerLink]="l.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="open.set(false)">
+
+          <span class="pv-ico">
+            @switch (l.label) {
+              @case ('Dashboard') {
+                <i class="fa-solid fa-chart-pie"></i>
+              }
+              @case ('Booking requests') {
+                <i class="fa-solid fa-inbox"></i>
+              }
+              @case ('My services') {
+                <i class="fa-solid fa-toolbox"></i>
+              }
+              @case ('Availability') {
+                <i class="fa-regular fa-calendar-days"></i>
+              }
+              @case ('Earnings') {
+                <i class="fa-solid fa-wallet"></i>
+              }
+              @case ('Reviews') {
+                <i class="fa-regular fa-star"></i>
+              }
+              @case ('Profile') {
+                <i class="fa-regular fa-user"></i>
+              }
+            }
+          </span>
+
+          <span class="pv-link-label">{{ l.label }}</span>
+
+          @if (l.path === '/provider/requests' && pending() > 0) {
+            <span class="pv-count">{{ pending() }}</span>
+          }
+
+          <i class="fa-solid fa-chevron-right pv-arrow"></i>
+        </a>
+      }
+    </nav>
+
+    <!-- Sidebar bottom -->
+    <div class="pv-sidebar-bottom">
+
+      <div class="pv-help">
+        <div class="pv-help-icon">
+          <i class="fa-regular fa-circle-question"></i>
+        </div>
+        <b>Need help?</b>
+        <small>We're here to help you.</small>
+      </div>
+
+      <div class="pv-user">
+        <div class="pv-avatar">{{ initial() }}</div>
+
+        <div class="pv-user-info">
+          <b>{{ auth.currentUser()?.name }}</b>
+          <small>Service Provider</small>
+        </div>
+
+        <button
+          type="button"
+          class="pv-logout"
+          title="Logout"
+          aria-label="Logout"
+          (click)="auth.logout()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- Main area -->
+  <div class="pv-main">
+
+    <!-- Desktop header -->
+    <header class="pv-desktop-top">
+      <div>
+        <b>Provider Workspace</b>
+        <small>Manage your services and bookings</small>
+      </div>
+
+      <div class="pv-top-user">
+        <div class="pv-avatar light">{{ initial() }}</div>
+        <span>{{ auth.currentUser()?.name }}</span>
+      </div>
+    </header>
+
+    <!-- Mobile header -->
+    <header class="pv-mobile-top">
+
+      <button
+        type="button"
+        class="pv-menu"
+        (click)="open.set(true)"
+        aria-label="Open menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <div class="pv-mobile-brand">
+        <b>HomeServices</b>
+        <small>Provider Portal</small>
+      </div>
+
+      <div class="pv-avatar sm">{{ initial() }}</div>
+
+    </header>
+
+    <!-- Router content -->
+    <main class="pv-page">
+      <router-outlet />
+    </main>
+
+    <!-- Footer -->
+    <footer class="pv-footer">
+      <span>© 2026 HomeServices</span>
+      <span>Provider Portal</span>
+    </footer>
+
+  </div>
+
+</div>

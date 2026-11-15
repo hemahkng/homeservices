@@ -1,0 +1,298 @@
+
+<div class="register-page">
+
+  <div class="register-container">
+
+    <!-- LEFT WELCOME PANEL -->
+    <aside class="welcome-panel">
+
+      <div class="brand">
+        <div class="brand-icon">H</div>
+        <span>HomeServices</span>
+      </div>
+
+      <div class="welcome-content">
+
+        <span class="welcome-label">
+          YOUR HOME, OUR PRIORITY
+        </span>
+
+        <h1>
+          Everything your
+          <span>home needs,</span>
+          in one place.
+        </h1>
+
+        <p>
+          Create your account and discover trusted professionals
+          who make everyday home services simple and convenient.
+        </p>
+
+        <div class="welcome-benefits">
+
+          <div class="benefit-item">
+            <div class="benefit-icon">✓</div>
+            <div>
+              <strong>Trusted professionals</strong>
+              <span>Find reliable experts for your home.</span>
+            </div>
+          </div>
+
+          <div class="benefit-item">
+            <div class="benefit-icon">⌂</div>
+            <div>
+              <strong>Services made simple</strong>
+              <span>Book services without any hassle.</span>
+            </div>
+          </div>
+
+          <div class="benefit-item">
+            <div class="benefit-icon">♡</div>
+            <div>
+              <strong>Customer first</strong>
+              <span>Your comfort and satisfaction matter.</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="welcome-footer">
+        <span>© 2026 HomeServices</span>
+        <span>Made for better living.</span>
+      </div>
+
+      <div class="circle-decoration circle-one"></div>
+      <div class="circle-decoration circle-two"></div>
+      <div class="circle-decoration circle-three"></div>
+
+    </aside>
+
+
+    <!-- RIGHT REGISTRATION PANEL -->
+    <main class="form-panel">
+
+      <div class="form-content">
+
+        <!-- FORM HEADING -->
+        <div class="form-heading">
+
+          <div class="heading-top">
+            <span class="form-step">GET STARTED</span>
+
+            <div class="account-badge">
+              <span class="online-dot"></span>
+              Customer account
+            </div>
+          </div>
+
+          <h2>Create your account</h2>
+
+          <p>
+            Enter your details below to get started with HomeServices.
+          </p>
+
+        </div>
+
+
+        <!-- REGISTRATION FORM -->
+        <form [formGroup]="form" (ngSubmit)="submit()">
+
+          <!-- FULL NAME -->
+          <div class="form-group">
+
+            <label for="name">
+              Full name <span class="required">*</span>
+            </label>
+
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+
+              <input
+                id="name"
+                type="text"
+                placeholder="Enter your full name"
+                formControlName="name"
+                autocomplete="name"
+              />
+            </div>
+
+            @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+              <small class="field-error">
+                Full name is required
+              </small>
+            }
+
+            @if (form.controls.name.touched && form.controls.name.hasError('minlength')) {
+              <small class="field-error">
+                Name must contain at least 2 characters
+              </small>
+            }
+
+          </div>
+
+
+          <!-- EMAIL -->
+          <div class="form-group">
+
+            <label for="email">
+              Email address <span class="required">*</span>
+            </label>
+
+            <div class="input-wrapper">
+              <span class="input-icon">✉</span>
+
+              <input
+                id="email"
+                type="email"
+                placeholder="name@example.com"
+                formControlName="email"
+                autocomplete="email"
+              />
+            </div>
+
+            @if (form.controls.email.touched && form.controls.email.hasError('required')) {
+              <small class="field-error">
+                Email is required
+              </small>
+            }
+
+            @if (form.controls.email.touched && form.controls.email.hasError('email')) {
+              <small class="field-error">
+                Enter a valid email address
+              </small>
+            }
+
+          </div>
+
+
+          <!-- PHONE -->
+          <div class="form-group">
+
+            <label for="phone">
+              Phone number
+              <span class="optional">(Optional)</span>
+            </label>
+
+            <div class="input-wrapper">
+              <span class="input-icon">📱</span>
+
+              <input
+                id="phone"
+                type="tel"
+                placeholder="Enter your phone number"
+                formControlName="phone"
+                autocomplete="tel"
+              />
+            </div>
+
+            @if (form.controls.phone.touched && form.controls.phone.invalid) {
+              <small class="field-error">
+                Enter 10 to 15 digits only
+              </small>
+            }
+
+          </div>
+
+
+          <!-- PASSWORD -->
+          <div class="form-group">
+
+            <label for="password">
+              Password <span class="required">*</span>
+            </label>
+
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+
+              <input
+                id="password"
+                type="password"
+                placeholder="Create a password"
+                formControlName="password"
+                autocomplete="new-password"
+              />
+            </div>
+
+            <small class="input-hint">
+              Use at least 6 characters for your password.
+            </small>
+
+            @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+              <small class="field-error">
+                Password is required
+              </small>
+            }
+
+            @if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
+              <small class="field-error">
+                Minimum 6 characters required
+              </small>
+            }
+
+          </div>
+
+
+          <!-- API ERROR -->
+          @if (error()) {
+            <div class="error-box">
+              <span class="error-icon">!</span>
+              <span>{{ error() }}</span>
+            </div>
+          }
+
+
+          <!-- SUBMIT BUTTON -->
+          <button
+            type="submit"
+            class="submit-btn"
+            [disabled]="form.invalid || loading()"
+          >
+
+            <span>
+              {{ loading() ? 'Creating account...' : 'Create My Account' }}
+            </span>
+
+            @if (!loading()) {
+              <span class="button-arrow">→</span>
+            }
+
+            @if (loading()) {
+              <span class="button-loader"></span>
+            }
+
+          </button>
+
+        </form>
+
+
+        <!-- SIGN IN -->
+        <div class="signin-section">
+          <span>Already have an account?</span>
+          <a routerLink="/auth/login">Sign in</a>
+        </div>
+
+
+        <!-- BACK LINK -->
+        <div class="back-link">
+          <a routerLink="/auth/register">
+            <span>←</span>
+            Back to registration options
+          </a>
+        </div>
+
+
+        <!-- SECURITY FOOTER -->
+        <div class="security-footer">
+          <span class="security-icon">✓</span>
+          Your information is safe and secure.
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>

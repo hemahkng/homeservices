@@ -1,0 +1,132 @@
+
+<div class="cu-notifications">
+
+  <!-- Page Header -->
+  <div class="cu-notifications__header">
+    <div>
+      <span class="cu-notifications__eyebrow">YOUR UPDATES</span>
+      <h1>Notifications</h1>
+      <p>Stay up to date with your bookings and activity.</p>
+    </div>
+
+    @if (unread() > 0) {
+      <button
+        type="button"
+        class="cu-notifications__mark"
+        (click)="markAll()">
+        <i class="fa-solid fa-check-double"></i>
+        Mark all as read
+      </button>
+    }
+  </div>
+
+  <!-- Notification Stats -->
+  <div class="cu-notifications__stats">
+    <div class="cu-notifications__stat-icon">
+      <i class="fa-regular fa-bell"></i>
+    </div>
+    <div>
+      <strong>{{ unread() }}</strong>
+      <span>Unread notifications</span>
+    </div>
+    <div class="cu-notifications__stat-divider"></div>
+    <div class="cu-notifications__stat-message">
+      @if (unread() > 0) {
+        <span>You have updates waiting for you.</span>
+      } @else {
+        <span>You're all caught up. No pending updates.</span>
+      }
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="cu-notifications__error">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      {{ error() }}
+    </div>
+  }
+
+  <!-- Notification List -->
+  <section class="cu-notifications__section">
+    <div class="cu-notifications__section-head">
+      <div>
+        <h2>Recent activity</h2>
+        <p>Your latest notifications will appear here.</p>
+      </div>
+      @if (items().length > 0) {
+        <span class="cu-notifications__count">
+          {{ items().length }} updates
+        </span>
+      }
+    </div>
+
+    @if (loading()) {
+      <div class="cu-notifications__loading">
+        <app-loader />
+      </div>
+    } @else if (items().length === 0) {
+      <div class="cu-notifications__empty">
+        <div class="cu-notifications__empty-icon">
+          <i class="fa-regular fa-bell-slash"></i>
+        </div>
+        <h3>You're all caught up!</h3>
+        <p>
+          Updates about your bookings, payments and services
+          will show up here.
+        </p>
+      </div>
+    } @else {
+      <div class="cu-notifications__list">
+        @for (n of items(); track n.id) {
+          <button
+            type="button"
+            class="cu-notifications__item"
+            [class.is-unread]="!n.isRead"
+            (click)="open(n)">
+
+            <span class="cu-notifications__item-icon">
+              @if (!n.isRead) {
+                <i class="fa-solid fa-bell"></i>
+              } @else {
+                <i class="fa-regular fa-bell"></i>
+              }
+            </span>
+
+            <span class="cu-notifications__item-content">
+              <span class="cu-notifications__item-top">
+                <strong>{{ n.title }}</strong>
+                @if (!n.isRead) {
+                  <span class="cu-notifications__new">
+                    <span></span>
+                    New
+                  </span>
+                }
+              </span>
+
+              <span class="cu-notifications__message">
+                {{ n.message }}
+              </span>
+
+              <span class="cu-notifications__time">
+                <i class="fa-regular fa-clock"></i>
+                {{ ago(n.createdAt) }}
+              </span>
+            </span>
+
+            @if (n.link) {
+              <span class="cu-notifications__arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+              </span>
+            }
+          </button>
+        }
+      </div>
+    }
+  </section>
+
+  <div class="cu-notifications__footer">
+    <i class="fa-solid fa-shield-halved"></i>
+    Your notifications help you keep track of your service activity.
+  </div>
+
+</div>

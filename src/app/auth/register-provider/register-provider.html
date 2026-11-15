@@ -1,0 +1,362 @@
+
+<div class="provider-page">
+
+  <div class="registration-layout">
+
+    <!-- LEFT PANEL -->
+    <aside class="welcome-panel">
+
+      <div class="brand">
+        <div class="brand-logo">
+          <i class="fa-solid fa-house"></i>
+        </div>
+        <span>HomeServices</span>
+      </div>
+
+      <div class="welcome-content">
+
+        <span class="welcome-tag">
+          <i class="fa-solid fa-star"></i>
+          PROFESSIONAL PARTNER PROGRAM
+        </span>
+
+        <h1>
+          Turn your
+          <span>skills into</span>
+          opportunities.
+        </h1>
+
+        <p>
+          Join our growing community of professionals.
+          Connect with customers and build your business
+          with HomeServices.
+        </p>
+
+        <div class="benefit-list">
+
+          <div class="benefit">
+            <div class="benefit-icon">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+              <h4>Reach more customers</h4>
+              <span>Connect with customers in your area.</span>
+            </div>
+          </div>
+
+          <div class="benefit">
+            <div class="benefit-icon">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div>
+              <h4>Grow your business</h4>
+              <span>Get more opportunities for your services.</span>
+            </div>
+          </div>
+
+          <div class="benefit">
+            <div class="benefit-icon">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+              <h4>Build your reputation</h4>
+              <span>Showcase your skills and experience.</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="welcome-bottom">
+        <span><i class="fa-solid fa-circle-check"></i> Simple registration</span>
+        <span><i class="fa-solid fa-circle-check"></i> Admin verified</span>
+      </div>
+
+      <div class="decoration decoration-one"></div>
+      <div class="decoration decoration-two"></div>
+
+    </aside>
+
+    <!-- RIGHT PANEL -->
+    <main class="form-panel">
+
+      @if (done()) {
+
+        <!-- SUCCESS -->
+        <div class="success-screen">
+
+          <div class="success-icon">
+            <i class="fa-solid fa-check"></i>
+          </div>
+
+          <span class="success-tag">APPLICATION SUBMITTED</span>
+
+          <h2>You're almost there!</h2>
+
+          <p>
+            Your provider registration has been successfully
+            submitted. Our admin team will review your
+            application shortly.
+          </p>
+
+          <div class="status-card">
+            <div class="status-icon">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+            <div>
+              <strong>Pending approval</strong>
+              <span>You can log in once your account is approved.</span>
+            </div>
+          </div>
+
+          <a routerLink="/auth/login" class="primary-button">
+            Go to Login
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+
+          <a routerLink="/auth/register" class="secondary-link">
+            Back to registration
+          </a>
+
+        </div>
+
+      } @else {
+
+        <div class="form-content">
+
+          <!-- Form Heading -->
+          <div class="form-top">
+            <div>
+              <span class="form-step">CREATE YOUR ACCOUNT</span>
+              <h2>Become a partner</h2>
+              <p>Complete the details below to get started.</p>
+            </div>
+
+            <div class="provider-badge">
+              <i class="fa-solid fa-user-gear"></i>
+              Provider
+            </div>
+          </div>
+
+          <form [formGroup]="form" (ngSubmit)="submit()">
+
+            <!-- PERSONAL DETAILS -->
+            <div class="section-title">
+              <span>01</span>
+              <div>
+                <h3>Personal details</h3>
+                <p>Your basic contact information</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+
+              <!-- Name -->
+              <div class="field full-width">
+                <label for="name">Full name <span>*</span></label>
+                <div class="input-box">
+                  <i class="fa-regular fa-user"></i>
+                  <input
+                    id="name"
+                    type="text"
+                    formControlName="name"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                  />
+                </div>
+                @if (form.controls.name.touched && form.controls.name.invalid) {
+                  <small class="field-error">Enter a name with at least 2 characters.</small>
+                }
+              </div>
+
+              <!-- Email -->
+              <div class="field">
+                <label for="email">Email address <span>*</span></label>
+                <div class="input-box">
+                  <i class="fa-regular fa-envelope"></i>
+                  <input
+                    id="email"
+                    type="email"
+                    formControlName="email"
+                    placeholder="name@example.com"
+                    autocomplete="email"
+                  />
+                </div>
+                @if (form.controls.email.touched && form.controls.email.invalid) {
+                  <small class="field-error">Enter a valid email address.</small>
+                }
+              </div>
+
+              <!-- Phone -->
+              <div class="field">
+                <label for="phone">Phone number <span>*</span></label>
+                <div class="input-box">
+                  <i class="fa-solid fa-phone"></i>
+                  <input
+                    id="phone"
+                    type="tel"
+                    formControlName="phone"
+                    placeholder="Enter phone number"
+                    autocomplete="tel"
+                  />
+                </div>
+                @if (form.controls.phone.touched && form.controls.phone.invalid) {
+                  <small class="field-error">Enter 10–15 digits.</small>
+                }
+              </div>
+
+              <!-- Password -->
+              <div class="field full-width">
+                <label for="password">Password <span>*</span></label>
+                <div class="input-box">
+                  <i class="fa-solid fa-lock"></i>
+                  <input
+                    id="password"
+                    type="password"
+                    formControlName="password"
+                    placeholder="Create a password (minimum 6 characters)"
+                    autocomplete="new-password"
+                  />
+                </div>
+                @if (form.controls.password.touched && form.controls.password.invalid) {
+                  <small class="field-error">Password must have at least 6 characters.</small>
+                }
+              </div>
+
+            </div>
+
+            <!-- PROFESSIONAL DETAILS -->
+            <div class="section-title professional-title">
+              <span>02</span>
+              <div>
+                <h3>Professional details</h3>
+                <p>Information about your service business</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+
+              <!-- Category -->
+              <div class="field full-width">
+                <label for="categoryId">Service category <span>*</span></label>
+                <div class="input-box">
+                  <i class="fa-solid fa-briefcase"></i>
+                  <select id="categoryId" formControlName="categoryId">
+                    <option [ngValue]="0" disabled>Select your service category</option>
+                    @for (c of categories(); track c.id) {
+                      <option [ngValue]="c.id">{{ c.name }}</option>
+                    }
+                  </select>
+                  <i class="fa-solid fa-chevron-down select-arrow"></i>
+                </div>
+                @if (form.controls.categoryId.touched && form.controls.categoryId.invalid) {
+                  <small class="field-error">Please select a service category.</small>
+                }
+              </div>
+
+              <!-- City -->
+              <div class="field">
+                <label for="city">City / Service area <span>*</span></label>
+                <div class="input-box">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <input
+                    id="city"
+                    type="text"
+                    formControlName="city"
+                    placeholder="Enter your city"
+                  />
+                </div>
+                @if (form.controls.city.touched && form.controls.city.invalid) {
+                  <small class="field-error">Enter a valid city.</small>
+                }
+              </div>
+
+              <!-- Experience -->
+              <div class="field">
+                <label for="experienceYears">Experience (years)</label>
+                <div class="input-box">
+                  <i class="fa-solid fa-award"></i>
+                  <input
+                    id="experienceYears"
+                    type="number"
+                    formControlName="experienceYears"
+                    placeholder="e.g. 3"
+                    min="0"
+                    max="60"
+                  />
+                </div>
+                @if (form.controls.experienceYears.touched && form.controls.experienceYears.invalid) {
+                  <small class="field-error">Enter a value between 0 and 60.</small>
+                }
+              </div>
+
+              <!-- Bio -->
+              <div class="field full-width">
+                <div class="label-row">
+                  <label for="bio">About your services</label>
+                  <span>OPTIONAL</span>
+                </div>
+                <div class="textarea-box">
+                  <textarea
+                    id="bio"
+                    rows="3"
+                    maxlength="500"
+                    formControlName="bio"
+                    placeholder="Tell customers about your skills, experience and services..."
+                  ></textarea>
+                </div>
+                <div class="character-count">
+                  {{ form.controls.bio.value.length }} / 500 characters
+                </div>
+              </div>
+
+            </div>
+
+            <!-- API ERROR -->
+            @if (error()) {
+              <div class="error-message">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                {{ error() }}
+              </div>
+            }
+
+            <!-- Submit -->
+            <div class="form-actions">
+              <button
+                type="submit"
+                class="primary-button"
+                [disabled]="form.invalid || loading()"
+              >
+                @if (loading()) {
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                  Submitting...
+                } @else {
+                  Submit for approval
+                  <i class="fa-solid fa-arrow-right"></i>
+                }
+              </button>
+
+              <a routerLink="/auth/register" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+              </a>
+            </div>
+
+          </form>
+
+          <div class="form-footer">
+            Already have an account?
+            <a routerLink="/auth/login">Sign in</a>
+            <span class="footer-copy">© 2026 HomeServices</span>
+          </div>
+
+        </div>
+
+      }
+
+    </main>
+
+  </div>
+
+</div>

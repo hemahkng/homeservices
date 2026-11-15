@@ -1,0 +1,176 @@
+
+<div class="requests-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <div class="page-label">WORKSPACE / BOOKINGS</div>
+      <h1>Bookings</h1>
+      <p>Stay on top of customer requests and manage your appointments.</p>
+    </div>
+
+    <div class="header-count">
+      <span>All requests</span>
+      <strong>{{ counts().all }}</strong>
+    </div>
+  </div>
+
+  <!-- Highlight -->
+  <div class="request-highlight">
+    <div class="highlight-left">
+      <div class="highlight-icon">↗</div>
+      <div>
+        <strong>{{ counts().pending }} requests need your attention</strong>
+        <span>Review pending requests and respond to your customers.</span>
+      </div>
+    </div>
+    <button type="button" class="review-btn" (click)="tab.set('pending')">
+      Review requests <span>→</span>
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-section">
+    <div class="filter-heading">
+      <h2>Manage bookings</h2>
+      <span>{{ visible().length }} results</span>
+    </div>
+
+    <div class="filter-tabs">
+      @for (t of tabs; track t.key) {
+        <button
+          type="button"
+          class="filter-tab"
+          [class.active]="tab() === t.key"
+          (click)="tab.set(t.key)"
+        >
+          {{ t.label }}
+          <span class="filter-count">{{ counts()[t.key] }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="pv-alert error">{{ error() }}</div>
+  }
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="loading-area">
+      <app-loader />
+    </div>
+  }
+
+  <!-- Empty -->
+  @else if (visible().length === 0) {
+    <div class="empty-area">
+      <app-empty-state
+        icon="📭"
+        title="No bookings yet"
+        text="Bookings matching this filter will appear here."
+      />
+    </div>
+  }
+
+  <!-- Bookings -->
+  @else {
+    <div class="booking-container">
+
+      <div class="table-heading">
+        <span>BOOKING DETAILS</span>
+        <span>SCHEDULE</span>
+        <span>AMOUNT</span>
+        <span>STATUS</span>
+        <span>ACTIONS</span>
+      </div>
+
+      @for (b of visible(); track b.id) {
+        <article class="booking-row">
+
+          <!-- Customer and Service -->
+          <div class="booking-main">
+            <div class="customer-avatar">
+              {{ (b.customer.name || 'C').charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="booking-main-info">
+              <h3>{{ b.service.title }}</h3>
+              <span class="customer-name">{{ b.customer.name }}</span>
+              <span class="booking-id">#{{ b.id }}</span>
+            </div>
+          </div>
+
+          <!-- Schedule -->
+          <div class="schedule-info">
+            <strong>{{ b.scheduledAt | date:'d MMM y' }}</strong>
+            <span>{{ b.scheduledAt | date:'h:mm a' }}</span>
+          </div>
+
+          <!-- Amount -->
+          <div class="amount-info">
+            ₹{{ b.total | number }}
+          </div>
+
+          <!-- Status -->
+          <div class="status-info">
+            <app-status-badge [status]="b.status" />
+          </div>
+
+          <!-- Actions -->
+          <div class="action-info">
+            <a
+              class="details-btn"
+              [routerLink]="['/provider/jobs', b.id]"
+              title="View booking details"
+            >
+              View
+            </a>
+
+            <div class="action-dropdown">
+              @for (d of actionsFor(b.status); track d.action) {
+                <button
+                  type="button"
+                  class="action-btn"
+                  [class.danger]="d.kind === 'danger'"
+                  [disabled]="busyId() === b.id"
+                  (click)="run(b, d)"
+                >
+                  {{ busyId() === b.id ? '...' : d.label }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Mobile additional details -->
+          <div class="mobile-details">
+            <div>
+              <span>Location</span>
+              <strong>{{ b.address }}</strong>
+            </div>
+
+            @if (b.customer.phone) {
+              <div>
+                <span>Contact</span>
+                <a [href]="'tel:' + b.customer.phone">
+                  {{ b.customer.phone }}
+                </a>
+              </div>
+            }
+
+            @if (b.notes) {
+              <div>
+                <span>Customer notes</span>
+                <strong>{{ b.notes }}</strong>
+              </div>
+            }
+          </div>
+
+        </article>
+      }
+
+    </div>
+  }
+
+</div>

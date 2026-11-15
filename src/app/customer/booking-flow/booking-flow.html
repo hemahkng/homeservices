@@ -1,0 +1,412 @@
+
+<a class="cu-checkout-back" [routerLink]="['/customer/services', serviceId]">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back to service
+</a>
+
+@if (loadingService()) {
+  <app-loader />
+} @else if (service(); as s) {
+
+  <!-- Page heading -->
+  <div class="cu-checkout-header">
+    <div>
+      <span class="cu-checkout-eyebrow">BOOK YOUR SERVICE</span>
+      <h1>Let's get you booked!</h1>
+      <p>Complete these simple steps to confirm your service.</p>
+    </div>
+
+    <div class="cu-checkout-service-price">
+      <span>Service price</span>
+      <strong>₹{{ s.price | number }}</strong>
+    </div>
+  </div>
+
+  <!-- Selected service -->
+  <div class="cu-checkout-service">
+    <div class="cu-checkout-service-icon">
+      <i class="fa-solid fa-house-chimney"></i>
+    </div>
+
+    <div class="cu-checkout-service-info">
+      <span>SELECTED SERVICE</span>
+      <b>{{ s.title }}</b>
+      <small>
+        <i class="fa-solid fa-user-tie"></i>
+        {{ s.provider.name }}
+      </small>
+    </div>
+
+    <div class="cu-checkout-service-tag">
+      <i class="fa-solid fa-check-circle"></i>
+      Selected
+    </div>
+  </div>
+
+  <!-- Stepper -->
+  <div class="cu-checkout-stepper">
+    @for (t of steps; track t; let i = $index) {
+      <div class="cu-checkout-step"
+           [class.done]="step() > i + 1"
+           [class.active]="step() === i + 1">
+
+        <div class="cu-checkout-step-circle">
+          @if (step() > i + 1) {
+            <i class="fa-solid fa-check"></i>
+          } @else {
+            {{ i + 1 }}
+          }
+        </div>
+
+        <div class="cu-checkout-step-info">
+          <small>STEP {{ i + 1 }}</small>
+          <b>{{ t }}</b>
+        </div>
+
+        @if (i < steps.length - 1) {
+          <div class="cu-checkout-step-line"></div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (error()) {
+    <div class="cu-alert error">{{ error() }}</div>
+  }
+
+  <div class="cu-checkout-layout">
+
+    <!-- Main form -->
+    <main class="cu-checkout-main">
+      <section class="cu-checkout-panel">
+
+        @switch (step()) {
+
+          <!-- STEP 1: DATE AND TIME -->
+          @case (1) {
+            <div class="cu-checkout-panel-heading">
+              <div class="cu-checkout-panel-icon">
+                <i class="fa-regular fa-calendar-days"></i>
+              </div>
+              <div>
+                <h2>When do you need the service?</h2>
+                <p>Choose your preferred date and available time.</p>
+              </div>
+            </div>
+
+            <div class="cu-checkout-field-heading">
+              <b>Select a date</b>
+              <span>Choose your preferred day</span>
+            </div>
+
+            <div class="cu-checkout-days">
+              @for (d of days; track d.key) {
+                <button type="button"
+                        class="cu-checkout-day"
+                        [class.selected]="date() === d.key"
+                        (click)="pickDate(d.key)">
+
+                  <small>{{ d.weekday }}</small>
+                  <strong>{{ d.num }}</strong>
+                  <small>{{ d.month }}</small>
+
+                  @if (date() === d.key) {
+                    <i class="fa-solid fa-circle-check"></i>
+                  }
+                </button>
+              }
+            </div>
+
+            <div class="cu-checkout-divider"></div>
+
+            <div class="cu-checkout-field-heading cu-checkout-time-heading">
+              <b>Select a time slot</b>
+              <span>Available timings for your selected date</span>
+            </div>
+
+            @if (slotsLoading()) {
+              <div class="cu-checkout-slot-loading">
+                <app-loader />
+              </div>
+            } @else if (closed()) {
+              <div class="cu-checkout-empty">
+                <i class="fa-regular fa-calendar-xmark"></i>
+                <b>Provider unavailable</b>
+                <p>The provider is not working on this day. Please choose another date.</p>
+              </div>
+            } @else if (slots().length === 0 || !hasFreeSlot()) {
+              <div class="cu-checkout-empty">
+                <i class="fa-regular fa-clock"></i>
+                <b>No slots available</b>
+                <p>No free time left on this day. Please choose another date.</p>
+              </div>
+            } @else {
+              <div class="cu-checkout-slots">
+                @for (sl of slots(); track sl.iso) {
+                  <button type="button"
+                          class="cu-checkout-slot"
+                          [class.selected]="slot()?.iso === sl.iso"
+                          [disabled]="!sl.available"
+                          (click)="slot.set(sl)">
+
+                    <i class="fa-regular fa-clock"></i>
+                    {{ fmt(sl.time) }}
+
+                    @if (slot()?.iso === sl.iso) {
+                      <i class="fa-solid fa-check cu-checkout-slot-check"></i>
+                    }
+                  </button>
+                }
+              </div>
+
+              <div class="cu-checkout-slot-legend">
+                <span><i class="available"></i> Available</span>
+                <span><i class="unavailable"></i> Booked / unavailable</span>
+                <span><i class="chosen"></i> Selected</span>
+              </div>
+            }
+          }
+
+          <!-- STEP 2: ADDRESS -->
+          @case (2) {
+            <div class="cu-checkout-panel-heading">
+              <div class="cu-checkout-panel-icon">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
+              <div>
+                <h2>Where should we come?</h2>
+                <p>Share the location where you need the service.</p>
+              </div>
+            </div>
+
+            <div class="cu-checkout-form">
+
+              <div class="cu-checkout-input-group">
+                <label for="addr">
+                  Service address
+                  <span>*</span>
+                </label>
+
+                <div class="cu-checkout-textarea-wrap">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <textarea
+                    id="addr"
+                    rows="4"
+                    placeholder="House / flat no., street, area, landmark, city"
+                    [ngModel]="address()"
+                    (ngModelChange)="address.set($event)">
+                  </textarea>
+                </div>
+
+                <small>
+                  <i class="fa-solid fa-circle-info"></i>
+                  Saved to your profile as your default address.
+                </small>
+              </div>
+
+              <div class="cu-checkout-input-group">
+                <label for="notes">
+                  Additional instructions
+                  <span class="optional">OPTIONAL</span>
+                </label>
+
+                <div class="cu-checkout-textarea-wrap">
+                  <i class="fa-regular fa-note-sticky"></i>
+                  <textarea
+                    id="notes"
+                    rows="4"
+                    placeholder="Gate code, landmarks, specific issues or instructions..."
+                    [ngModel]="notes()"
+                    (ngModelChange)="notes.set($event)">
+                  </textarea>
+                </div>
+
+                <small>
+                  Help your provider prepare for the job.
+                </small>
+              </div>
+
+            </div>
+
+            <div class="cu-checkout-address-tip">
+              <i class="fa-solid fa-lightbulb"></i>
+              <div>
+                <b>Helpful tip</b>
+                <p>Include a nearby landmark so your provider can find your location easily.</p>
+              </div>
+            </div>
+          }
+
+          <!-- STEP 3: REVIEW -->
+          @case (3) {
+            <div class="cu-checkout-panel-heading">
+              <div class="cu-checkout-panel-icon">
+                <i class="fa-solid fa-clipboard-check"></i>
+              </div>
+              <div>
+                <h2>Review your booking</h2>
+                <p>Check everything before confirming your request.</p>
+              </div>
+            </div>
+
+            <div class="cu-checkout-review-service">
+              <div class="cu-checkout-review-icon">
+                <i class="fa-solid fa-house-chimney"></i>
+              </div>
+              <div>
+                <small>YOUR SERVICE</small>
+                <b>{{ s.title }}</b>
+                <span>Provided by {{ s.provider.name }}</span>
+              </div>
+            </div>
+
+            <div class="cu-checkout-review-details">
+              @if (slot(); as sl) {
+                <div class="cu-checkout-review-row">
+                  <div class="cu-checkout-review-label">
+                    <i class="fa-regular fa-calendar"></i>
+                    Date
+                  </div>
+                  <b>{{ sl.iso | date: 'EEEE, d MMM y' }}</b>
+                </div>
+
+                <div class="cu-checkout-review-row">
+                  <div class="cu-checkout-review-label">
+                    <i class="fa-regular fa-clock"></i>
+                    Time
+                  </div>
+                  <b>{{ sl.iso | date: 'h:mm a' }}</b>
+                </div>
+              }
+
+              <div class="cu-checkout-review-row vertical">
+                <div class="cu-checkout-review-label">
+                  <i class="fa-solid fa-location-dot"></i>
+                  Service address
+                </div>
+                <b>{{ address() }}</b>
+              </div>
+
+              @if (notes().trim()) {
+                <div class="cu-checkout-review-row vertical">
+                  <div class="cu-checkout-review-label">
+                    <i class="fa-regular fa-note-sticky"></i>
+                    Additional instructions
+                  </div>
+                  <b>{{ notes() }}</b>
+                </div>
+              }
+            </div>
+
+            <div class="cu-checkout-total">
+              <div>
+                <span>Total service amount</span>
+                <small>Payment after provider acceptance</small>
+              </div>
+              <strong>₹{{ s.price | number }}</strong>
+            </div>
+
+            <div class="cu-checkout-payment-note">
+              <i class="fa-solid fa-shield-halved"></i>
+              <div>
+                <b>No payment required now</b>
+                <p>You pay only after the provider accepts your booking.</p>
+              </div>
+            </div>
+          }
+        }
+
+        <!-- Navigation buttons -->
+        <div class="cu-checkout-actions">
+          @if (step() > 1) {
+            <button type="button"
+                    class="cu-checkout-back-btn"
+                    (click)="back()">
+              <i class="fa-solid fa-arrow-left"></i>
+              Back
+            </button>
+          } @else {
+            <span></span>
+          }
+
+          @if (step() < 3) {
+            <button type="button"
+                    class="cu-checkout-continue-btn"
+                    [disabled]="!canNext()"
+                    (click)="next()">
+              Continue
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          } @else {
+            <button type="button"
+                    class="cu-checkout-continue-btn"
+                    [disabled]="saving()"
+                    (click)="confirm()">
+              <i class="fa-solid fa-check"></i>
+              {{ saving() ? 'Confirming booking...' : 'Confirm booking' }}
+            </button>
+          }
+        </div>
+      </section>
+    </main>
+
+    <!-- Desktop booking summary -->
+    <aside class="cu-checkout-sidebar">
+      <div class="cu-checkout-summary">
+        <div class="cu-checkout-summary-heading">
+          <h3>Booking summary</h3>
+          <i class="fa-solid fa-receipt"></i>
+        </div>
+
+        <div class="cu-checkout-summary-service">
+          <div class="cu-checkout-summary-icon">
+            <i class="fa-solid fa-house-chimney"></i>
+          </div>
+          <div>
+            <b>{{ s.title }}</b>
+            <small>{{ s.provider.name }}</small>
+          </div>
+        </div>
+
+        <div class="cu-checkout-summary-line">
+          <span>Service price</span>
+          <b>₹{{ s.price | number }}</b>
+        </div>
+
+        @if (slot(); as sl) {
+          <div class="cu-checkout-summary-line">
+            <span>Date</span>
+            <b>{{ sl.iso | date: 'd MMM y' }}</b>
+          </div>
+          <div class="cu-checkout-summary-line">
+            <span>Time</span>
+            <b>{{ sl.iso | date: 'h:mm a' }}</b>
+          </div>
+        }
+
+        <div class="cu-checkout-summary-total">
+          <span>Total</span>
+          <strong>₹{{ s.price | number }}</strong>
+        </div>
+
+        <div class="cu-checkout-summary-safe">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Secure booking. No payment required now.</span>
+        </div>
+      </div>
+
+      <div class="cu-checkout-support">
+        <div class="cu-checkout-support-icon">
+          <i class="fa-solid fa-headset"></i>
+        </div>
+        <div>
+          <b>Need help?</b>
+          <p>Review your details carefully before confirming your booking.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+}
+@else if (error()) {
+  <div class="cu-alert error">{{ error() }}</div>
+}

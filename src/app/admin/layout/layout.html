@@ -1,0 +1,136 @@
+
+<div class="ad-shell">
+
+  @if (open()) {
+    <div class="ad-overlay" (click)="open.set(false)"></div>
+  }
+
+  <aside class="ad-side" [class.open]="open()">
+
+    <div class="ad-brand">
+      <div class="ad-logo">
+        <i class="fa-solid fa-house-chimney"></i>
+      </div>
+      <div class="ad-brand-text">
+        <b>HomeServices</b>
+        <small>ADMIN PANEL</small>
+      </div>
+      <button class="ad-close" type="button" (click)="open.set(false)">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="ad-section-label">MAIN MENU</div>
+
+    <nav class="ad-nav">
+      @for (l of links; track l.path) {
+        <a
+          class="ad-link"
+          [routerLink]="l.path"
+          routerLinkActive="active"
+          (click)="open.set(false)"
+        >
+          <span class="ad-ico">
+            @switch (l.path) {
+              @case ('/admin/dashboard') {
+                <i class="fa-solid fa-chart-pie"></i>
+              }
+              @case ('/admin/provider-approvals') {
+                <i class="fa-solid fa-user-shield"></i>
+              }
+              @case ('/admin/users') {
+                <i class="fa-solid fa-users"></i>
+              }
+              @case ('/admin/bookings') {
+                <i class="fa-solid fa-calendar-check"></i>
+              }
+              @case ('/admin/payments') {
+                <i class="fa-solid fa-credit-card"></i>
+              }
+              @case ('/admin/payouts') {
+                <i class="fa-solid fa-building-columns"></i>
+              }
+              @case ('/admin/reports') {
+                <i class="fa-solid fa-chart-line"></i>
+              }
+              @case ('/admin/categories') {
+                <i class="fa-solid fa-layer-group"></i>
+              }
+              @case ('/admin/settings') {
+                <i class="fa-solid fa-gear"></i>
+              }
+              @default {
+                <i class="fa-solid fa-circle"></i>
+              }
+            }
+          </span>
+
+          <span class="ad-link-label">{{ l.label }}</span>
+
+          @if (l.path === '/admin/provider-approvals' && pending() > 0) {
+            <span class="ad-count">{{ pending() > 99 ? '99+' : pending() }}</span>
+          }
+
+          <i class="fa-solid fa-chevron-right ad-arrow"></i>
+        </a>
+      }
+    </nav>
+
+    <div class="ad-sidebar-bottom">
+      <div class="ad-user">
+        <div class="ad-avatar">{{ initial() }}</div>
+
+        <div class="ad-user-info">
+          <b>{{ auth.currentUser()?.name }}</b>
+          <small><span></span> Administrator</small>
+        </div>
+
+        <button
+          type="button"
+          class="ad-logout"
+          (click)="auth.logout()"
+          title="Logout"
+          aria-label="Logout"
+        >
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </div>
+
+  </aside>
+
+  <div class="ad-main">
+
+    <header class="ad-top">
+      <div class="ad-top-left">
+        <button
+          type="button"
+          class="ad-menu"
+          (click)="open.set(true)"
+          aria-label="Open menu"
+        >
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="ad-page-heading">
+          <span>Workspace</span>
+          <i class="fa-solid fa-chevron-right"></i>
+          <b>Admin Console</b>
+        </div>
+      </div>
+
+      <div class="ad-top-right">
+        <div class="ad-admin-label">
+          <i class="fa-solid fa-shield-halved"></i>
+          Admin
+        </div>
+        <div class="ad-avatar top-avatar">{{ initial() }}</div>
+      </div>
+    </header>
+
+    <main class="ad-page">
+      <router-outlet />
+    </main>
+
+  </div>
+</div>

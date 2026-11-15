@@ -1,0 +1,204 @@
+
+<div class="categories-page">
+
+  <!-- Page Header -->
+  <header class="cat-header">
+    <div class="cat-title">
+      <div class="cat-breadcrumb">
+        <i class="fa-solid fa-sliders"></i>
+        <span>ADMINISTRATION</span>
+        <i class="fa-solid fa-chevron-right"></i>
+        <span>CATALOGUE</span>
+      </div>
+
+      <h1>Service Categories</h1>
+      <p>Manage the categories that connect customers with the right professionals.</p>
+    </div>
+
+    <a class="cat-primary-btn" routerLink="/admin/categories/new">
+      <i class="fa-solid fa-plus"></i>
+      Add category
+    </a>
+  </header>
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="cat-alert">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  @if (loading()) {
+    <app-loader />
+  } @else if (items().length === 0) {
+
+    <!-- Empty State -->
+    <div class="cat-empty">
+      <div class="empty-icon">
+        <i class="fa-solid fa-layer-group"></i>
+      </div>
+      <h2>Your categories start here</h2>
+      <p>Create categories to organize your services and make it easier for customers to find professionals.</p>
+      <a class="cat-primary-btn" routerLink="/admin/categories/new">
+        <i class="fa-solid fa-plus"></i>
+        Create first category
+      </a>
+    </div>
+
+  } @else {
+
+    <!-- Summary Cards -->
+    <section class="cat-summary">
+
+      <div class="summary-card">
+        <div class="summary-icon total">
+          <i class="fa-solid fa-layer-group"></i>
+        </div>
+        <div class="summary-content">
+          <span>Total categories</span>
+          <strong>{{ totalCategories() }}</strong>
+          <small>All service categories</small>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-icon active">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div class="summary-content">
+          <span>Active categories</span>
+          <strong>{{ activeCategories() }}</strong>
+          <small>Visible to customers</small>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-icon hidden">
+          <i class="fa-solid fa-eye-slash"></i>
+        </div>
+        <div class="summary-content">
+          <span>Hidden categories</span>
+          <strong>{{ hiddenCategories() }}</strong>
+          <small>Not visible to customers</small>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-icon services">
+          <i class="fa-solid fa-briefcase"></i>
+        </div>
+        <div class="summary-content">
+          <span>Total services</span>
+          <strong>{{ totalServices() }}</strong>
+          <small>Across all categories</small>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Categories Section -->
+    <section class="cat-content">
+
+      <div class="section-heading">
+        <div>
+          <h2>All categories</h2>
+          <p>Browse and manage your service categories.</p>
+        </div>
+
+        <span class="result-count">
+          {{ items().length }} categories
+        </span>
+      </div>
+
+      <!-- Category Grid -->
+      <div class="category-grid">
+
+        @for (c of items(); track c.id) {
+          <article class="category-card" [class.is-hidden]="!c.isActive">
+
+            <!-- Card Header -->
+            <div class="card-top">
+              <div class="category-symbol">
+                {{ c.icon || icon(c.name) }}
+              </div>
+
+              <span
+                class="status-badge"
+                [attr.data-status]="c.isActive ? 'active' : 'hidden'">
+
+                <span class="status-indicator"></span>
+                {{ c.isActive ? 'Active' : 'Hidden' }}
+              </span>
+            </div>
+
+            <!-- Category Info -->
+            <div class="card-info">
+              <h3>{{ c.name }}</h3>
+              <span class="category-caption">Service category</span>
+            </div>
+
+            <!-- Statistics -->
+            <div class="card-metrics">
+
+              <div class="metric">
+                <div class="metric-icon service-icon">
+                  <i class="fa-solid fa-briefcase"></i>
+                </div>
+                <div>
+                  <strong>{{ c._count.services }}</strong>
+                  <span>Services</span>
+                </div>
+              </div>
+
+              <div class="metric-separator"></div>
+
+              <div class="metric">
+                <div class="metric-icon provider-icon">
+                  <i class="fa-solid fa-users"></i>
+                </div>
+                <div>
+                  <strong>{{ c._count.providers }}</strong>
+                  <span>Providers</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Actions -->
+            <div class="card-actions">
+
+              <a
+                class="edit-btn"
+                [routerLink]="['/admin/categories', c.id, 'edit']">
+                <i class="fa-solid fa-pen-to-square"></i>
+                Edit category
+              </a>
+
+              <button
+                type="button"
+                class="visibility-btn"
+                [class.hide-btn]="c.isActive"
+                [disabled]="busyId() === c.id"
+                (click)="toggle(c)">
+
+                @if (busyId() === c.id) {
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                } @else if (c.isActive) {
+                  <i class="fa-solid fa-eye-slash"></i>
+                } @else {
+                  <i class="fa-solid fa-eye"></i>
+                }
+
+                {{ busyId() === c.id ? 'Saving...' : c.isActive ? 'Hide' : 'Show' }}
+              </button>
+
+            </div>
+
+          </article>
+        }
+
+      </div>
+    </section>
+  }
+</div>

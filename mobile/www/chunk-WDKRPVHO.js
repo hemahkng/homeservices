@@ -1,0 +1,1 @@
+import{Ca as r,Va as i,Wa as t,fb as p}from"./chunk-76P4NMAR.js";import"./chunk-2VMXMS7J.js";var n=class o{static \u0275fac=function(e){return new(e||o)};static \u0275cmp=r({type:o,selectors:[["app-provider-profile"]],decls:2,vars:0,template:function(e,s){e&1&&(i(0,"p"),p(1,"provider-profile works!"),t())},encapsulation:2})};export{n as ProviderProfile};

@@ -1,0 +1,95 @@
+@mixin page-head {
+  .ad-head {
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 22px;
+    h1 { margin: 0; font-size: 26px; letter-spacing: -.02em; }
+    p { margin: 4px 0 0; color: var(--ad-muted); font-size: 14px; }
+  }
+  .ad-back { display: inline-block; margin-bottom: 14px; color: var(--ad-primary); font-weight: 600; font-size: 14px; }
+}
+
+@mixin card {
+  .ad-card {
+    background: var(--ad-card); border: 1px solid var(--ad-line); border-radius: var(--ad-radius);
+    box-shadow: var(--ad-shadow); padding: 20px; min-width: 0;
+    h2 { margin: 0 0 14px; font-size: 16px; }
+  }
+}
+
+@mixin buttons {
+  a, a:hover { text-decoration: none; }
+  .ad-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 16px;
+    border: 1px solid transparent; border-radius: 10px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+    background: var(--ad-primary); color: #fff; transition: background .15s;
+    &:hover { background: var(--ad-primary-dark); }
+    &:disabled { opacity: .55; cursor: not-allowed; }
+    &.ghost { background: #fff; color: var(--ad-ink); border-color: var(--ad-line); &:hover { background: var(--ad-bg); } }
+    &.danger { background: #fff; color: var(--ad-danger); border-color: #ffc9c9; &:hover { background: #fff5f5; } }
+    &.good { background: var(--ad-success); &:hover { background: #2b8a3e; } }
+    &.sm { padding: 6px 11px; font-size: 13px; }
+  }
+}
+
+@mixin fields {
+  .ad-form { display: block; max-width: none; margin: 0; padding: 0; background: transparent; box-shadow: none; border-radius: 0; }
+  .ad-field {
+    display: flex; flex-direction: column; gap: 6px;
+    label { font-size: 13px; font-weight: 600; }
+    input, select, textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--ad-line); border-radius: 10px;
+      font: inherit; font-size: 14px; background: #fff; color: var(--ad-ink);
+      &:focus { outline: none; border-color: var(--ad-primary); box-shadow: 0 0 0 3px var(--ad-primary-soft); }
+    }
+    .hint { font-size: 12px; color: var(--ad-muted); }
+    .err { font-size: 12px; color: var(--ad-danger); }
+  }
+}
+
+@mixin alerts {
+  .ad-alert {
+    padding: 10px 14px; border-radius: 10px; font-size: 14px; margin-bottom: 14px;
+    &.error { background: #fff5f5; color: #c92a2a; border: 1px solid #ffc9c9; }
+    &.ok { background: #ebfbee; color: #2b8a3e; border: 1px solid #b2f2bb; }
+    &.warn { background: #fff9db; color: #8a6d00; border: 1px solid #ffec99; }
+    a { color: inherit; font-weight: 700; text-decoration: underline; }
+  }
+}
+
+@mixin pill {
+  .pill {
+    display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+    text-transform: capitalize; background: #eef0f4; color: #495057; white-space: nowrap;
+    &[data-s='active'], &[data-s='paid'] { background: #d3f9d8; color: #2b8a3e; }
+    &[data-s='pending'] { background: #fff4d6; color: #9a6700; }
+    &[data-s='blocked'] { background: #ffe3e3; color: #c92a2a; }
+    &[data-s='provider'] { background: #e5dbff; color: #5f3dc4; }
+    &[data-s='customer'] { background: #dbe4ff; color: #364fc7; }
+  }
+}
+
+@mixin table {
+  .ad-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; padding: 10px 12px; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ad-muted); border-bottom: 1px solid var(--ad-line); white-space: nowrap; }
+  td { padding: 12px; border-bottom: 1px solid var(--ad-line); vertical-align: middle; }
+  tr:last-child td { border-bottom: 0; }
+  .r { text-align: right; }
+  .sub { display: block; color: var(--ad-muted); font-size: 12px; }
+  td a.main { color: var(--ad-ink); font-weight: 600; &:hover { color: var(--ad-primary); } }
+}
+
+@mixin toolbar {
+  .ad-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .ad-bar input, .ad-bar select {
+    padding: 9px 12px; border: 1px solid var(--ad-line); border-radius: 10px; font: inherit; font-size: 14px; background: #fff; color: var(--ad-ink); width: auto;
+    &:focus { outline: none; border-color: var(--ad-primary); }
+  }
+  .ad-bar input[type=search] { flex: 1; min-width: 220px; }
+  .ad-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px; }
+  .ad-tab {
+    display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; white-space: nowrap;
+    background: #fff; color: var(--ad-ink); border: 1px solid var(--ad-line); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+    &:hover { border-color: var(--ad-primary); }
+    &.on { background: var(--ad-primary); border-color: var(--ad-primary); color: #fff; }
+  }
+}

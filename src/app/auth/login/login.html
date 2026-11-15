@@ -1,0 +1,176 @@
+
+<div class="login-page">
+  <div class="login-layout">
+
+    <!-- Left branding section -->
+    <section class="brand-panel">
+      <div class="brand-content">
+        <a class="brand-logo" routerLink="/">
+          <span class="logo-icon">
+            <i class="fa-solid fa-house"></i>
+          </span>
+          <span>HomeServices</span>
+        </a>
+
+        <div class="welcome-content">
+          <span class="welcome-tag">WELCOME BACK</span>
+          <h1>Your home deserves the best care.</h1>
+          <p>
+            Connect with trusted professionals and manage all your home
+            services from one simple place.
+          </p>
+
+          <div class="feature-list">
+            <div class="feature-item">
+              <span class="feature-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+              </span>
+              <div>
+                <h4>Trusted Professionals</h4>
+                <p>Reliable experts for every home need.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">
+                <i class="fa-solid fa-clock"></i>
+              </span>
+              <div>
+                <h4>Save Your Time</h4>
+                <p>Book and manage services easily.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">
+                <i class="fa-solid fa-star"></i>
+              </span>
+              <div>
+                <h4>Quality Service</h4>
+                <p>Get the service your home deserves.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="brand-footer">
+          © 2026 HomeServices. All rights reserved.
+        </div>
+      </div>
+
+      <div class="decor-circle circle-one"></div>
+      <div class="decor-circle circle-two"></div>
+    </section>
+
+    <!-- Right login section -->
+    <section class="form-panel">
+      <div class="login-card">
+
+        <div class="mobile-brand">
+          <span class="mobile-logo-icon">
+            <i class="fa-solid fa-house"></i>
+          </span>
+          <span>HomeServices</span>
+        </div>
+
+        <div class="form-heading">
+          <span class="heading-label">ACCOUNT LOGIN</span>
+          <h2>Welcome back!</h2>
+          <p>Enter your details to access your account.</p>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="submit()">
+
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <div class="input-wrapper">
+              <i class="fa-regular fa-envelope input-icon"></i>
+              <input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                formControlName="email"
+                autocomplete="email"
+              />
+            </div>
+
+            @if (form.controls.email.touched && form.controls.email.invalid) {
+              <small class="validation-error">
+                @if (form.controls.email.hasError('required')) {
+                  Email is required.
+                } @else {
+                  Please enter a valid email address.
+                }
+              </small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-lock input-icon"></i>
+              <input
+                id="password"
+                [type]="showPassword() ? 'text' : 'password'"
+                placeholder="Enter your password"
+                formControlName="password"
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="togglePassword()"
+                [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+              >
+                <i [class]="showPassword() ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye'"></i>
+              </button>
+            </div>
+
+            @if (form.controls.password.touched && form.controls.password.invalid) {
+              <small class="validation-error">
+                @if (form.controls.password.hasError('required')) {
+                  Password is required.
+                } @else {
+                  Password must contain at least 6 characters.
+                }
+              </small>
+            }
+          </div>
+
+          @if (error()) {
+            <div class="error-message">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>{{ error() }}</span>
+            </div>
+          }
+
+          <button
+            type="submit"
+            class="login-button"
+            [disabled]="form.invalid || loading()"
+          >
+            <span>{{ loading() ? 'Please wait...' : 'Sign in to account' }}</span>
+            @if (!loading()) {
+              <i class="fa-solid fa-arrow-right"></i>
+            } @else {
+              <i class="fa-solid fa-spinner fa-spin"></i>
+            }
+          </button>
+
+        </form>
+
+        <div class="signup-section">
+          <span>Don't have an account?</span>
+          <a routerLink="/auth/register">Create account</a>
+        </div>
+
+        <div class="secure-note">
+          <i class="fa-solid fa-shield-halved"></i>
+          Your information is protected and secure.
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</div>

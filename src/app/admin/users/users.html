@@ -1,0 +1,289 @@
+
+<div class="us-page">
+
+  <!-- Page heading -->
+  <div class="us-heading">
+    <div>
+      <span class="us-eyebrow">
+        <i class="fa-solid fa-users"></i>
+        ACCOUNT MANAGEMENT
+      </span>
+      <h1>Users</h1>
+      <p>Manage customer and provider accounts across your platform.</p>
+    </div>
+
+    <div class="us-count-card">
+      <span class="us-count-icon">
+        <i class="fa-solid fa-user-group"></i>
+      </span>
+      <div>
+        <strong>{{ items().length }}</strong>
+        <small>Accounts shown</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search and filters -->
+  <div class="us-filter-card">
+    <div class="us-search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input
+        type="search"
+        placeholder="Search by name, email or phone..."
+        [(ngModel)]="q"
+        (keyup.enter)="load()"
+      />
+    </div>
+
+    <div class="us-select">
+      <i class="fa-solid fa-user-tag"></i>
+      <select [ngModel]="role" (ngModelChange)="role = $event; load()" aria-label="Filter by role">
+        <option value="">All roles</option>
+        <option value="customer">Customers</option>
+        <option value="provider">Providers</option>
+      </select>
+      <i class="fa-solid fa-chevron-down arrow"></i>
+    </div>
+
+    <div class="us-select">
+      <i class="fa-solid fa-filter"></i>
+      <select [ngModel]="status" (ngModelChange)="status = $event; load()" aria-label="Filter by status">
+        <option value="">Any status</option>
+        <option value="active">Active</option>
+        <option value="pending">Pending</option>
+        <option value="blocked">Blocked</option>
+      </select>
+      <i class="fa-solid fa-chevron-down arrow"></i>
+    </div>
+
+    <button type="button" class="us-search-btn" (click)="load()" [disabled]="loading()">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      Search
+    </button>
+  </div>
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="us-alert">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="us-loading">
+      <app-loader />
+    </div>
+  } @else if (items().length === 0) {
+
+    <!-- Empty state -->
+    <div class="us-empty">
+      <div class="us-empty-icon">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <h3>No users found</h3>
+      <p>We couldn't find any accounts matching your search or filters.</p>
+      <button type="button" (click)="q = ''; role = ''; status = ''; load()">
+        <i class="fa-solid fa-rotate-left"></i>
+        Clear filters
+      </button>
+    </div>
+
+  } @else {
+
+    <!-- Table -->
+    <div class="us-table-card">
+
+      <div class="us-table-heading">
+        <div>
+          <h3>All accounts</h3>
+          <p>View account details and manage access.</p>
+        </div>
+        <span class="us-result-count">{{ items().length }} results</span>
+      </div>
+
+      <div class="us-table-scroll">
+        <table class="us-table">
+          <thead>
+            <tr>
+              <th>USER DETAILS</th>
+              <th>ROLE</th>
+              <th>ACCOUNT STATUS</th>
+              <th>BOOKINGS</th>
+              <th>JOINED DATE</th>
+              <th class="text-right">ACTION</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (u of items(); track u.id) {
+              <tr>
+                <!-- User -->
+                <td>
+                  <div class="us-user">
+                    <div class="us-avatar" [attr.data-role]="u.role">
+                      {{ u.name.charAt(0).toUpperCase() }}
+                    </div>
+
+                    <div class="us-user-info">
+                      <strong>{{ u.name }}</strong>
+                      <span>
+                        <i class="fa-regular fa-envelope"></i>
+                        {{ u.email }}
+                      </span>
+                      <span>
+                        <i class="fa-solid fa-phone"></i>
+                        {{ u.phone || 'No phone number' }}
+                      </span>
+
+                      @if (u.providerProfile) {
+                        <span class="us-provider-meta">
+                          <i class="fa-solid fa-briefcase"></i>
+                          {{ u.providerProfile.category.name }} · {{ u.providerProfile.city }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Role -->
+                <td>
+                  <span class="us-role" [attr.data-role]="u.role">
+                    @if (u.role === 'provider') {
+                      <i class="fa-solid fa-briefcase"></i>
+                    } @else {
+                      <i class="fa-solid fa-user"></i>
+                    }
+                    {{ u.role }}
+                  </span>
+                </td>
+
+                <!-- Status -->
+                <td>
+                  <span class="us-status" [attr.data-status]="u.status">
+                    <span class="us-status-dot"></span>
+                    {{ u.status }}
+                  </span>
+                </td>
+
+                <!-- Bookings -->
+                <td>
+                  <div class="us-bookings">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <strong>{{ bookings(u) }}</strong>
+                  </div>
+                </td>
+
+                <!-- Joined -->
+                <td>
+                  <div class="us-date">
+                    <i class="fa-regular fa-calendar"></i>
+                    {{ u.createdAt | date: 'd MMM y' }}
+                  </div>
+                </td>
+
+                <!-- Action -->
+                <td class="text-right">
+                  <button
+                    type="button"
+                    class="us-action-btn"
+                    [class.unblock]="u.status === 'blocked'"
+                    [class.block]="u.status !== 'blocked'"
+                    [disabled]="busyId() === u.id"
+                    (click)="toggle(u)">
+
+                    @if (busyId() === u.id) {
+                      <i class="fa-solid fa-spinner fa-spin"></i>
+                      Processing
+                    } @else if (u.status === 'blocked') {
+                      <i class="fa-solid fa-unlock"></i>
+                      Unblock
+                    } @else {
+                      <i class="fa-solid fa-ban"></i>
+                      Block
+                    }
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile account cards -->
+      <div class="us-mobile-list">
+        @for (u of items(); track u.id) {
+          <article class="us-mobile-card">
+
+            <div class="us-mobile-top">
+              <div class="us-user">
+                <div class="us-avatar" [attr.data-role]="u.role">
+                  {{ u.name.charAt(0).toUpperCase() }}
+                </div>
+                <div class="us-user-info">
+                  <strong>{{ u.name }}</strong>
+                  <span>{{ u.email }}</span>
+                </div>
+              </div>
+
+              <span class="us-status" [attr.data-status]="u.status">
+                <span class="us-status-dot"></span>
+                {{ u.status }}
+              </span>
+            </div>
+
+            <div class="us-mobile-details">
+              <div>
+                <small>Phone</small>
+                <strong>{{ u.phone || 'Not provided' }}</strong>
+              </div>
+              <div>
+                <small>Role</small>
+                <strong>{{ u.role }}</strong>
+              </div>
+              <div>
+                <small>Bookings</small>
+                <strong>{{ bookings(u) }}</strong>
+              </div>
+              <div>
+                <small>Joined</small>
+                <strong>{{ u.createdAt | date: 'd MMM y' }}</strong>
+              </div>
+
+              @if (u.providerProfile) {
+                <div class="full">
+                  <small>Provider details</small>
+                  <strong>{{ u.providerProfile.category.name }} · {{ u.providerProfile.city }}</strong>
+                </div>
+              }
+            </div>
+
+            <button
+              type="button"
+              class="us-action-btn mobile-action"
+              [class.unblock]="u.status === 'blocked'"
+              [class.block]="u.status !== 'blocked'"
+              [disabled]="busyId() === u.id"
+              (click)="toggle(u)">
+
+              @if (busyId() === u.id) {
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Processing
+              } @else if (u.status === 'blocked') {
+                <i class="fa-solid fa-unlock"></i>
+                Unblock account
+              } @else {
+                <i class="fa-solid fa-ban"></i>
+                Block account
+              }
+            </button>
+
+          </article>
+        }
+      </div>
+
+    </div>
+  }
+
+</div>

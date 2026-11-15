@@ -1,0 +1,15 @@
+@use '../cu';
+@include cu.page-head;
+@include cu.card;
+@include cu.buttons;
+@include cu.fields;
+@include cu.alerts;
+
+:host { display: block; }
+.box { max-width: 480px; margin: 10px auto; h1 { margin: 0; font-size: 22px; text-align: center; } }
+.for { text-align: center; color: var(--cu-muted); margin: 6px 0 18px; font-size: 14px; }
+.stars { display: flex; justify-content: center; gap: 4px; }
+.star { background: none; border: 0; padding: 0 4px; font-size: 44px; line-height: 1; color: #dee2e6; cursor: pointer; transition: transform .1s;
+  &:hover { transform: scale(1.15); } &.on { color: #fab005; } }
+.lbl { text-align: center; height: 22px; margin: 4px 0 16px; font-weight: 600; color: var(--cu-muted); }
+.cu-form { margin-bottom: 16px; }

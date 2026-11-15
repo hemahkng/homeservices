@@ -1,0 +1,66 @@
+<a class="pv-link-text back" routerLink="/provider/requests">← Back to requests</a>
+
+@if (loading()) {
+  <app-loader />
+} @else if (b(); as j) {
+  <div class="pv-head">
+    <div>
+      <h1>{{ j.service.title }}</h1>
+      <p>Booking #{{ j.id }}</p>
+    </div>
+    <app-status-badge [status]="j.status" />
+  </div>
+
+  @if (error()) { <div class="pv-alert error">{{ error() }}</div> }
+
+  @if (j.status === 'rejected' || j.status === 'cancelled') {
+    <div class="pv-alert error">This booking was {{ j.status }}.</div>
+  } @else {
+    <div class="pv-card timeline">
+      @for (s of steps; track s; let i = $index) {
+        <div class="step" [class.done]="i <= stepIndex()" [class.current]="i === stepIndex()">
+          <span class="dot">{{ i < stepIndex() || (i === stepIndex() && j.status === 'completed') ? '✓' : i + 1 }}</span>
+          <span class="lbl">{{ s }}</span>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="grid">
+    <div class="pv-card">
+      <h2>Schedule &amp; location</h2>
+      <div class="row"><span>Date</span><b>{{ j.scheduledAt | date: 'EEEE, d MMM y' }}</b></div>
+      <div class="row"><span>Time</span><b>{{ j.scheduledAt | date: 'h:mm a' }} – {{ endsAt() | date: 'h:mm a' }}</b></div>
+      <div class="row"><span>Address</span><b>{{ j.address }}</b></div>
+      <a class="pv-btn ghost sm map" [href]="mapUrl()" target="_blank" rel="noopener">📍 Open in Maps</a>
+      @if (j.notes) { <div class="notes"><span>Customer notes</span><p>{{ j.notes }}</p></div> }
+    </div>
+
+    <div class="pv-card">
+      <h2>Customer</h2>
+      <div class="row"><span>Name</span><b>{{ j.customer.name }}</b></div>
+      <div class="row"><span>Phone</span><b>{{ j.customer.phone || 'Not provided' }}</b></div>
+      @if (j.customer.phone) { <a class="pv-btn ghost sm map" [href]="'tel:' + j.customer.phone">📞 Call customer</a> }
+    </div>
+
+    <div class="pv-card">
+      <h2>Payment</h2>
+      <div class="row"><span>Amount</span><b class="amt">₹{{ j.total | number }}</b></div>
+      <div class="row">
+        <span>Status</span>
+        <b [class.paid]="j.payment?.status === 'paid'">{{ j.payment?.status === 'paid' ? 'Paid ✓' : 'Not paid yet' }}</b>
+      </div>
+      @if (j.review) { <div class="row"><span>Customer rating</span><b>{{ j.review.rating }} ★</b></div> }
+    </div>
+  </div>
+
+  @if (acts().length) {
+    <div class="bar">
+      @for (d of acts(); track d.action) {
+        <button type="button" class="pv-btn" [class.danger]="d.kind === 'danger'" [disabled]="busy()" (click)="run(d)">{{ d.label }}</button>
+      }
+    </div>
+  }
+} @else if (error()) {
+  <div class="pv-alert error">{{ error() }}</div>
+}

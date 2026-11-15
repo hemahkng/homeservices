@@ -1,0 +1,148 @@
+
+<div class="category-form-page">
+
+  <a class="back-link" routerLink="/admin/categories">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span>Back to categories</span>
+  </a>
+
+  <div class="page-heading">
+    <div>
+      <span class="eyebrow">CATEGORY MANAGEMENT</span>
+      <h1>{{ id ? 'Edit category' : 'Create category' }}</h1>
+      <p>
+        {{ id
+          ? 'Update the category details and visibility.'
+          : 'Add a new service category to your marketplace.' }}
+      </p>
+    </div>
+
+    <div class="heading-icon">
+      <i class="fa-solid fa-layer-group"></i>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="form-alert">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  <div class="form-layout">
+
+    <section class="form-card">
+      <div class="card-heading">
+        <div>
+          <h2>Category details</h2>
+          <p>Enter the information for this service category.</p>
+        </div>
+        <span class="required-note">* Required</span>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+
+        <div class="field-group">
+          <label for="name">
+            Category name <span>*</span>
+          </label>
+
+          <div class="input-wrap">
+            <i class="fa-solid fa-tag"></i>
+            <input
+              id="name"
+              type="text"
+              formControlName="name"
+              placeholder="e.g. Pest control"
+              maxlength="50"
+            />
+          </div>
+
+          @if (form.controls.name.touched && form.controls.name.invalid) {
+            <span class="field-error">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              Enter a name between 2 and 50 characters.
+            </span>
+          } @else {
+            <span class="field-hint">Choose a short, clear name customers can understand.</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label for="icon">Category icon</label>
+
+          <div class="input-wrap">
+            <i class="fa-regular fa-face-smile"></i>
+            <input
+              id="icon"
+              type="text"
+              maxlength="8"
+              formControlName="icon"
+              placeholder="🐜"
+            />
+          </div>
+
+          <span class="field-hint">
+            Optional. Add an emoji to represent this category. Leave empty to use the default icon.
+          </span>
+        </div>
+
+        @if (id) {
+          <div class="visibility-box">
+            <div class="visibility-icon">
+              <i class="fa-solid fa-eye"></i>
+            </div>
+
+            <div class="visibility-content">
+              <strong>Category visibility</strong>
+              <span>Control whether this category is available to customers and providers.</span>
+            </div>
+
+            <label class="switch">
+              <input type="checkbox" formControlName="isActive" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        }
+
+        <div class="form-actions">
+          <a class="cancel-btn" routerLink="/admin/categories">
+            Cancel
+          </a>
+
+          <button type="submit" class="save-btn" [disabled]="loading()">
+            @if (loading()) {
+              <i class="fa-solid fa-spinner fa-spin"></i>
+              Saving...
+            } @else {
+              <i class="fa-solid fa-check"></i>
+              {{ id ? 'Save changes' : 'Create category' }}
+            }
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+    <aside class="preview-card">
+      <span class="preview-label">PREVIEW</span>
+
+      <div class="preview-icon">
+        {{ form.controls.icon.value || '✦' }}
+      </div>
+
+      <h3>{{ form.controls.name.value || 'Category name' }}</h3>
+      <p>This is how your category information will appear.</p>
+
+      <div class="preview-divider"></div>
+
+      <div class="preview-info">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>
+          Keep category names simple and recognizable so customers can easily find the service they need.
+        </span>
+      </div>
+    </aside>
+
+  </div>
+</div>

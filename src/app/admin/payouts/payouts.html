@@ -1,0 +1,362 @@
+
+<div class="payout-page">
+
+  <!-- Header -->
+  <div class="payout-header">
+    <div>
+      <div class="eyebrow">
+        <i class="fa-solid fa-building-columns"></i>
+        FINANCE MANAGEMENT
+      </div>
+      <h1>Provider Payouts</h1>
+      <p>Manage provider earnings, outstanding balances and payout transactions.</p>
+    </div>
+
+    <div class="header-icon">
+      <i class="fa-solid fa-money-bill-transfer"></i>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card">
+      <app-loader />
+    </div>
+  } @else {
+
+    <!-- Summary -->
+    <div class="summary-grid">
+
+      <div class="summary-card due-card">
+        <div class="summary-top">
+          <div class="summary-icon">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+          <span class="summary-label">TOTAL OUTSTANDING</span>
+        </div>
+
+        <div class="summary-value">₹{{ totalDue() | number }}</div>
+
+        <div class="summary-note">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+          Pending provider settlements
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-top">
+          <div class="summary-icon green">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <span class="summary-label">ALREADY PAID OUT</span>
+        </div>
+
+        <div class="summary-value">₹{{ totalPaidOut() | number }}</div>
+
+        <div class="summary-note">
+          Successfully recorded payouts
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-top">
+          <div class="summary-icon blue">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <span class="summary-label">PROVIDERS WITH EARNINGS</span>
+        </div>
+
+        <div class="summary-value">{{ balances().length }}</div>
+
+        <div class="summary-note">
+          Providers in the earnings ledger
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Important Notice -->
+    <div class="payout-notice">
+      <div class="notice-icon">
+        <i class="fa-solid fa-circle-info"></i>
+      </div>
+      <div class="notice-content">
+        <strong>Manual payout recording</strong>
+        <p>
+          Transfer the amount to the provider using bank transfer or UPI.
+          Once the transfer is completed, record the payout here with its
+          transaction reference number.
+        </p>
+      </div>
+    </div>
+
+    @if (ok()) {
+      <div class="feedback success">
+        <i class="fa-solid fa-circle-check"></i>
+        {{ ok() }}
+      </div>
+    }
+
+    @if (error()) {
+      <div class="feedback error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{ error() }}
+      </div>
+    }
+
+    <!-- Provider Earnings -->
+    <section class="content-section">
+
+      <div class="section-header">
+        <div>
+          <h2>Provider earnings</h2>
+          <p>Review commissions, net earnings and pending payouts.</p>
+        </div>
+
+        <div class="section-count">
+          <i class="fa-solid fa-users"></i>
+          {{ balances().length }} providers
+        </div>
+      </div>
+
+      @if (balances().length === 0) {
+
+        <div class="empty-container">
+          <app-empty-state
+            icon="🏦"
+            title="No provider earnings yet"
+            text="Provider balances will appear here after customers complete payments." />
+        </div>
+
+      } @else {
+
+        <div class="table-container">
+          <div class="table-scroll">
+            <table class="payout-table">
+              <thead>
+                <tr>
+                  <th>PROVIDER</th>
+                  <th class="numeric">GROSS EARNINGS</th>
+                  <th class="numeric">COMMISSION</th>
+                  <th class="numeric">NET EARNED</th>
+                  <th class="numeric">PAID OUT</th>
+                  <th class="numeric">BALANCE DUE</th>
+                  <th class="action-column">ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (r of balances(); track r.providerId) {
+
+                  <tr>
+                    <td>
+                      <div class="provider-cell">
+                        <div class="provider-avatar">
+                          {{ r.name.charAt(0) }}
+                        </div>
+
+                        <div class="provider-info">
+                          <strong>{{ r.name }}</strong>
+                          <span>{{ r.email }}</span>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td class="numeric">
+                      <span class="money-text">₹{{ r.gross | number }}</span>
+                    </td>
+
+                    <td class="numeric">
+                      <span class="commission-text">−₹{{ r.fee | number }}</span>
+                    </td>
+
+                    <td class="numeric">
+                      <strong class="money-text">₹{{ r.net | number }}</strong>
+                    </td>
+
+                    <td class="numeric">
+                      <span class="paid-text">₹{{ r.paidOut | number }}</span>
+                    </td>
+
+                    <td class="numeric">
+                      <div class="due-cell">
+                        <strong [class.has-due]="r.due > 0">
+                          ₹{{ r.due | number }}
+                        </strong>
+                        <span>{{ r.due > 0 ? 'Pending' : 'Settled' }}</span>
+                      </div>
+                    </td>
+
+                    <td class="action-column">
+                      <button
+                        type="button"
+                        class="record-button"
+                        [disabled]="r.due <= 0"
+                        (click)="openPay(r)">
+                        <i class="fa-solid fa-plus"></i>
+                        Record payout
+                      </button>
+                    </td>
+                  </tr>
+
+                  @if (payingId() === r.providerId) {
+                    <tr class="form-row">
+                      <td colspan="7">
+
+                        <div class="payout-form">
+
+                          <div class="form-heading">
+                            <div class="form-heading-icon">
+                              <i class="fa-solid fa-money-bill-transfer"></i>
+                            </div>
+
+                            <div>
+                              <strong>Record provider payout</strong>
+                              <span>{{ r.name }} · Outstanding ₹{{ r.due | number }}</span>
+                            </div>
+                          </div>
+
+                          <div class="form-fields">
+
+                            <div class="form-field amount-field">
+                              <label for="amt">Payout amount</label>
+                              <div class="input-with-prefix">
+                                <span>₹</span>
+                                <input
+                                  id="amt"
+                                  type="number"
+                                  min="1"
+                                  [max]="r.due"
+                                  [(ngModel)]="amount"
+                                  placeholder="Enter amount" />
+                              </div>
+                            </div>
+
+                            <div class="form-field reference-field">
+                              <label for="ref">Transaction reference</label>
+                              <input
+                                id="ref"
+                                type="text"
+                                maxlength="100"
+                                [(ngModel)]="reference"
+                                placeholder="UPI ID / Bank transaction ID" />
+                            </div>
+
+                            <div class="form-actions">
+                              <button
+                                type="button"
+                                class="confirm-button"
+                                [disabled]="saving()"
+                                (click)="submit(r)">
+                                @if (saving()) {
+                                  <i class="fa-solid fa-spinner fa-spin"></i>
+                                  Saving...
+                                } @else {
+                                  <i class="fa-solid fa-check"></i>
+                                  Confirm payout
+                                }
+                              </button>
+
+                              <button
+                                type="button"
+                                class="cancel-button"
+                                (click)="payingId.set(null)">
+                                Cancel
+                              </button>
+                            </div>
+
+                          </div>
+                        </div>
+
+                      </td>
+                    </tr>
+                  }
+
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+    </section>
+
+    <!-- Payout History -->
+    <section class="content-section history-section">
+
+      <div class="section-header">
+        <div>
+          <h2>Payout history</h2>
+          <p>Previously recorded provider transfers.</p>
+        </div>
+
+        <div class="history-icon">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+      </div>
+
+      @if (history().length === 0) {
+
+        <div class="history-empty">
+          <div class="history-empty-icon">
+            <i class="fa-solid fa-receipt"></i>
+          </div>
+          <strong>No payouts recorded yet</strong>
+          <span>Completed payout records will appear here.</span>
+        </div>
+
+      } @else {
+
+        <div class="table-container">
+          <div class="table-scroll">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>DATE & TIME</th>
+                  <th>PROVIDER</th>
+                  <th>TRANSACTION REFERENCE</th>
+                  <th class="numeric">AMOUNT PAID</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (h of history(); track h.id) {
+                  <tr>
+                    <td>
+                      <div class="history-date">
+                        <strong>{{ h.createdAt | date: 'd MMM y' }}</strong>
+                        <span>{{ h.createdAt | date: 'h:mm a' }}</span>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="history-provider">
+                        <div class="small-avatar">
+                          {{ h.provider.name.charAt(0) }}
+                        </div>
+                        <strong>{{ h.provider.name }}</strong>
+                      </div>
+                    </td>
+
+                    <td>
+                      <span class="reference-value">
+                        <i class="fa-solid fa-hashtag"></i>
+                        {{ h.reference || '—' }}
+                      </span>
+                    </td>
+
+                    <td class="numeric">
+                      <strong class="history-amount">
+                        ₹{{ h.amount | number }}
+                      </strong>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      }
+    </section>
+
+  }
+</div>

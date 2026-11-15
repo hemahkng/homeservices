@@ -1,0 +1,1 @@
+import{Ca as o,Va as a,Wa as s,fb as n}from"./chunk-76P4NMAR.js";import"./chunk-2VMXMS7J.js";var p=class e{static \u0275fac=function(t){return new(t||e)};static \u0275cmp=o({type:e,selectors:[["app-payouts"]],decls:2,vars:0,template:function(t,m){t&1&&(a(0,"p"),n(1,"payouts works!"),s())},encapsulation:2})};export{p as Payouts};

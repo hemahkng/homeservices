@@ -1,0 +1,177 @@
+
+<div class="availability-page">
+
+  <div class="availability-heading">
+    <div>
+      <span class="eyebrow">BUSINESS SETTINGS</span>
+      <h1>Availability</h1>
+      <p>Manage the days and hours when customers can book your services.</p>
+    </div>
+
+    <div class="heading-icon">
+      <i class="fa-regular fa-calendar-check"></i>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <app-loader />
+  } @else {
+
+    @if (error()) {
+      <div class="availability-alert error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{ error() }}
+      </div>
+    }
+
+    @if (saved()) {
+      <div class="availability-alert success">
+        <i class="fa-solid fa-circle-check"></i>
+        Schedule saved successfully.
+      </div>
+    }
+
+    <!-- Weekly summary -->
+    <div class="availability-summary">
+      <div class="summary-icon">
+        <i class="fa-solid fa-calendar-week"></i>
+      </div>
+      <div class="summary-content">
+        <strong>{{ openDays }} of 7 days available</strong>
+        <span>Your weekly booking availability</span>
+      </div>
+      <div class="summary-progress">
+        <div class="progress-track">
+          <div class="progress-value" [style.width.%]="(openDays / 7) * 100"></div>
+        </div>
+        <span>{{ openDays }}/7 days</span>
+      </div>
+    </div>
+
+    <!-- Schedule card -->
+    <section class="schedule-card">
+
+      <div class="schedule-header">
+        <div>
+          <h2>Weekly schedule</h2>
+          <p>Turn on the days you want to accept bookings.</p>
+        </div>
+
+        <button
+          type="button"
+          class="copy-btn"
+          [disabled]="openDays === 0"
+          (click)="copyToAll()"
+        >
+          <i class="fa-regular fa-copy"></i>
+          <span>Copy first day's hours</span>
+        </button>
+      </div>
+
+      <div class="schedule-list">
+
+        @for (r of rows; track r.dayOfWeek) {
+          <div class="schedule-day" [class.is-closed]="!r.isActive">
+
+            <div class="day-toggle">
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="r.isActive"
+                  [attr.aria-label]="r.name + ' available'"
+                />
+                <span class="track"></span>
+              </label>
+            </div>
+
+            <div class="day-details">
+              <div class="day-name">{{ r.name }}</div>
+              <span class="day-status" [class.closed]="!r.isActive">
+                <span class="status-dot"></span>
+                {{ r.isActive ? 'Available' : 'Day off' }}
+              </span>
+            </div>
+
+            @if (r.isActive) {
+              <div class="time-controls">
+
+                <div class="time-field">
+                  <label>START TIME</label>
+                  <div class="time-input">
+                    <i class="fa-regular fa-clock"></i>
+                    <input
+                      type="time"
+                      [(ngModel)]="r.startTime"
+                      [attr.aria-label]="r.name + ' start time'"
+                    />
+                  </div>
+                </div>
+
+                <span class="time-separator">to</span>
+
+                <div class="time-field">
+                  <label>END TIME</label>
+                  <div class="time-input">
+                    <i class="fa-regular fa-clock"></i>
+                    <input
+                      type="time"
+                      [(ngModel)]="r.endTime"
+                      [attr.aria-label]="r.name + ' end time'"
+                    />
+                  </div>
+                </div>
+
+              </div>
+            } @else {
+              <div class="closed-message">
+                <i class="fa-solid fa-moon"></i>
+                Not accepting bookings
+              </div>
+            }
+
+          </div>
+        }
+
+      </div>
+
+      <div class="schedule-footer">
+        <div class="footer-info">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Remember to save your changes after updating your schedule.</span>
+        </div>
+
+        <button
+          type="button"
+          class="save-btn"
+          [disabled]="saving()"
+          (click)="save()"
+        >
+          @if (saving()) {
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Saving...
+          } @else {
+            <i class="fa-solid fa-floppy-disk"></i>
+            Save schedule
+          }
+        </button>
+      </div>
+
+    </section>
+
+    <!-- Booking information -->
+    <div class="booking-note">
+      <div class="note-icon">
+        <i class="fa-solid fa-lightbulb"></i>
+      </div>
+      <div>
+        <strong>How booking availability works</strong>
+        <p>
+          A booking must fit completely within your working hours.
+          The selected time range must also accommodate the full service duration.
+          Customers cannot book outside your configured availability.
+        </p>
+      </div>
+    </div>
+
+  }
+</div>

@@ -1,0 +1,279 @@
+
+<a class="cu-booking-back" routerLink="/customer/my-bookings">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back to my bookings
+</a>
+
+@if (loading()) {
+  <app-loader />
+} @else if (b(); as j) {
+
+  <!-- Page heading -->
+  <div class="cu-booking-header">
+    <div class="cu-booking-heading">
+      <span class="cu-booking-eyebrow">BOOKING DETAILS</span>
+      <h1>{{ j.service.title }}</h1>
+      <div class="cu-booking-reference">
+        <span>Booking ID</span>
+        <b>#{{ j.id }}</b>
+      </div>
+    </div>
+
+    <div class="cu-booking-header-status">
+      <app-status-badge [status]="j.status" />
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="cu-alert error">{{ error() }}</div>
+  }
+
+  <!-- Booking status messages -->
+  @if (j.status === 'rejected') {
+    <div class="cu-booking-message rejected">
+      <div class="cu-booking-message-icon">
+        <i class="fa-solid fa-circle-exclamation"></i>
+      </div>
+      <div>
+        <b>Booking request declined</b>
+        <p>The provider could not take this booking. You can book another provider.</p>
+      </div>
+    </div>
+  } @else if (j.status === 'cancelled') {
+    <div class="cu-booking-message cancelled">
+      <div class="cu-booking-message-icon">
+        <i class="fa-solid fa-ban"></i>
+      </div>
+      <div>
+        <b>Booking cancelled</b>
+        <p>This booking has been cancelled.</p>
+      </div>
+    </div>
+  } @else {
+
+    <!-- Booking progress -->
+    <section class="cu-booking-progress">
+      <div class="cu-booking-section-heading">
+        <div>
+          <span class="cu-booking-eyebrow">TRACK YOUR SERVICE</span>
+          <h2>Booking progress</h2>
+          <p>Follow each step of your service booking.</p>
+        </div>
+        <div class="cu-booking-progress-icon">
+          <i class="fa-solid fa-route"></i>
+        </div>
+      </div>
+
+      <div class="cu-booking-timeline">
+        @for (s of steps; track s; let i = $index) {
+          <div class="cu-booking-step"
+               [class.done]="i <= stepIndex()"
+               [class.current]="i === stepIndex()">
+
+            <div class="cu-booking-step-marker">
+              @if (i < stepIndex() || (i === stepIndex() && j.status === 'completed')) {
+                <i class="fa-solid fa-check"></i>
+              } @else {
+                <span>{{ i + 1 }}</span>
+              }
+            </div>
+
+            <span class="cu-booking-step-label">{{ s }}</span>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- Information cards -->
+  <div class="cu-booking-info-grid">
+
+    <!-- Schedule -->
+    <section class="cu-booking-info-card">
+      <div class="cu-booking-card-heading">
+        <div class="cu-booking-card-icon green">
+          <i class="fa-regular fa-calendar-days"></i>
+        </div>
+        <div>
+          <h2>Schedule &amp; location</h2>
+          <p>When and where your service happens</p>
+        </div>
+      </div>
+
+      <div class="cu-booking-details">
+        <div class="cu-booking-detail-row">
+          <span class="cu-booking-detail-label">
+            <i class="fa-regular fa-calendar"></i>
+            Date
+          </span>
+          <b>{{ j.scheduledAt | date: 'EEEE, d MMM y' }}</b>
+        </div>
+
+        <div class="cu-booking-detail-row">
+          <span class="cu-booking-detail-label">
+            <i class="fa-regular fa-clock"></i>
+            Time
+          </span>
+          <b>{{ j.scheduledAt | date: 'h:mm a' }} – {{ endsAt() | date: 'h:mm a' }}</b>
+        </div>
+
+        <div class="cu-booking-detail-row vertical">
+          <span class="cu-booking-detail-label">
+            <i class="fa-solid fa-location-dot"></i>
+            Service address
+          </span>
+          <b>{{ j.address }}</b>
+        </div>
+
+        @if (j.notes) {
+          <div class="cu-booking-detail-row vertical">
+            <span class="cu-booking-detail-label">
+              <i class="fa-regular fa-note-sticky"></i>
+              Your notes
+            </span>
+            <b>{{ j.notes }}</b>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Provider -->
+    <section class="cu-booking-info-card">
+      <div class="cu-booking-card-heading">
+        <div class="cu-booking-card-icon blue">
+          <i class="fa-solid fa-user-tie"></i>
+        </div>
+        <div>
+          <h2>Your provider</h2>
+          <p>Professional handling your booking</p>
+        </div>
+      </div>
+
+      <div class="cu-booking-provider">
+        <div class="cu-booking-provider-avatar">
+          {{ j.provider.name.charAt(0).toUpperCase() }}
+        </div>
+
+        <div class="cu-booking-provider-info">
+          <b>{{ j.provider.name }}</b>
+          <span>Service provider</span>
+        </div>
+      </div>
+
+      <div class="cu-booking-details">
+        <div class="cu-booking-detail-row">
+          <span class="cu-booking-detail-label">
+            <i class="fa-solid fa-phone"></i>
+            Phone
+          </span>
+          <b>{{ j.provider.phone || 'Not provided' }}</b>
+        </div>
+      </div>
+
+      <div class="cu-booking-provider-actions">
+        @if (j.provider.phone && (j.status === 'accepted' || j.status === 'in_progress')) {
+          <a class="cu-booking-secondary-btn"
+             [href]="'tel:' + j.provider.phone">
+            <i class="fa-solid fa-phone"></i>
+            Call provider
+          </a>
+        }
+
+        <a class="cu-booking-secondary-btn"
+           [routerLink]="['/customer/providers', j.provider.id]">
+          <i class="fa-regular fa-user"></i>
+          View profile
+        </a>
+      </div>
+    </section>
+
+    <!-- Payment -->
+    <section class="cu-booking-info-card">
+      <div class="cu-booking-card-heading">
+        <div class="cu-booking-card-icon orange">
+          <i class="fa-solid fa-wallet"></i>
+        </div>
+        <div>
+          <h2>Payment summary</h2>
+          <p>Your booking payment information</p>
+        </div>
+      </div>
+
+      <div class="cu-booking-total">
+        <span>Total amount</span>
+        <strong>₹{{ j.total | number }}</strong>
+      </div>
+
+      <div class="cu-booking-details">
+        <div class="cu-booking-detail-row">
+          <span class="cu-booking-detail-label">
+            <i class="fa-solid fa-receipt"></i>
+            Payment status
+          </span>
+
+          <b [class.paid]="j.payment?.status === 'paid'"
+             [class.unpaid]="j.payment?.status !== 'paid'">
+            @if (j.payment?.status === 'paid') {
+              <i class="fa-solid fa-circle-check"></i>
+              Paid
+            } @else {
+              Not paid yet
+            }
+          </b>
+        </div>
+
+        @if (j.review) {
+          <div class="cu-booking-detail-row">
+            <span class="cu-booking-detail-label">
+              <i class="fa-regular fa-star"></i>
+              Your rating
+            </span>
+            <b class="cu-booking-rating">{{ j.review.rating }} ★</b>
+          </div>
+        }
+      </div>
+    </section>
+  </div>
+
+  <!-- Actions -->
+  @if (canPay(j) || canRate(j) || canCancel(j)) {
+    <section class="cu-booking-actions">
+      <div class="cu-booking-actions-info">
+        <b>Manage your booking</b>
+        <p>Choose an action for this booking.</p>
+      </div>
+
+      <div class="cu-booking-action-buttons">
+        @if (canCancel(j)) {
+          <button type="button"
+                  class="cu-booking-cancel-btn"
+                  [disabled]="busy()"
+                  (click)="cancel()">
+            <i class="fa-solid fa-xmark"></i>
+            {{ busy() ? 'Cancelling...' : 'Cancel booking' }}
+          </button>
+        }
+
+        @if (canRate(j)) {
+          <a class="cu-booking-review-btn"
+             [routerLink]="['/customer/review', j.id]">
+            <i class="fa-solid fa-star"></i>
+            Rate this service
+          </a>
+        }
+
+        @if (canPay(j)) {
+          <a class="cu-booking-pay-btn"
+             [routerLink]="['/customer/payment', j.id]">
+            <i class="fa-solid fa-lock"></i>
+            Pay ₹{{ j.total | number }}
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        }
+      </div>
+    </section>
+  }
+
+} @else if (error()) {
+  <div class="cu-alert error">{{ error() }}</div>
+}

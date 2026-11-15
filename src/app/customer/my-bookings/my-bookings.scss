@@ -1,0 +1,624 @@
+
+@use '../cu';
+
+@include cu.page-head;
+@include cu.card;
+@include cu.buttons;
+@include cu.alerts;
+
+:host {
+  display: block;
+
+  --bk-primary: #18765d;
+  --bk-primary-dark: #105b47;
+  --bk-ink: #24352c;
+  --bk-muted: #87938b;
+  --bk-border: #e9eeea;
+  --bk-bg: #f7f9f6;
+}
+
+/* Page */
+
+.cu-bookings-page {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  color: var(--bk-ink);
+}
+
+/* Header */
+
+.cu-bookings-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 27px;
+
+  h1 {
+    margin: 8px 0 5px;
+    color: var(--bk-ink);
+    font-size: 29px;
+    font-weight: 850;
+    letter-spacing: -1px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--bk-muted);
+    font-size: 12px;
+  }
+}
+
+.cu-bookings-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--bk-primary);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.5px;
+}
+
+.cu-bookings-browse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 17px;
+  border-radius: 9px;
+  background: var(--bk-primary);
+  color: #fff;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
+  transition: .2s;
+
+  &:hover {
+    background: var(--bk-primary-dark);
+    transform: translateY(-1px);
+  }
+}
+
+/* Tabs */
+
+.cu-bookings-tabs {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  overflow-x: auto;
+  padding: 5px 2px 13px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--bk-border);
+  scrollbar-width: thin;
+}
+
+.cu-bookings-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #77847b;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: .2s;
+
+  &:hover {
+    background: #f1f6f1;
+    color: var(--bk-primary);
+  }
+
+  &.active {
+    border-color: #dcebe0;
+    background: #edf5ed;
+    color: var(--bk-primary);
+  }
+}
+
+.cu-bookings-count {
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 6px;
+  background: #edf0ed;
+  color: #78847c;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.cu-bookings-tab.active .cu-bookings-count {
+  background: var(--bk-primary);
+  color: #fff;
+}
+
+/* Results heading */
+
+.cu-bookings-results-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 17px;
+
+  h2 {
+    margin: 0 0 5px;
+    color: var(--bk-ink);
+    font-size: 17px;
+    font-weight: 850;
+    letter-spacing: -.4px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--bk-muted);
+    font-size: 11px;
+  }
+}
+
+.cu-bookings-results-count {
+  padding: 7px 11px;
+  border: 1px solid var(--bk-border);
+  border-radius: 7px;
+  background: #fff;
+  color: #77847b;
+  font-size: 10px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+/* Booking list */
+
+.cu-bookings-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr));
+  gap: 16px;
+}
+
+/* Booking card */
+
+.cu-booking-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--bk-border);
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(31, 63, 42, .025);
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+
+  &:hover {
+    border-color: #cddfd0;
+    box-shadow: 0 9px 25px rgba(31, 63, 42, .07);
+    transform: translateY(-2px);
+  }
+}
+
+/* Card top */
+
+.cu-booking-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 17px;
+  border-bottom: 1px solid #f0f2ef;
+}
+
+.cu-booking-service {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+}
+
+.cu-booking-service-icon {
+  display: grid;
+  place-items: center;
+  width: 49px;
+  height: 49px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  background: #edf5ed;
+  color: var(--bk-primary);
+  font-size: 21px;
+}
+
+.cu-booking-title {
+  min-width: 0;
+
+  h3 {
+    overflow: hidden;
+    margin: 5px 0;
+    color: var(--bk-ink);
+    font-size: 15px;
+    font-weight: 850;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    color: var(--bk-muted);
+    font-size: 10px;
+
+    i {
+      color: #91a197;
+    }
+  }
+}
+
+.cu-booking-reference {
+  color: #a0aaa2;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 1px;
+}
+
+.cu-booking-status {
+  flex-shrink: 0;
+}
+
+/* Appointment information */
+
+.cu-booking-information {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 18px 0;
+}
+
+.cu-booking-info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+
+  > div {
+    min-width: 0;
+  }
+
+  small {
+    display: block;
+    margin-bottom: 5px;
+    color: #a0aaa2;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .7px;
+  }
+
+  strong {
+    display: block;
+    overflow-wrap: anywhere;
+    color: #405047;
+    font-size: 10px;
+    font-weight: 750;
+    line-height: 1.5;
+  }
+}
+
+.cu-booking-info-icon {
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  font-size: 13px;
+
+  &.date {
+    background: #eaf2ff;
+    color: #5684c4;
+  }
+
+  &.time {
+    background: #fff4e5;
+    color: #d49b40;
+  }
+
+  &.location {
+    background: #f1edff;
+    color: #8470c7;
+  }
+}
+
+.cu-booking-info-item.address {
+  grid-column: 1 / -1;
+}
+
+/* Footer */
+
+.cu-booking-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f2ef;
+}
+
+.cu-booking-payment {
+  flex-shrink: 0;
+
+  > small {
+    display: block;
+    margin-bottom: 6px;
+    color: #9aa49d;
+    font-size: 8px;
+    font-weight: 850;
+    letter-spacing: .8px;
+  }
+}
+
+.cu-booking-amount {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  > strong {
+    color: var(--bk-ink);
+    font-size: 19px;
+    font-weight: 850;
+    letter-spacing: -.5px;
+  }
+}
+
+.cu-booking-paid {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: #eaf6ed;
+  color: #258052;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.cu-booking-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.cu-booking-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: .2s;
+
+  &:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+  }
+
+  &.secondary {
+    border-color: #e6ece7;
+    background: #fff;
+    color: #64736a;
+
+    &:hover {
+      border-color: #a9cbb3;
+      background: #f4f8f4;
+      color: var(--bk-primary);
+    }
+  }
+
+  &.primary {
+    background: var(--bk-primary);
+    color: #fff;
+
+    &:hover {
+      background: var(--bk-primary-dark);
+    }
+  }
+
+  &.review {
+    background: #fff6e7;
+    color: #bb852b;
+
+    &:hover {
+      background: #ffedcf;
+    }
+  }
+
+  &.cancel {
+    border-color: #f2dddd;
+    background: #fff;
+    color: #c45b5b;
+
+    &:hover:not(:disabled) {
+      background: #fff0f0;
+      border-color: #e8bebe;
+    }
+  }
+}
+
+/* Loading, error and empty */
+
+.cu-bookings-loading {
+  display: flex;
+  justify-content: center;
+  min-height: 180px;
+  padding: 45px 0;
+}
+
+.cu-bookings-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.cu-bookings-empty {
+  padding: 35px 15px;
+  border: 1px dashed #dce5dc;
+  border-radius: 15px;
+  background: #fff;
+  text-align: center;
+}
+
+.cu-bookings-empty-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 17px;
+  margin-top: 12px;
+  border-radius: 8px;
+  background: var(--bk-primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 750;
+  text-decoration: none;
+  transition: .2s;
+
+  &:hover {
+    background: var(--bk-primary-dark);
+  }
+}
+
+/* Tablet */
+
+@media (max-width: 850px) {
+  .cu-bookings-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .cu-bookings-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+
+    h1 {
+      font-size: 25px;
+    }
+  }
+
+  .cu-bookings-browse {
+    min-height: 38px;
+    font-size: 10px;
+  }
+
+  .cu-bookings-tabs {
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+
+  .cu-bookings-tab {
+    min-height: 37px;
+    padding: 0 11px;
+    font-size: 10px;
+  }
+
+  .cu-bookings-results-heading {
+    h2 {
+      font-size: 15px;
+    }
+  }
+
+  .cu-booking-card {
+    padding: 15px;
+  }
+
+  .cu-booking-top {
+    gap: 8px;
+  }
+
+  .cu-booking-service {
+    gap: 9px;
+  }
+
+  .cu-booking-service-icon {
+    width: 41px;
+    height: 41px;
+    font-size: 17px;
+  }
+
+  .cu-booking-title h3 {
+    max-width: 190px;
+    font-size: 13px;
+  }
+
+  .cu-booking-information {
+    gap: 14px 8px;
+  }
+
+  .cu-booking-info-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 11px;
+  }
+
+  .cu-booking-info-item strong {
+    font-size: 9px;
+  }
+
+  .cu-booking-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cu-booking-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .cu-booking-btn {
+    min-height: 35px;
+    padding: 0 10px;
+    font-size: 9px;
+  }
+}
+
+/* Small mobile */
+
+@media (max-width: 380px) {
+  .cu-booking-top {
+    flex-direction: column;
+  }
+
+  .cu-booking-information {
+    grid-template-columns: 1fr;
+  }
+
+  .cu-booking-info-item.address {
+    grid-column: auto;
+  }
+
+  .cu-booking-actions {
+    gap: 6px;
+  }
+}

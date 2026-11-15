@@ -1,0 +1,318 @@
+
+<div class="dashboard">
+
+  <!-- PAGE HEADER -->
+  <div class="ad-head">
+    <div>
+      <div class="ad-eyebrow">
+        <span class="ad-live-dot"></span>
+        ADMIN OVERVIEW
+      </div>
+      <h1>Dashboard</h1>
+      <p>Welcome back, {{ auth.currentUser()?.name }}. Here's what's happening with your platform.</p>
+    </div>
+
+    <div class="ad-head-date">
+      <i class="fa-regular fa-calendar"></i>
+      Platform overview
+    </div>
+  </div>
+
+  @if (loading()) {
+    <app-loader />
+  } @else if (error()) {
+    <div class="ad-alert error">{{ error() }}</div>
+  } @else if (stats(); as s) {
+
+    <!-- APPROVAL ALERT -->
+    @if (s.pendingProviders > 0) {
+      <div class="approval-alert">
+        <div class="approval-icon">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <div class="approval-content">
+          <strong>{{ s.pendingProviders }} provider{{ s.pendingProviders === 1 ? '' : 's' }} awaiting approval</strong>
+          <span>Review applications and approve eligible service providers.</span>
+        </div>
+        <a routerLink="/admin/provider-approvals">
+          Review applications
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    }
+
+    <!-- KPI CARDS -->
+    <div class="section-heading">
+      <div>
+        <h2>Platform statistics</h2>
+        <p>Key numbers at a glance</p>
+      </div>
+    </div>
+
+    <div class="kpis">
+
+      <a class="kpi" routerLink="/admin/users">
+        <div class="kpi-top">
+          <span class="kpi-icon blue">
+            <i class="fa-solid fa-users"></i>
+          </span>
+          <span class="kpi-caption">CUSTOMERS</span>
+        </div>
+        <div class="kpi-value">{{ s.customers | number }}</div>
+        <div class="kpi-footer">
+          <span>Registered customers</span>
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </div>
+      </a>
+
+      <a class="kpi" routerLink="/admin/provider-approvals">
+        <div class="kpi-top">
+          <span class="kpi-icon violet">
+            <i class="fa-solid fa-user-gear"></i>
+          </span>
+          <span class="kpi-caption">PROVIDERS</span>
+        </div>
+        <div class="kpi-value">{{ s.providers | number }}</div>
+        <div class="kpi-footer">
+          <span>Active providers</span>
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </div>
+      </a>
+
+      <a class="kpi" routerLink="/admin/provider-approvals">
+        <div class="kpi-top">
+          <span class="kpi-icon amber">
+            <i class="fa-solid fa-hourglass-half"></i>
+          </span>
+          <span class="kpi-caption">PENDING APPROVALS</span>
+        </div>
+        <div class="kpi-value">{{ s.pendingProviders | number }}</div>
+        <div class="kpi-footer">
+          <span>Need your attention</span>
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </div>
+      </a>
+
+      <a class="kpi" routerLink="/admin/bookings">
+        <div class="kpi-top">
+          <span class="kpi-icon cyan">
+            <i class="fa-solid fa-calendar-check"></i>
+          </span>
+          <span class="kpi-caption">TOTAL BOOKINGS</span>
+        </div>
+        <div class="kpi-value">{{ total() | number }}</div>
+        <div class="kpi-footer">
+          <span>All platform bookings</span>
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </div>
+      </a>
+
+      <a class="kpi" routerLink="/admin/payments">
+        <div class="kpi-top">
+          <span class="kpi-icon green">
+            <i class="fa-solid fa-indian-rupee-sign"></i>
+          </span>
+          <span class="kpi-caption">CUSTOMER REVENUE</span>
+        </div>
+        <div class="kpi-value">₹{{ s.revenue | number }}</div>
+        <div class="kpi-footer">
+          <span>Successfully paid</span>
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </div>
+      </a>
+
+      <a class="kpi" routerLink="/admin/reports">
+        <div class="kpi-top">
+          <span class="kpi-icon orange">
+            <i class="fa-solid fa-percent"></i>
+          </span>
+          <span class="kpi-caption">COMMISSION</span>
+        </div>
+        <div class="kpi-value">₹{{ s.commission | number }}</div>
+        <div class="kpi-footer">
+          <span>{{ s.commissionPercent }}% platform commission</span>
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- CHARTS -->
+    <div class="section-heading chart-heading">
+      <div>
+        <h2>Booking analytics</h2>
+        <p>Understand your platform activity</p>
+      </div>
+    </div>
+
+    <div class="analytics-grid">
+
+      <div class="ad-card booking-chart-card">
+        <div class="card-heading">
+          <div>
+            <h3>Bookings overview</h3>
+            <p>Daily bookings for the last 7 days</p>
+          </div>
+          <span class="card-icon">
+            <i class="fa-solid fa-chart-column"></i>
+          </span>
+        </div>
+
+        <div class="chart">
+          @for (p of s.series; track p.date) {
+            <div class="chart-col">
+              <span class="chart-value">{{ p.count }}</span>
+              <div class="chart-bar-area">
+                <div
+                  class="bar"
+                  [style.height.%]="(p.count / maxBar()) * 100"
+                  [class.empty-bar]="p.count === 0"
+                ></div>
+              </div>
+              <span class="chart-label">{{ p.label }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="ad-card status-card">
+        <div class="card-heading">
+          <div>
+            <h3>Booking status</h3>
+            <p>Distribution by current status</p>
+          </div>
+          <span class="card-icon">
+            <i class="fa-solid fa-chart-bar"></i>
+          </span>
+        </div>
+
+        <div class="status-list">
+          @for (r of rows(); track r.key) {
+            <div class="status-row">
+              <div class="status-top">
+                <span class="status-name">
+                  <span class="status-dot" [attr.data-s]="r.key"></span>
+                  {{ r.label }}
+                </span>
+                <strong>{{ r.n }}</strong>
+              </div>
+              <div class="track">
+                <div
+                  class="fill"
+                  [attr.data-s]="r.key"
+                  [style.width.%]="r.pct"
+                ></div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RECENT ACTIVITY -->
+    <div class="section-heading activity-heading">
+      <div>
+        <h2>Platform activity</h2>
+        <p>Recent bookings and provider applications</p>
+      </div>
+    </div>
+
+    <div class="activity-grid">
+
+      <!-- RECENT BOOKINGS -->
+      <div class="ad-card activity-card">
+        <div class="card-heading">
+          <div>
+            <h3>Recent bookings</h3>
+            <p>Latest customer service requests</p>
+          </div>
+          <a class="view-link" routerLink="/admin/bookings">
+            View all <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
+        @if (s.recent.length === 0) {
+          <div class="empty-state">
+            <i class="fa-regular fa-calendar"></i>
+            <strong>No bookings yet</strong>
+            <span>New bookings will appear here.</span>
+          </div>
+        }
+
+        <div class="booking-list">
+          @for (b of s.recent; track b.id) {
+            <a class="booking-item" [routerLink]="['/admin/bookings', b.id]">
+              <div class="booking-symbol">
+                <i class="fa-solid fa-calendar-check"></i>
+              </div>
+
+              <div class="booking-info">
+                <strong>#{{ b.id }} · {{ b.service.title }}</strong>
+                <span>{{ b.customer.name }} → {{ b.provider.name }}</span>
+                <small>
+                  <i class="fa-regular fa-clock"></i>
+                  {{ b.scheduledAt | date: 'd MMM, h:mm a' }}
+                </small>
+              </div>
+
+              <div class="booking-end">
+                <strong>₹{{ b.total | number }}</strong>
+                <app-status-badge [status]="b.status" />
+              </div>
+            </a>
+          }
+        </div>
+      </div>
+
+      <!-- PENDING PROVIDERS -->
+      <div class="ad-card activity-card">
+        <div class="card-heading">
+          <div>
+            <h3>Provider applications</h3>
+            <p>Waiting for admin review</p>
+          </div>
+          <a class="view-link" routerLink="/admin/provider-approvals">
+            View all <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
+        @if (s.pendingList.length === 0) {
+          <div class="empty-state">
+            <i class="fa-solid fa-circle-check"></i>
+            <strong>All caught up!</strong>
+            <span>There are no pending provider applications.</span>
+          </div>
+        }
+
+        <div class="provider-list">
+          @for (p of s.pendingList; track p.id) {
+            <a class="provider-item" routerLink="/admin/provider-approvals">
+              <span class="provider-avatar">
+                {{ p.name.charAt(0).toUpperCase() }}
+              </span>
+
+              <div class="provider-info">
+                <strong>{{ p.name }}</strong>
+                <span>
+                  {{ p.providerProfile?.category?.name }} ·
+                  {{ p.providerProfile?.city }}
+                </span>
+                <small>
+                  <i class="fa-regular fa-clock"></i>
+                  Applied {{ p.createdAt | date: 'd MMM' }}
+                </small>
+              </div>
+
+              <span class="review-icon">
+                <i class="fa-solid fa-chevron-right"></i>
+              </span>
+            </a>
+          }
+        </div>
+      </div>
+
+    </div>
+  }
+
+</div>

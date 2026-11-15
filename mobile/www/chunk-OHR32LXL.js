@@ -1,0 +1,1 @@
+import{Ca as a,Va as e,Wa as l,fb as n}from"./chunk-76P4NMAR.js";import"./chunk-2VMXMS7J.js";var o=class t{static \u0275fac=function(i){return new(i||t)};static \u0275cmp=a({type:t,selectors:[["app-availability"]],decls:2,vars:0,template:function(i,p){i&1&&(e(0,"p"),n(1,"availability works!"),l())},encapsulation:2})};export{o as Availability};

@@ -1,0 +1,575 @@
+
+:host {
+  --ad-primary: #5b5ce2;
+  --ad-primary-dark: #4849c7;
+  --ad-primary-light: #eef0ff;
+
+  --ad-sidebar: #171a2e;
+  --ad-sidebar-hover: #252943;
+
+  --ad-bg: #f6f7fb;
+  --ad-ink: #20243a;
+  --ad-muted: #8990a5;
+  --ad-line: #eaecf2;
+  --ad-card: #fff;
+  --ad-danger: #df5050;
+
+  display: block;
+  min-height: 100vh;
+  background: var(--ad-bg);
+  color: var(--ad-ink);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.ad-shell,
+.ad-shell * {
+  box-sizing: border-box;
+}
+
+.ad-shell {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ==================================
+   SIDEBAR
+================================== */
+
+.ad-side {
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+
+  position: sticky;
+  top: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 25px 17px 16px;
+
+  background: var(--ad-sidebar);
+  color: #fff;
+
+  z-index: 30;
+  overflow: hidden;
+}
+
+.ad-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 0 7px 30px;
+  flex-shrink: 0;
+}
+
+.ad-logo {
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 13px;
+  background: linear-gradient(135deg, #7778ff, #5152d7);
+
+  color: #fff;
+  font-size: 19px;
+
+  box-shadow: 0 5px 15px rgba(91, 92, 226, .3);
+}
+
+.ad-brand-text {
+  flex: 1;
+  min-width: 0;
+
+  b {
+    display: block;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 750;
+    letter-spacing: -.4px;
+  }
+
+  small {
+    display: block;
+    margin-top: 4px;
+    color: #858ba6;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+}
+
+.ad-close {
+  display: none;
+}
+
+/* ==================================
+   NAVIGATION
+================================== */
+
+.ad-section-label {
+  padding: 0 11px 12px;
+
+  color: #747b98;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.ad-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  flex: 1;
+  min-height: 0;
+
+  overflow-y: auto;
+  padding-bottom: 15px;
+
+  scrollbar-width: thin;
+  scrollbar-color: #454963 transparent;
+}
+
+.ad-link {
+  min-height: 47px;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  padding: 0 12px;
+
+  border-radius: 10px;
+
+  color: #a9aec3;
+  font-size: 13px;
+  font-weight: 550;
+  text-decoration: none;
+
+  transition: all .2s ease;
+
+  &:hover {
+    color: #fff;
+    background: var(--ad-sidebar-hover);
+  }
+
+  &.active {
+    background: linear-gradient(100deg, #5b5ce2, #6566e9);
+    color: #fff;
+
+    box-shadow: 0 5px 14px rgba(91, 92, 226, .22);
+
+    .ad-ico {
+      color: #fff;
+    }
+
+    .ad-arrow {
+      opacity: .8;
+    }
+  }
+}
+
+.ad-ico {
+  width: 21px;
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  color: #858ca9;
+  font-size: 15px;
+}
+
+.ad-link-label {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.ad-arrow {
+  color: #c0c4d4;
+  font-size: 9px;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.ad-count {
+  min-width: 21px;
+  height: 21px;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0 6px;
+  border-radius: 20px;
+
+  background: #f05b72;
+  color: #fff;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+/* ==================================
+   SIDEBAR BOTTOM
+================================== */
+
+.ad-sidebar-bottom {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.ad-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 13px 9px 3px;
+
+  border-top: 1px solid #34374d;
+  background: transparent;
+}
+
+.ad-avatar {
+  width: 37px;
+  height: 37px;
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 11px;
+  background: linear-gradient(135deg, #7778f6, #4546ba);
+
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.ad-user-info {
+  min-width: 0;
+  flex: 1;
+
+  b {
+    display: block;
+    overflow: hidden;
+
+    color: #fff;
+    font-size: 12px;
+    font-weight: 650;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  small {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    margin-top: 4px;
+
+    color: #9298ae;
+    font-size: 10px;
+
+    span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #35c58b;
+    }
+  }
+}
+
+.ad-logout {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: transparent;
+  color: #9298ae;
+
+  cursor: pointer;
+  transition: all .2s;
+
+  &:hover {
+    background: #4a2937;
+    color: #ff7185;
+  }
+}
+
+/* ==================================
+   MAIN AREA
+================================== */
+
+.ad-main {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+}
+
+/* ==================================
+   TOP HEADER
+================================== */
+
+.ad-top {
+  min-height: 76px;
+  padding: 0 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: #fff;
+  border-bottom: 1px solid var(--ad-line);
+}
+
+.ad-top-left,
+.ad-top-right {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.ad-page-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 12px;
+
+  span {
+    color: #9298ae;
+  }
+
+  i {
+    color: #747b98;
+    font-size: 9px;
+  }
+
+  b {
+    color: #344054;
+    font-weight: 700;
+  }
+}
+
+.ad-top-right {
+  gap: 12px;
+}
+
+.ad-admin-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 7px 11px;
+
+  border: 1px solid #e9edf3;
+  border-radius: 8px;
+
+  background: #fff;
+  color: #687589;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  i {
+    color: #5b5ce2;
+  }
+}
+
+.top-avatar {
+  width: 35px;
+  height: 35px;
+  font-size: 13px;
+}
+
+.ad-menu {
+  display: none;
+}
+
+/* ==================================
+   CONTENT
+================================== */
+
+.ad-page {
+  width: 100%;
+  max-width: 1500px;
+
+  flex: 1;
+  min-height: calc(100vh - 76px);
+
+  margin: 0 auto;
+  padding: 32px 35px;
+}
+
+/* ==================================
+   OVERLAY
+================================== */
+
+.ad-overlay {
+  display: none;
+}
+
+/* ==================================
+   TABLET
+================================== */
+
+@media (max-width: 1100px) and (min-width: 901px) {
+  .ad-side {
+    width: 235px;
+    min-width: 235px;
+  }
+
+  .ad-top {
+    padding: 0 22px;
+  }
+
+  .ad-page {
+    padding: 25px 22px;
+  }
+}
+
+/* ==================================
+   MOBILE / TABLET SIDEBAR
+================================== */
+
+@media (max-width: 900px) {
+
+  .ad-side {
+    width: 280px;
+    min-width: 280px;
+    height: 100dvh;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+
+    box-shadow: none;
+    z-index: 50;
+  }
+
+  .ad-side.open {
+    transform: translateX(0);
+    box-shadow: 10px 0 40px rgba(0, 0, 0, .3);
+  }
+
+  .ad-brand {
+    padding-bottom: 26px;
+  }
+
+  .ad-close {
+    width: 30px;
+    height: 30px;
+
+    display: grid;
+    place-items: center;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: #292d46;
+    color: #fff;
+
+    cursor: pointer;
+  }
+
+  /* Overlay */
+
+  .ad-overlay {
+    display: block;
+
+    position: fixed;
+    inset: 0;
+
+    z-index: 40;
+
+    background: rgba(12, 16, 35, .55);
+    backdrop-filter: blur(3px);
+  }
+
+  /* Mobile header */
+
+  .ad-top {
+    min-height: 65px;
+    padding: 0 17px;
+
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .ad-menu {
+    width: 39px;
+    height: 39px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid var(--ad-line);
+    border-radius: 10px;
+
+    background: #fff;
+    color: var(--ad-ink);
+
+    font-size: 17px;
+    cursor: pointer;
+  }
+
+  .ad-admin-label {
+    display: none;
+  }
+
+  .ad-page {
+    min-height: calc(100vh - 65px);
+    padding: 23px 18px 35px;
+  }
+}
+
+/* ==================================
+   SMALL MOBILE
+================================== */
+
+@media (max-width: 480px) {
+
+  .ad-side {
+    width: min(280px, 85vw);
+    min-width: 0;
+  }
+
+  .ad-page {
+    padding: 18px 13px 30px;
+  }
+
+  .ad-top {
+    padding: 0 13px;
+  }
+
+  .ad-page-heading {
+    gap: 7px;
+    font-size: 11px;
+  }
+
+  .top-avatar {
+    width: 33px;
+    height: 33px;
+  }
+}

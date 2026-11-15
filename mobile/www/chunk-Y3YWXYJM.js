@@ -1,0 +1,1 @@
+import{Ca as e,Va as i,Wa as t,fb as m}from"./chunk-76P4NMAR.js";import"./chunk-2VMXMS7J.js";var r=class n{static \u0275fac=function(o){return new(o||n)};static \u0275cmp=e({type:n,selectors:[["app-booking-confirm"]],decls:2,vars:0,template:function(o,s){o&1&&(i(0,"p"),m(1,"booking-confirm works!"),t())},encapsulation:2})};export{r as BookingConfirm};

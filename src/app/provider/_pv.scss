@@ -1,0 +1,59 @@
+@mixin page-head {
+  .pv-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap; margin-bottom: 22px;
+    h1 { margin: 0; font-size: 26px; letter-spacing: -.02em; }
+    p { margin: 4px 0 0; color: var(--pv-muted); font-size: 14px; }
+  }
+}
+
+@mixin card {
+  .pv-card {
+    background: var(--pv-card); border: 1px solid var(--pv-line);
+    border-radius: var(--pv-radius); box-shadow: var(--pv-shadow); padding: 20px;
+    h2 { margin: 0 0 14px; font-size: 16px; }
+  }
+}
+
+@mixin buttons {
+  a, a:hover { text-decoration: none; }
+  .pv-link-text { color: var(--pv-primary); font-weight: 600; font-size: 14px; }
+  .pv-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 10px 16px; border: 1px solid transparent; border-radius: 10px;
+    font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+    background: var(--pv-primary); color: #fff; transition: background .15s, transform .05s;
+    &:hover { background: var(--pv-primary-dark); }
+    &:active { transform: translateY(1px); }
+    &:disabled { opacity: .55; cursor: not-allowed; }
+    &.ghost { background: #fff; color: var(--pv-ink); border-color: var(--pv-line); &:hover { background: var(--pv-bg); } }
+    &.danger { background: #fff; color: var(--pv-danger); border-color: #ffc9c9; &:hover { background: #fff5f5; } }
+    &.sm { padding: 7px 12px; font-size: 13px; }
+    &.block { width: 100%; }
+  }
+}
+
+@mixin fields {
+  .pv-form { display: block; max-width: none; margin: 0; padding: 0; background: transparent; box-shadow: none; border-radius: 0; }
+  .pv-field {
+    display: flex; flex-direction: column; gap: 6px;
+    label { font-size: 13px; font-weight: 600; }
+    input, select, textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--pv-line); border-radius: 10px;
+      font: inherit; font-size: 14px; background: #fff; color: var(--pv-ink);
+      &:focus { outline: none; border-color: var(--pv-primary); box-shadow: 0 0 0 3px var(--pv-primary-soft); }
+      &:disabled { background: var(--pv-bg); color: var(--pv-muted); }
+    }
+    textarea { resize: vertical; }
+    .hint { font-size: 12px; color: var(--pv-muted); }
+    .err { font-size: 12px; color: var(--pv-danger); }
+  }
+}
+
+@mixin alerts {
+  .pv-alert {
+    padding: 10px 14px; border-radius: 10px; font-size: 14px; margin-bottom: 14px;
+    &.error { background: #fff5f5; color: #c92a2a; border: 1px solid #ffc9c9; }
+    &.ok { background: #ebfbee; color: #2b8a3e; border: 1px solid #b2f2bb; }
+  }
+}

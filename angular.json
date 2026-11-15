@@ -18,10 +18,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
-            "outputPath": {
-              "base": "mobile/www",
-              "browser": ""
-            },
+            "outputPath": "dist/home-services-app",
             "polyfills": [
               "zone.js"
             ],

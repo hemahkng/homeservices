@@ -36,18 +36,22 @@ jobs:
       - name: Build Angular
         run: npm run build -- --base-href=/homeservices/
 
+      - name: Show build output
+        run: |
+          echo "Generated files:"
+          find dist -name index.html -print
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist/home-services-app/browser
 
   deploy:
+    runs-on: ubuntu-latest
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
-    runs-on: ubuntu-latest
-    needs: build
 
     steps:
       - name: Deploy to GitHub Pages

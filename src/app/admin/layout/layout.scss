@@ -304,6 +304,8 @@
   cursor: pointer;
   transition: all .2s;
 
+  padding: 0 !important;
+
   &:hover {
     background: #4a2937;
     color: #ff7185;
@@ -490,6 +492,7 @@
     color: #fff;
 
     cursor: pointer;
+    padding: 0;
   }
 
   /* Overlay */
@@ -532,6 +535,7 @@
 
     font-size: 17px;
     cursor: pointer;
+    padding: 0;
   }
 
   .ad-admin-label {

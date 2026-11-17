@@ -1,4 +1,3 @@
-
 <div class="payments-page">
 
   <!-- Page Header -->
@@ -17,190 +16,396 @@
     </div>
   </div>
 
+  <!-- Loading -->
   @if (loading()) {
-    <div class="state-card">
-      <app-loader />
-    </div>
-  } @else if (error()) {
-    <div class="payment-error">
-      <i class="fa-solid fa-circle-exclamation"></i>
-      <span>{{ error() }}</span>
-    </div>
-  } @else if (data(); as d) {
-
-    <!-- Summary Cards -->
-    <div class="summary-grid">
-
-      <div class="summary-card received">
-        <div class="summary-top">
-          <div class="summary-icon">
-            <i class="fa-solid fa-indian-rupee-sign"></i>
-          </div>
-          <span class="summary-label">TOTAL RECEIVED</span>
-        </div>
-        <div class="summary-value">₹{{ d.paidTotal | number }}</div>
-        <div class="summary-description">
-          <i class="fa-solid fa-circle-check"></i>
-          Successfully collected
-        </div>
-      </div>
-
-      <div class="summary-card">
-        <div class="summary-top">
-          <div class="summary-icon green">
-            <i class="fa-solid fa-check-double"></i>
-          </div>
-          <span class="summary-label">SUCCESSFUL PAYMENTS</span>
-        </div>
-        <div class="summary-value">{{ d.paidCount }}</div>
-        <div class="summary-description">
-          Payments completed successfully
-        </div>
-      </div>
-
-      <div class="summary-card">
-        <div class="summary-top">
-          <div class="summary-icon orange">
-            <i class="fa-solid fa-clock"></i>
-          </div>
-          <span class="summary-label">NOT COMPLETED</span>
-        </div>
-        <div class="summary-value">{{ d.pendingCount }}</div>
-        <div class="summary-description">
-          Awaiting payment completion
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Transactions Section -->
-    <section class="transactions-section">
-
-      <div class="section-heading">
-        <div>
-          <h2>Transaction history</h2>
-          <p>View and manage all customer payment attempts.</p>
-        </div>
-
-        <div class="transaction-count">
-          <i class="fa-solid fa-receipt"></i>
-          {{ visible().length }} transactions
-        </div>
-      </div>
-
-      <!-- Filters -->
-      <div class="filter-bar">
-        <div class="filter-tabs">
-          @for (t of tabs; track t.key) {
-            <button
-              type="button"
-              class="filter-tab"
-              [class.active]="tab() === t.key"
-              (click)="tab.set(t.key)">
-              {{ t.label }}
-            </button>
-          }
-        </div>
-      </div>
-
-      @if (visible().length === 0) {
-        <div class="empty-wrapper">
-          <app-empty-state
-            icon="💳"
-            title="No payments found"
-            text="Payment transactions will appear here once customers make a payment." />
-        </div>
-      } @else {
-
-        <div class="table-container">
-          <div class="table-scroll">
-            <table class="payments-table">
-              <thead>
-                <tr>
-                  <th>TRANSACTION DATE</th>
-                  <th>BOOKING</th>
-                  <th>CUSTOMER</th>
-                  <th>PROVIDER</th>
-                  <th>TRANSACTION ID</th>
-                  <th class="amount-column">AMOUNT</th>
-                  <th>STATUS</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                @for (p of visible(); track p.id) {
-                  <tr>
-                    <td>
-                      <div class="date-cell">
-                        <span class="date-main">
-                          {{ (p.paidAt || p.createdAt) | date: 'd MMM y' }}
-                        </span>
-                        <span class="date-time">
-                          <i class="fa-regular fa-clock"></i>
-                          {{ (p.paidAt || p.createdAt) | date: 'h:mm a' }}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td>
-                      <div class="booking-cell">
-                        <a [routerLink]="['/admin/bookings', p.booking.id]">
-                          #{{ p.booking.id }}
-                          <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                        </a>
-                        <span>{{ p.booking.service.title }}</span>
-                      </div>
-                    </td>
-
-                    <td>
-                      <div class="person-cell">
-                        <div class="person-avatar customer-avatar">
-                          {{ p.booking.customer.name.charAt(0) }}
-                        </div>
-                        <span>{{ p.booking.customer.name }}</span>
-                      </div>
-                    </td>
-
-                    <td>
-                      <div class="person-cell">
-                        <div class="person-avatar provider-avatar">
-                          {{ p.booking.provider.name.charAt(0) }}
-                        </div>
-                        <span>{{ p.booking.provider.name }}</span>
-                      </div>
-                    </td>
-
-                    <td>
-                      <span class="transaction-id">
-                        {{ p.txnId || '—' }}
-                      </span>
-                    </td>
-
-                    <td class="amount-column">
-                      <span class="amount-value">
-                        ₹{{ p.amount | number }}
-                      </span>
-                    </td>
-
-                    <td>
-                      <span
-                        class="payment-status"
-                        [attr.data-status]="p.status === 'paid' ? 'paid' : 'pending'">
-                        <i
-                          class="fa-solid"
-                          [class.fa-circle-check]="p.status === 'paid'"
-                          [class.fa-clock]="p.status !== 'paid'">
-                        </i>
-                        {{ p.status === 'paid' ? 'Paid' : 'Not completed' }}
-                      </span>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        </div>
-      }
-    </section>
+  <div class="state-card">
+    <app-loader />
+  </div>
   }
+
+  <!-- Error -->
+  @else if (error()) {
+  <div class="payment-error">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <span>{{ error() }}</span>
+  </div>
+  }
+
+  @else if (data(); as d) {
+
+  <!-- Summary Cards -->
+  <div class="summary-grid">
+
+    <div class="summary-card received">
+      <div class="summary-top">
+        <div class="summary-icon">
+          <i class="fa-solid fa-indian-rupee-sign"></i>
+        </div>
+        <span class="summary-label">TOTAL RECEIVED</span>
+      </div>
+
+      <div class="summary-value">
+        ₹{{ d.paidTotal | number }}
+      </div>
+
+      <div class="summary-description">
+        <i class="fa-solid fa-circle-check"></i>
+        Successfully collected
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-top">
+        <div class="summary-icon green">
+          <i class="fa-solid fa-check-double"></i>
+        </div>
+        <span class="summary-label">SUCCESSFUL PAYMENTS</span>
+      </div>
+
+      <div class="summary-value">
+        {{ d.paidCount }}
+      </div>
+
+      <div class="summary-description">
+        Fully paid bookings
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-top">
+        <div class="summary-icon orange">
+          <i class="fa-solid fa-clock"></i>
+        </div>
+        <span class="summary-label">PENDING TRANSACTIONS</span>
+      </div>
+
+      <div class="summary-value">
+        {{ d.pendingCount }}
+      </div>
+
+      <div class="summary-description">
+        Awaiting admin verification
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-top">
+        <div class="summary-icon green">
+          <i class="fa-solid fa-chart-pie"></i>
+        </div>
+        <span class="summary-label">PARTIAL PAYMENTS</span>
+      </div>
+
+      <div class="summary-value">
+        {{ d.partialCount }}
+      </div>
+
+      <div class="summary-description">
+        Bookings with remaining balance
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Verification Success -->
+  @if (actionMessage()) {
+  <div class="payment-success">
+    <i class="fa-solid fa-circle-check"></i>
+    <span>{{ actionMessage() }}</span>
+  </div>
+  }
+
+  <!-- Verification Error -->
+  @if (actionError()) {
+  <div class="payment-error">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <span>{{ actionError() }}</span>
+  </div>
+  }
+
+  <!-- Transactions Section -->
+  <section class="transactions-section">
+
+    <div class="section-heading">
+      <div>
+        <h2>Transaction history</h2>
+        <p>Review and verify individual customer payment transactions.</p>
+      </div>
+
+      <div class="transaction-count">
+        <i class="fa-solid fa-receipt"></i>
+        {{ visible().length }} bookings
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-bar">
+      <div class="filter-tabs">
+
+        @for (t of tabs; track t.key) {
+        <button type="button" class="filter-tab" [class.active]="tab() === t.key" (click)="tab.set(t.key)">
+          {{ t.label }}
+        </button>
+        }
+
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    @if (visible().length === 0) {
+
+    <div class="empty-wrapper">
+      <app-empty-state icon="💳" title="No payments found"
+        text="Payment transactions will appear here once customers make a payment." />
+    </div>
+
+    }
+
+    @else {
+
+    <div class="table-container">
+      <div class="table-scroll">
+
+        <table class="payments-table">
+
+          <thead>
+            <tr>
+              <th>DATE</th>
+              <th>BOOKING</th>
+              <th>CUSTOMER</th>
+              <th>PROVIDER</th>
+              <th>UTR / TRANSACTION ID</th>
+              <th>PAYMENT REFERENCE</th>
+              <th>SUBMITTED</th>
+              <th>VERIFIED</th>
+              <th>TRANSACTION STATUS</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            @for (p of visible(); track p.id) {
+
+            <!-- Individual UTR transactions -->
+            @for (tx of (p.transactions || []); track tx.id) {
+
+            <tr>
+
+              <td>
+                <div class="date-cell">
+                  <span class="date-main">
+                    {{ tx.createdAt | date: 'd MMM y' }}
+                  </span>
+                  <span class="date-time">
+                    <i class="fa-regular fa-clock"></i>
+                    {{ tx.createdAt | date: 'h:mm a' }}
+                  </span>
+                </div>
+              </td>
+
+              <td>
+                <div class="booking-cell">
+                  <a [routerLink]="['/admin/bookings', p.booking.id]">
+                    #{{ p.booking.id }}
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </a>
+                  <span>{{ p.booking.service.title }}</span>
+                </div>
+              </td>
+
+              <td>
+                <div class="person-cell">
+                  <div class="person-avatar customer-avatar">
+                    {{ p.booking.customer.name.charAt(0) }}
+                  </div>
+                  <span>{{ p.booking.customer.name }}</span>
+                </div>
+              </td>
+
+              <td>
+                <div class="person-cell">
+                  <div class="person-avatar provider-avatar">
+                    {{ p.booking.provider.name.charAt(0) }}
+                  </div>
+                  <span>{{ p.booking.provider.name }}</span>
+                </div>
+              </td>
+
+              <!-- UTR -->
+              <td>
+                <span class="transaction-id">
+                  {{ tx.txnId }}
+                </span>
+              </td>
+
+              <!-- Payment Reference -->
+              <td>
+                <span class="transaction-id">
+                  {{ tx.paymentRequest?.reference || p.orderId }}
+                </span>
+              </td>
+
+              <!-- Submitted Amount -->
+              <td>
+                <span class="amount-value">
+                  ₹{{ tx.amount | number }}
+                </span>
+              </td>
+
+              <td>
+                @if (tx.verifiedAmount !== null) {
+                <span class="amount-value">
+                  ₹{{ tx.verifiedAmount | number }}
+                </span>
+                } @else {
+                <span class="waiting-label">Not verified</span>
+                }
+              </td>
+
+              <td>
+                <span class="payment-status" [attr.data-status]="tx.status">
+
+                  @if (tx.status === 'verified') {
+                  <i class="fa-solid fa-circle-check"></i>
+                  Verified
+                  } @else if (tx.status === 'rejected') {
+                  <i class="fa-solid fa-circle-xmark"></i>
+                  Rejected
+                  } @else {
+                  <i class="fa-solid fa-clock"></i>
+                  {{ tx.status }}
+                  }
+
+                </span>
+              </td>
+
+              <td>
+                @if (tx.status === 'submitted') {
+
+                <button type="button" class="verify-btn" [disabled]="verifyingId() === tx.id" (click)="verify(p, tx)">
+
+                  @if (verifyingId() === tx.id) {
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                  Verifying...
+                  } @else {
+                  <i class="fa-solid fa-check"></i>
+                  Verify UTR
+                  }
+
+                </button>
+
+                } @else if (tx.status === 'verified') {
+
+                <span class="verified-label">
+                  <i class="fa-solid fa-circle-check"></i>
+                  Completed
+                </span>
+
+                } @else {
+
+                <span class="waiting-label">
+                  No action
+                </span>
+
+                }
+              </td>
+
+            </tr>
+
+            }
+
+            <!-- Legacy payment without transaction records -->
+            @if (!p.transactions || p.transactions.length === 0) {
+
+            <tr>
+
+              <td>
+                <div class="date-cell">
+                  <span class="date-main">
+                    {{ (p.paidAt || p.createdAt) | date: 'd MMM y' }}
+                  </span>
+                  <span class="date-time">
+                    {{ (p.paidAt || p.createdAt) | date: 'h:mm a' }}
+                  </span>
+                </div>
+              </td>
+
+              <td>
+                <div class="booking-cell">
+                  <a [routerLink]="['/admin/bookings', p.booking.id]">
+                    #{{ p.booking.id }}
+                  </a>
+                  <span>{{ p.booking.service.title }}</span>
+                </div>
+              </td>
+
+              <td>{{ p.booking.customer.name }}</td>
+              <td>{{ p.booking.provider.name }}</td>
+
+              <td>
+                <span class="transaction-id">
+                  {{ p.txnId || '—' }}
+                </span>
+              </td>
+
+              <td>
+                <span class="transaction-id">
+                  {{ p.orderId }}
+                </span>
+              </td>
+
+              <td>₹{{ p.amount | number }}</td>
+              <td>₹{{ p.paidAmount | number }}</td>
+
+              <td>
+                <span class="payment-status" [attr.data-status]="p.status">
+                  {{ p.status }}
+                </span>
+              </td>
+
+              <td>
+                @if (p.status === 'paid') {
+                <span class="verified-label">
+                  <i class="fa-solid fa-circle-check"></i>
+                  Verified
+                </span>
+                } @else {
+                <span class="waiting-label">
+                  No transaction submitted
+                </span>
+                }
+              </td>
+
+            </tr>
+
+            }
+
+            <!-- Payment balance summary -->
+            <tr class="payment-balance-row">
+              <td colspan="10">
+                <strong>Booking #{{ p.booking.id }} summary:</strong>
+                Total ₹{{ p.amount | number }}
+                <span class="balance-separator">|</span>
+                Paid ₹{{ p.paidAmount | number }}
+                <span class="balance-separator">|</span>
+                Remaining ₹{{ (p.amount - p.paidAmount) | number }}
+              </td>
+            </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+    </div>
+
+    }
+
+  </section>
+
+  }
+
 </div>

@@ -1,3 +1,4 @@
+
 <div class="cu-payment">
 
   <a class="cu-payment__back" routerLink="/customer/my-bookings">
@@ -6,269 +7,331 @@
   </a>
 
   @if (loading()) {
-  <div class="cu-payment__loading">
-    <app-loader />
-  </div>
-  } @else if (done()) {
-
-  <div class="cu-payment__container">
-    <div class="cu-payment__success">
-
-      <div class="cu-payment__success-icon">
-        <i class="fa-solid fa-check"></i>
-      </div>
-
-      <h1>Payment completed!</h1>
-
-      <p class="cu-payment__success-text">
-        Your payment has already been verified successfully.
-      </p>
-
-      <div class="cu-payment__success-info">
-        <i class="fa-solid fa-circle-check"></i>
-        Payment verified
-      </div>
-
-      <a routerLink="/customer/my-bookings" class="cu-payment__primary">
-        Back to my bookings
-      </a>
-
+    <div class="cu-payment__loading">
+      <app-loader />
     </div>
-  </div>
+  } @else if (done()) {
+    <div class="cu-payment__container">
+      <div class="cu-payment__success">
+        <div class="cu-payment__success-icon">
+          <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h1>Payment completed!</h1>
+
+        <p class="cu-payment__success-text">
+          Your booking payment has been fully verified.
+        </p>
+
+        <div class="cu-payment__success-info">
+          <i class="fa-solid fa-circle-check"></i>
+          Total paid: ₹{{ paidAmount() }}
+        </div>
+
+        <a routerLink="/customer/my-bookings" class="cu-payment__primary">
+          Back to my bookings
+        </a>
+      </div>
+    </div>
 
   } @else if (booking(); as b) {
 
-  <div class="cu-payment__container">
+    <div class="cu-payment__container">
 
-    <div class="cu-payment__header">
-
-      <div class="cu-payment__header-icon">
-        <i class="fa-solid fa-wallet"></i>
-      </div>
-
-      <span class="cu-payment__eyebrow">
-        SECURE BOOKING PAYMENT
-      </span>
-
-      <h1>Complete your payment</h1>
-
-      <p>
-        Pay using your preferred UPI application.
-      </p>
-
-    </div>
-
-    <div class="cu-payment__card">
-
-      <div class="cu-payment__card-head">
-        <div>
-          <span class="cu-payment__label">
-            BOOKING PAYMENT
-          </span>
-          <h2>Booking #{{ b.id }}</h2>
+      <div class="cu-payment__header">
+        <div class="cu-payment__header-icon">
+          <i class="fa-solid fa-wallet"></i>
         </div>
 
-        <span class="cu-payment__pending">
-          <span></span>
-          Payment pending
+        <span class="cu-payment__eyebrow">
+          SECURE BOOKING PAYMENT
         </span>
+
+        <h1>Complete your payment</h1>
+
+        <p>Pay in full or split your payment into multiple UPI transactions.</p>
       </div>
 
-      <div class="cu-payment__amount">
-        <div>
-          <span>Total amount</span>
-          <small>Booking payment amount</small>
-        </div>
+      <div class="cu-payment__card">
 
-        <strong>₹{{ b.total }}</strong>
-      </div>
-
-      @if (error()) {
-      <div class="cu-payment__error">
-        <i class="fa-solid fa-circle-exclamation"></i>
-        <span>{{ error() }}</span>
-      </div>
-      }
-
-      <div class="cu-upi">
-
-        <div class="cu-upi__heading">
-          <div class="cu-upi__icon">
-            <i class="fa-solid fa-mobile-screen-button"></i>
-          </div>
-
+        <div class="cu-payment__card-head">
           <div>
-            <h3>Pay using UPI</h3>
-            <p>Google Pay, PhonePe, Paytm or any UPI app.</p>
+            <span class="cu-payment__label">BOOKING PAYMENT</span>
+            <h2>Booking #{{ b.id }}</h2>
           </div>
+
+          <span class="cu-payment__pending">
+            <span></span>
+            Balance pending
+          </span>
         </div>
 
-        @if (!upiOrder()) {
-
-        <button type="button" class="cu-payment__primary cu-payment__pay" [disabled]="paying()"
-          (click)="startUpiPayment()">
-
-          @if (paying()) {
-          <i class="fa-solid fa-spinner fa-spin"></i>
-          Preparing payment...
-          } @else {
-          <i class="fa-solid fa-indian-rupee-sign"></i>
-          Generate UPI Payment
-          }
-
-        </button>
-
-        } @else {
-
-        @if (upiOrder(); as order) {
-
-        <div class="cu-upi-details">
-
-          <div class="cu-upi-details__row">
-            <span>Payee name</span>
-            <strong>{{ order.payeeName }}</strong>
+        <div class="cu-payment__amount">
+          <div>
+            <span>Total amount</span>
+            <small>Booking payment amount</small>
           </div>
-
-          <div class="cu-upi-details__row">
-            <span>UPI ID</span>
-            <strong>{{ order.upiId }}</strong>
-          </div>
-
-          <div class="cu-upi-details__row">
-            <span>Amount</span>
-            <strong class="cu-upi__amount">
-              ₹{{ order.amount }}
-            </strong>
-          </div>
-
-          <div class="cu-upi-details__row">
-            <span>Payment reference</span>
-            <strong>{{ order.reference }}</strong>
-          </div>
-
+          <strong>₹{{ totalAmount() }}</strong>
         </div>
 
-        <a class="cu-payment__primary cu-payment__pay" [href]="order.upiUrl" target="_self">
+        <div class="cu-payment__amount">
+          <div>
+            <span>Already verified</span>
+            <small>Amount received and confirmed</small>
+          </div>
+          <strong>₹{{ paidAmount() }}</strong>
+        </div>
 
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          Open UPI App
-        </a>
+        <div class="cu-payment__amount">
+          <div>
+            <span>Remaining balance</span>
+            <small>Amount still payable</small>
+          </div>
+          <strong>₹{{ remainingAmount() }}</strong>
+        </div>
 
-        <p class="cu-upi__instruction">
-          Complete the payment in your UPI app. Return here after
-          payment and enter your transaction ID.
-        </p>
+        @if (error()) {
+          <div class="cu-payment__error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>{{ error() }}</span>
+          </div>
+        }
 
-        <div class="cu-utr">
+        @if (transactions().length > 0) {
+          <div class="cu-upi cu-history">
+            <div class="cu-upi__heading">
+              <div class="cu-upi__icon">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+              </div>
+              <div>
+                <h3>Payment history</h3>
+                <p>Track your submitted UPI transactions.</p>
+              </div>
+            </div>
 
-          @if (!utrSubmitted()) {
+            @for (tx of transactions(); track tx.id) {
+              <div class="cu-upi-details">
+                <div class="cu-upi-details__row">
+                  <span>Transaction ID</span>
+                  <strong>{{ tx.txnId }}</strong>
+                </div>
 
-          <label for="transactionId">
-            UPI transaction ID / UTR
-          </label>
+                <div class="cu-upi-details__row">
+                  <span>Submitted amount</span>
+                  <strong>₹{{ tx.amount }}</strong>
+                </div>
 
-          <input id="transactionId" type="text" [value]="transactionId()"
-            (input)="transactionId.set($any($event.target).value)" placeholder="Enter transaction ID"
-            autocomplete="off" />
+                @if (tx.verifiedAmount !== null) {
+                  <div class="cu-upi-details__row">
+                    <span>Verified amount</span>
+                    <strong>₹{{ tx.verifiedAmount }}</strong>
+                  </div>
+                }
 
-          <button type="button" class="cu-payment__primary cu-payment__pay" [disabled]="submittingUtr()"
-            (click)="submitTransactionId()">
+                <div class="cu-upi-details__row">
+                  <span>Status</span>
+                  <strong>{{ tx.status | titlecase }}</strong>
+                </div>
 
-            @if (submittingUtr()) {
-            <i class="fa-solid fa-spinner fa-spin"></i>
-            Submitting...
-            } @else {
-            <i class="fa-solid fa-paper-plane"></i>
-            Submit Transaction ID
+                <div class="cu-upi-details__row">
+                  <span>Submitted on</span>
+                  <strong>{{ tx.createdAt | date:'medium' }}</strong>
+                </div>
+              </div>
             }
+          </div>
+        }
 
-          </button>
-
-          <p class="cu-utr__note">
-            Submit the transaction ID only after completing
-            the payment.
-          </p>
-
-          } @else {
-
+        @if (utrSubmitted()) {
           <div class="cu-upi__submitted">
-
             <div class="cu-upi__submitted-icon">
               <i class="fa-solid fa-clock"></i>
             </div>
 
-            <h4>Payment verification pending</h4>
-
+            <h4>Payment submitted successfully</h4>
             <p>
-              Your transaction ID has been submitted.
-              Our team will verify the payment and update
-              your booking.
+              Your UTR has been submitted for admin verification.
+              Your verified balance will update after confirmation.
             </p>
-
-            <span>
-              Transaction ID: {{ transactionId() }}
-            </span>
-
+            <span>Transaction ID: {{ transactionId() }}</span>
           </div>
 
-          }
+          <button
+            type="button"
+            class="cu-payment__primary cu-payment__pay"
+            (click)="makeAnotherPayment()">
+            <i class="fa-solid fa-plus"></i>
+            Make another payment
+          </button>
 
+        } @else {
+
+          <div class="cu-upi">
+
+            <div class="cu-upi__heading">
+              <div class="cu-upi__icon">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+              </div>
+              <div>
+                <h3>Pay using UPI</h3>
+                <p>Google Pay, PhonePe, Paytm or any UPI app.</p>
+              </div>
+            </div>
+
+            @if (!upiOrder()) {
+
+              <div class="cu-upi-details">
+                <label for="paymentAmount">Enter payment amount (₹)</label>
+
+                <input
+                  id="paymentAmount"
+                  type="number"
+                  min="1"
+                  [max]="remainingAmount()"
+                  step="1"
+                  [value]="paymentAmount() ?? ''"
+                  (input)="updatePaymentAmount($any($event.target).value)"
+                  placeholder="Enter amount" />
+
+                <small>
+                  You can pay any whole amount up to ₹{{ remainingAmount() }}.
+                </small>
+              </div>
+
+              <button
+                type="button"
+                class="cu-payment__primary cu-payment__pay"
+                [disabled]="paying() || remainingAmount() <= 0"
+                (click)="startUpiPayment()">
+
+                @if (paying()) {
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                  Preparing payment...
+                } @else {
+                  <i class="fa-solid fa-indian-rupee-sign"></i>
+                  Generate UPI Payment
+                }
+              </button>
+
+            } @else {
+
+              @if (upiOrder(); as order) {
+
+                <div class="cu-upi-details">
+                  <div class="cu-upi-details__row">
+                    <span>Payee name</span>
+                    <strong>{{ order.payeeName }}</strong>
+                  </div>
+
+                  <div class="cu-upi-details__row">
+                    <span>UPI ID</span>
+                    <strong>{{ order.upiId }}</strong>
+                  </div>
+
+                  <div class="cu-upi-details__row">
+                    <span>Amount</span>
+                    <strong class="cu-upi__amount">₹{{ order.amount }}</strong>
+                  </div>
+
+                  <div class="cu-upi-details__row">
+                    <span>Payment reference</span>
+                    <strong>{{ order.reference }}</strong>
+                  </div>
+                </div>
+
+                <a
+                  class="cu-payment__primary cu-payment__pay"
+                  [href]="order.upiUrl"
+                  target="_self">
+                  <i class="fa-solid fa-mobile-screen-button"></i>
+                  Open UPI App
+                </a>
+
+                <p class="cu-upi__instruction">
+                  Complete the payment in your UPI app. Return here
+                  after payment and enter your transaction ID.
+                </p>
+
+                <div class="cu-utr">
+                  <label for="transactionId">UPI transaction ID / UTR</label>
+
+                  <input
+                    id="transactionId"
+                    type="text"
+                    [value]="transactionId()"
+                    (input)="transactionId.set($any($event.target).value)"
+                    placeholder="Enter transaction ID"
+                    autocomplete="off" />
+
+                  <button
+                    type="button"
+                    class="cu-payment__primary cu-payment__pay"
+                    [disabled]="submittingUtr()"
+                    (click)="submitTransactionId()">
+
+                    @if (submittingUtr()) {
+                      <i class="fa-solid fa-spinner fa-spin"></i>
+                      Submitting...
+                    } @else {
+                      <i class="fa-solid fa-paper-plane"></i>
+                      Submit Transaction ID
+                    }
+                  </button>
+
+                  <p class="cu-utr__note">
+                    Submit the transaction ID only after completing
+                    the payment.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  class="cu-upi__change"
+                  (click)="retryPayment()">
+                  <i class="fa-solid fa-rotate-left"></i>
+                  Change payment amount
+                </button>
+              }
+
+            }
+
+          </div>
+        }
+
+        <div class="cu-payment__secure">
+          <i class="fa-solid fa-shield-halved"></i>
+          <div>
+            <strong>UPI payment</strong>
+            <span>
+              Verify the payee and amount in your UPI app before paying.
+            </span>
+          </div>
         </div>
 
-        @if (!utrSubmitted()) {
-        <button type="button" class="cu-upi__change" (click)="retryPayment()">
-          <i class="fa-solid fa-rotate-left"></i>
-          Generate a new payment request
-        </button>
-        }
-
-        }
-
-        }
+        <p class="cu-payment__bottom-note">
+          <i class="fa-solid fa-circle-info"></i>
+          Payment will be confirmed after manual verification.
+        </p>
 
       </div>
-
-      <div class="cu-payment__secure">
-        <i class="fa-solid fa-shield-halved"></i>
-
-        <div>
-          <strong>UPI payment</strong>
-          <span>
-            Verify the payee and amount in your UPI app before paying.
-          </span>
-        </div>
-      </div>
-
-      <p class="cu-payment__bottom-note">
-        <i class="fa-solid fa-circle-info"></i>
-        Payment will be confirmed after manual verification.
-      </p>
-
     </div>
-
-  </div>
 
   } @else {
 
-  <div class="cu-payment__container">
-    <div class="cu-payment__not-found">
+    <div class="cu-payment__container">
+      <div class="cu-payment__not-found">
+        <div class="cu-payment__not-found-icon">
+          <i class="fa-solid fa-calendar-xmark"></i>
+        </div>
 
-      <div class="cu-payment__not-found-icon">
-        <i class="fa-solid fa-calendar-xmark"></i>
+        <h2>Booking not found</h2>
+        <p>We couldn't find this booking. Please check your booking details.</p>
+
+        <a routerLink="/customer/my-bookings" class="cu-payment__primary">
+          Back to my bookings
+        </a>
       </div>
-
-      <h2>Booking not found</h2>
-
-      <p>
-        We couldn't find this booking. Please check your booking details.
-      </p>
-
-      <a routerLink="/customer/my-bookings" class="cu-payment__primary">
-        Back to my bookings
-      </a>
-
     </div>
-  </div>
 
   }
 

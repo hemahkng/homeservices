@@ -1,8 +1,7 @@
-
 <div class="pv-shell">
 
   @if (open()) {
-    <div class="pv-overlay" (click)="open.set(false)"></div>
+  <div class="pv-overlay" (click)="open.set(false)"></div>
   }
 
   <aside class="pv-side" [class.open]="open()">
@@ -17,10 +16,7 @@
         <small>{{ 'PROVIDER_LAYOUT.PORTAL' | translate }}</small>
       </div>
 
-      <button
-        type="button"
-        class="pv-close"
-        (click)="open.set(false)"
+      <button type="button" class="pv-close" (click)="open.set(false)"
         [attr.aria-label]="'PROVIDER_LAYOUT.CLOSE_MENU' | translate">
         <i class="fa-solid fa-xmark"></i>
       </button>
@@ -32,49 +28,45 @@
 
     <nav class="pv-nav">
       @for (l of links; track l.path) {
-        <a
-          class="pv-link"
-          [routerLink]="l.path"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          (click)="open.set(false)">
+      <a class="pv-link" [routerLink]="l.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+        (click)="open.set(false)">
 
-          <span class="pv-ico">
-            @switch (l.key) {
-              @case ('DASHBOARD') {
-                <i class="fa-solid fa-chart-pie"></i>
-              }
-              @case ('BOOKING_REQUESTS') {
-                <i class="fa-solid fa-inbox"></i>
-              }
-              @case ('MY_SERVICES') {
-                <i class="fa-solid fa-toolbox"></i>
-              }
-              @case ('AVAILABILITY') {
-                <i class="fa-regular fa-calendar-days"></i>
-              }
-              @case ('EARNINGS') {
-                <i class="fa-solid fa-wallet"></i>
-              }
-              @case ('REVIEWS') {
-                <i class="fa-regular fa-star"></i>
-              }
-              @case ('PROFILE') {
-                <i class="fa-regular fa-user"></i>
-              }
-            }
-          </span>
-
-          <span class="pv-link-label">
-            {{ ('PROVIDER_LAYOUT.' + l.key) | translate }}
-          </span>
-
-          @if (l.path === '/provider/requests' && pending() > 0) {
-            <span class="pv-count">{{ pending() }}</span>
+        <span class="pv-ico">
+          @switch (l.key) {
+          @case ('DASHBOARD') {
+          <i class="fa-solid fa-chart-pie"></i>
           }
+          @case ('BOOKING_REQUESTS') {
+          <i class="fa-solid fa-inbox"></i>
+          }
+          @case ('MY_SERVICES') {
+          <i class="fa-solid fa-toolbox"></i>
+          }
+          @case ('AVAILABILITY') {
+          <i class="fa-regular fa-calendar-days"></i>
+          }
+          @case ('EARNINGS') {
+          <i class="fa-solid fa-wallet"></i>
+          }
+          @case ('REVIEWS') {
+          <i class="fa-regular fa-star"></i>
+          }
+          @case ('PROFILE') {
+          <i class="fa-regular fa-user"></i>
+          }
+          }
+        </span>
 
-          <i class="fa-solid fa-chevron-right pv-arrow"></i>
-        </a>
+        <span class="pv-link-label">
+          {{ ('PROVIDER_LAYOUT.' + l.key) | translate }}
+        </span>
+
+        @if (l.path === '/provider/requests' && pending() > 0) {
+        <span class="pv-count">{{ pending() }}</span>
+        }
+
+        <i class="fa-solid fa-chevron-right pv-arrow"></i>
+      </a>
       }
     </nav>
 
@@ -96,12 +88,8 @@
           <small>{{ 'PROVIDER_LAYOUT.SERVICE_PROVIDER' | translate }}</small>
         </div>
 
-        <button
-          type="button"
-          class="pv-logout"
-          [title]="'PROVIDER_LAYOUT.LOGOUT' | translate"
-          [attr.aria-label]="'PROVIDER_LAYOUT.LOGOUT' | translate"
-          (click)="auth.logout()">
+        <button type="button" class="pv-logout" [title]="'PROVIDER_LAYOUT.LOGOUT' | translate"
+          [attr.aria-label]="'PROVIDER_LAYOUT.LOGOUT' | translate" (click)="auth.logout()">
           <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </button>
       </div>
@@ -118,13 +106,14 @@
       </div>
 
       <div class="pv-top-user">
-        <select
-          class="pv-language-select"
-          [value]="language()"
-          (change)="changeLanguage($any($event.target).value)"
+        <select class="pv-language-select" [value]="language()" (change)="changeLanguage($any($event.target).value)"
           aria-label="Select language">
           <option value="en">English</option>
-          <option value="ta">தமிழ்</option>
+          <option value="ta">Tamil (தமிழ்)</option>
+          <option value="te">Telugu (తెలుగు)</option>
+          <option value="kn">kannada (ಕನ್ನಡ)</option>
+          <option value="hi">Hindi (हिन्दी)</option>
+          <option value="ml">Malayalam (മലയാളം)</option>
         </select>
 
         <div class="pv-avatar light">{{ initial() }}</div>
@@ -134,10 +123,7 @@
 
     <header class="pv-mobile-top">
 
-      <button
-        type="button"
-        class="pv-menu"
-        (click)="open.set(true)"
+      <button type="button" class="pv-menu" (click)="open.set(true)"
         [attr.aria-label]="'PROVIDER_LAYOUT.OPEN_MENU' | translate">
         <i class="fa-solid fa-bars"></i>
       </button>

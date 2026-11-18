@@ -16,7 +16,11 @@
       <select class="cu-language-select" [value]="language()" (change)="changeLanguage($any($event.target).value)"
         aria-label="Select language">
         <option value="en">English</option>
-        <option value="ta">தமிழ்</option>
+        <option value="ta">Tamil (தமிழ்)</option>
+        <option value="te">Telugu (తెలుగు)</option>
+        <option value="kn">kannada (ಕನ್ನಡ)</option>
+        <option value="hi">Hindi (हिन्दी)</option>
+        <option value="ml">Malayalam (മലയാളം)</option>
       </select>
 
       <a class="cu-bell" routerLink="/customer/notifications"

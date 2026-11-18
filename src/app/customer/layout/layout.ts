@@ -19,7 +19,7 @@ export class Layout {
   private router = inject(Router);
   private translate = inject(TranslateService);
 
-  language = signal<'en' | 'ta'>('en');
+  language = signal<'en' | 'ta' | 'te' | 'kn' | 'ml' | 'hi'>('en');
 
   unread = signal(0);
   initial = computed(() => (this.auth.currentUser()?.name ?? '?').charAt(0).toUpperCase());
@@ -41,7 +41,15 @@ export class Layout {
 
   constructor() {
     const savedLanguage = localStorage.getItem('app-language');
-    const initialLanguage = savedLanguage === 'ta' ? 'ta' : 'en';
+
+    const initialLanguage: 'en' | 'ta' | 'te' | 'kn' | 'ml' | 'hi' =
+      savedLanguage === 'ta' ||
+        savedLanguage === 'te' ||
+        savedLanguage === 'kn' ||
+        savedLanguage === 'hi' ||
+        savedLanguage === 'ml'
+        ? savedLanguage
+        : 'en';
 
     this.language.set(initialLanguage);
     this.translate.use(initialLanguage);
@@ -51,13 +59,13 @@ export class Layout {
       .subscribe(() =>
         this.account.unreadCount().subscribe({
           next: (r) => this.unread.set(r.count),
-          error: () => {},
+          error: () => { },
         })
       );
   }
 
   changeLanguage(lang: string) {
-    if (lang !== 'en' && lang !== 'ta') return;
+    if (lang !== 'en' && lang !== 'ta' && lang !== 'te' && lang !== 'kn' && lang !== 'hi' && lang !== 'ml') return;
 
     this.language.set(lang);
     localStorage.setItem('app-language', lang);

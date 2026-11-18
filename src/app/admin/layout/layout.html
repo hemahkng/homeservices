@@ -1,7 +1,7 @@
 <div class="ad-shell">
 
   @if (open()) {
-    <div class="ad-overlay" (click)="open.set(false)"></div>
+  <div class="ad-overlay" (click)="open.set(false)"></div>
   }
 
   <aside class="ad-side" [class.open]="open()">
@@ -27,55 +27,50 @@
 
     <nav class="ad-nav">
       @for (l of links; track l.path) {
-        <a
-          class="ad-link"
-          [routerLink]="l.path"
-          routerLinkActive="active"
-          (click)="open.set(false)"
-        >
-          <span class="ad-ico">
-            @switch (l.path) {
-              @case ('/admin/dashboard') {
-                <i class="fa-solid fa-chart-pie"></i>
-              }
-              @case ('/admin/provider-approvals') {
-                <i class="fa-solid fa-user-shield"></i>
-              }
-              @case ('/admin/users') {
-                <i class="fa-solid fa-users"></i>
-              }
-              @case ('/admin/bookings') {
-                <i class="fa-solid fa-calendar-check"></i>
-              }
-              @case ('/admin/payments') {
-                <i class="fa-solid fa-credit-card"></i>
-              }
-              @case ('/admin/payouts') {
-                <i class="fa-solid fa-building-columns"></i>
-              }
-              @case ('/admin/reports') {
-                <i class="fa-solid fa-chart-line"></i>
-              }
-              @case ('/admin/categories') {
-                <i class="fa-solid fa-layer-group"></i>
-              }
-              @case ('/admin/settings') {
-                <i class="fa-solid fa-gear"></i>
-              }
-              @default {
-                <i class="fa-solid fa-circle"></i>
-              }
-            }
-          </span>
-
-          <span class="ad-link-label">{{ l.label | translate }}</span>
-
-          @if (l.path === '/admin/provider-approvals' && pending() > 0) {
-            <span class="ad-count">{{ pending() > 99 ? '99+' : pending() }}</span>
+      <a class="ad-link" [routerLink]="l.path" routerLinkActive="active" (click)="open.set(false)">
+        <span class="ad-ico">
+          @switch (l.path) {
+          @case ('/admin/dashboard') {
+          <i class="fa-solid fa-chart-pie"></i>
           }
+          @case ('/admin/provider-approvals') {
+          <i class="fa-solid fa-user-shield"></i>
+          }
+          @case ('/admin/users') {
+          <i class="fa-solid fa-users"></i>
+          }
+          @case ('/admin/bookings') {
+          <i class="fa-solid fa-calendar-check"></i>
+          }
+          @case ('/admin/payments') {
+          <i class="fa-solid fa-credit-card"></i>
+          }
+          @case ('/admin/payouts') {
+          <i class="fa-solid fa-building-columns"></i>
+          }
+          @case ('/admin/reports') {
+          <i class="fa-solid fa-chart-line"></i>
+          }
+          @case ('/admin/categories') {
+          <i class="fa-solid fa-layer-group"></i>
+          }
+          @case ('/admin/settings') {
+          <i class="fa-solid fa-gear"></i>
+          }
+          @default {
+          <i class="fa-solid fa-circle"></i>
+          }
+          }
+        </span>
 
-          <i class="fa-solid fa-chevron-right ad-arrow"></i>
-        </a>
+        <span class="ad-link-label">{{ l.label | translate }}</span>
+
+        @if (l.path === '/admin/provider-approvals' && pending() > 0) {
+        <span class="ad-count">{{ pending() > 99 ? '99+' : pending() }}</span>
+        }
+
+        <i class="fa-solid fa-chevron-right ad-arrow"></i>
+      </a>
       }
     </nav>
 
@@ -91,13 +86,8 @@
           </small>
         </div>
 
-        <button
-          type="button"
-          class="ad-logout"
-          (click)="auth.logout()"
-          [title]="'COMMON.LOGOUT' | translate"
-          [attr.aria-label]="'COMMON.LOGOUT' | translate"
-        >
+        <button type="button" class="ad-logout" (click)="auth.logout()" [title]="'COMMON.LOGOUT' | translate"
+          [attr.aria-label]="'COMMON.LOGOUT' | translate">
           <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </button>
       </div>
@@ -109,12 +99,7 @@
 
     <header class="ad-top">
       <div class="ad-top-left">
-        <button
-          type="button"
-          class="ad-menu"
-          (click)="open.set(true)"
-          aria-label="Open menu"
-        >
+        <button type="button" class="ad-menu" (click)="open.set(true)" aria-label="Open menu">
           <i class="fa-solid fa-bars"></i>
         </button>
 
@@ -127,14 +112,14 @@
 
       <div class="ad-top-right">
 
-        <select
-          class="ad-language-select"
-          [value]="language()"
-          (change)="changeLanguage($any($event.target).value)"
-          aria-label="Select language"
-        >
+        <select class="ad-language-select" [value]="language()" (change)="changeLanguage($any($event.target).value)"
+          aria-label="Select language">
           <option value="en">English</option>
-          <option value="ta">தமிழ்</option>
+          <option value="ta">Tamil (தமிழ்)</option>
+          <option value="te">Telugu (తెలుగు)</option>
+          <option value="kn">kannada (ಕನ್ನಡ)</option>
+          <option value="hi">Hindi (हिन्दी)</option>
+          <option value="ml">Malayalam (മലയാളം)</option>
         </select>
 
         <div class="ad-admin-label">

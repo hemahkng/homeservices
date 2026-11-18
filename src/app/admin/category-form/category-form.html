@@ -1,19 +1,18 @@
-
 <div class="category-form-page">
 
   <a class="back-link" routerLink="/admin/categories">
     <i class="fa-solid fa-arrow-left"></i>
-    <span>Back to categories</span>
+    <span>{{ 'CATEGORY_FORM.BACK' | translate }}</span>
   </a>
 
   <div class="page-heading">
     <div>
-      <span class="eyebrow">CATEGORY MANAGEMENT</span>
-      <h1>{{ id ? 'Edit category' : 'Create category' }}</h1>
+      <span class="eyebrow">{{ 'CATEGORY_FORM.EYEBROW' | translate }}</span>
+      <h1>
+        {{ (id ? 'CATEGORY_FORM.EDIT_TITLE' : 'CATEGORY_FORM.CREATE_TITLE') | translate }}
+      </h1>
       <p>
-        {{ id
-          ? 'Update the category details and visibility.'
-          : 'Add a new service category to your marketplace.' }}
+        {{ (id ? 'CATEGORY_FORM.EDIT_DESCRIPTION' : 'CATEGORY_FORM.CREATE_DESCRIPTION') | translate }}
       </p>
     </div>
 
@@ -23,10 +22,10 @@
   </div>
 
   @if (error()) {
-    <div class="form-alert">
-      <i class="fa-solid fa-circle-exclamation"></i>
-      <span>{{ error() }}</span>
-    </div>
+  <div class="form-alert">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <span>{{ error() }}</span>
+  </div>
   }
 
   <div class="form-layout">
@@ -34,89 +33,81 @@
     <section class="form-card">
       <div class="card-heading">
         <div>
-          <h2>Category details</h2>
-          <p>Enter the information for this service category.</p>
+          <h2>{{ 'CATEGORY_FORM.DETAILS' | translate }}</h2>
+          <p>{{ 'CATEGORY_FORM.DETAILS_DESCRIPTION' | translate }}</p>
         </div>
-        <span class="required-note">* Required</span>
+        <span class="required-note">{{ 'CATEGORY_FORM.REQUIRED' | translate }}</span>
       </div>
 
       <form [formGroup]="form" (ngSubmit)="submit()">
 
         <div class="field-group">
           <label for="name">
-            Category name <span>*</span>
+            {{ 'CATEGORY_FORM.NAME' | translate }} <span>*</span>
           </label>
 
           <div class="input-wrap">
             <i class="fa-solid fa-tag"></i>
-            <input
-              id="name"
-              type="text"
-              formControlName="name"
-              placeholder="e.g. Pest control"
-              maxlength="50"
-            />
+            <input id="name" type="text" formControlName="name"
+              [placeholder]="'CATEGORY_FORM.NAME_PLACEHOLDER' | translate" maxlength="50" />
           </div>
 
           @if (form.controls.name.touched && form.controls.name.invalid) {
-            <span class="field-error">
-              <i class="fa-solid fa-circle-exclamation"></i>
-              Enter a name between 2 and 50 characters.
-            </span>
+          <span class="field-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            {{ 'CATEGORY_FORM.NAME_ERROR' | translate }}
+          </span>
           } @else {
-            <span class="field-hint">Choose a short, clear name customers can understand.</span>
+          <span class="field-hint">
+            {{ 'CATEGORY_FORM.NAME_HINT' | translate }}
+          </span>
           }
         </div>
 
         <div class="field-group">
-          <label for="icon">Category icon</label>
+          <label for="icon">{{ 'CATEGORY_FORM.ICON' | translate }}</label>
 
           <div class="input-wrap">
             <i class="fa-regular fa-face-smile"></i>
-            <input
-              id="icon"
-              type="text"
-              maxlength="8"
-              formControlName="icon"
-              placeholder="🐜"
-            />
+            <input id="icon" type="text" maxlength="8" formControlName="icon"
+              [placeholder]="'CATEGORY_FORM.ICON_PLACEHOLDER' | translate" />
           </div>
 
           <span class="field-hint">
-            Optional. Add an emoji to represent this category. Leave empty to use the default icon.
+            {{ 'CATEGORY_FORM.ICON_HINT' | translate }}
           </span>
         </div>
 
         @if (id) {
-          <div class="visibility-box">
-            <div class="visibility-icon">
-              <i class="fa-solid fa-eye"></i>
-            </div>
-
-            <div class="visibility-content">
-              <strong>Category visibility</strong>
-              <span>Control whether this category is available to customers and providers.</span>
-            </div>
-
-            <label class="switch">
-              <input type="checkbox" formControlName="isActive" />
-              <span class="slider"></span>
-            </label>
+        <div class="visibility-box">
+          <div class="visibility-icon">
+            <i class="fa-solid fa-eye"></i>
           </div>
+
+          <div class="visibility-content">
+            <strong>{{ 'CATEGORY_FORM.VISIBILITY' | translate }}</strong>
+            <span>{{ 'CATEGORY_FORM.VISIBILITY_DESCRIPTION' | translate }}</span>
+          </div>
+
+          <label class="switch">
+            <input type="checkbox" formControlName="isActive" />
+            <span class="slider"></span>
+          </label>
+        </div>
         }
 
         <div class="form-actions">
           <a class="cancel-btn" routerLink="/admin/categories">
-            Cancel
+            {{ 'CATEGORY_FORM.CANCEL' | translate }}
           </a>
 
           <button type="submit" class="save-btn" [disabled]="loading()">
             @if (loading()) {
-              <i class="fa-solid fa-spinner fa-spin"></i>
-              Saving...
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            {{ 'CATEGORY_FORM.SAVING' | translate }}
             } @else {
-              <i class="fa-solid fa-check"></i>
-              {{ id ? 'Save changes' : 'Create category' }}
+            <i class="fa-solid fa-check"></i>
+            {{ (id ? 'CATEGORY_FORM.SAVE_CHANGES' : 'CATEGORY_FORM.CREATE') | translate }}
             }
           </button>
         </div>
@@ -125,22 +116,22 @@
     </section>
 
     <aside class="preview-card">
-      <span class="preview-label">PREVIEW</span>
+      <span class="preview-label">{{ 'CATEGORY_FORM.PREVIEW' | translate }}</span>
 
       <div class="preview-icon">
         {{ form.controls.icon.value || '✦' }}
       </div>
 
-      <h3>{{ form.controls.name.value || 'Category name' }}</h3>
-      <p>This is how your category information will appear.</p>
+      <h3>
+        {{ form.controls.name.value || ('CATEGORY_FORM.DEFAULT_NAME' | translate) }}
+      </h3>
+      <p>{{ 'CATEGORY_FORM.PREVIEW_DESCRIPTION' | translate }}</p>
 
       <div class="preview-divider"></div>
 
       <div class="preview-info">
         <i class="fa-solid fa-circle-info"></i>
-        <span>
-          Keep category names simple and recognizable so customers can easily find the service they need.
-        </span>
+        <span>{{ 'CATEGORY_FORM.PREVIEW_HINT' | translate }}</span>
       </div>
     </aside>
 

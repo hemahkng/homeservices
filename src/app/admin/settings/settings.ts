@@ -1,17 +1,19 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Loader } from '../../shared/components/loader/loader';
 import { AdminApi } from '../services/admin';
 
 @Component({
   selector: 'app-settings',
-  imports: [ReactiveFormsModule, Loader],
+  imports: [ReactiveFormsModule, Loader, TranslatePipe],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })
 export class Settings implements OnInit {
   private fb = inject(FormBuilder);
   private api = inject(AdminApi);
+  private translate = inject(TranslateService);
 
   loading = signal(true);
   saving = signal(false);
@@ -27,8 +29,14 @@ export class Settings implements OnInit {
 
   ngOnInit() {
     this.api.settings().subscribe({
-      next: (s) => { this.form.patchValue(s); this.loading.set(false); },
-      error: (e) => { this.error.set(e.error?.message ?? 'Could not load settings'); this.loading.set(false); },
+      next: (s) => {
+        this.form.patchValue(s);
+        this.loading.set(false);
+      },
+      error: (e) => {
+        this.error.set(e.error?.message ?? this.translate.instant('SETTINGS.LOAD_ERROR'));
+        this.loading.set(false);
+      },
     });
   }
 
@@ -38,9 +46,14 @@ export class Settings implements OnInit {
   }
 
   save() {
-    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
     this.saving.set(true);
     this.error.set('');
+
     this.api.saveSettings(this.form.getRawValue()).subscribe({
       next: (s) => {
         this.form.patchValue(s);
@@ -48,7 +61,10 @@ export class Settings implements OnInit {
         this.saved.set(true);
         setTimeout(() => this.saved.set(false), 3000);
       },
-      error: (e) => { this.error.set(e.error?.message ?? 'Could not save'); this.saving.set(false); },
+      error: (e) => {
+        this.error.set(e.error?.message ?? this.translate.instant('SETTINGS.SAVE_ERROR'));
+        this.saving.set(false);
+      },
     });
   }
 }

@@ -2,6 +2,8 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe, TitleCasePipe } from '@angular/common';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
 import { Api } from '../../core/services/api';
 import { Booking } from '../../shared/models/booking';
 import { Loader } from '../../shared/components/loader/loader';
@@ -18,13 +20,20 @@ interface UpiOrderResponse {
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [RouterLink, Loader, DatePipe, TitleCasePipe],
+  imports: [
+    RouterLink,
+    Loader,
+    DatePipe,
+    TitleCasePipe,
+    TranslatePipe
+  ],
   templateUrl: './payment.html',
   styleUrl: './payment.scss',
 })
 export class Payment implements OnInit {
   private api = inject(Api);
   private bookings = inject(CustomerBooking);
+  private translate = inject(TranslateService);
 
   private bookingId = Number(
     inject(ActivatedRoute).snapshot.paramMap.get('bookingId')
@@ -62,9 +71,13 @@ export class Payment implements OnInit {
     return this.booking()?.payment?.transactions ?? [];
   });
 
+  private message(key: string, params?: Record<string, unknown>): string {
+    return this.translate.instant(key, params);
+  }
+
   ngOnInit(): void {
     if (!Number.isInteger(this.bookingId) || this.bookingId <= 0) {
-      this.error.set('Invalid booking ID');
+      this.error.set(this.message('CUSTOMER_PAYMENT.INVALID_BOOKING_ID'));
       this.loading.set(false);
       return;
     }
@@ -86,7 +99,7 @@ export class Payment implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.error.set('Booking not found');
+        this.error.set(this.message('CUSTOMER_PAYMENT.LOAD_ERROR'));
         this.loading.set(false);
       },
     });
@@ -118,12 +131,14 @@ export class Payment implements OnInit {
     const remaining = this.remainingAmount();
 
     if (!amount || !Number.isInteger(amount) || amount <= 0) {
-      this.error.set('Enter a valid payment amount');
+      this.error.set(this.message('CUSTOMER_PAYMENT.VALID_AMOUNT'));
       return;
     }
 
     if (amount > remaining) {
-      this.error.set(`Maximum payable amount is ₹${remaining}`);
+      this.error.set(
+        this.message('CUSTOMER_PAYMENT.MAX_AMOUNT', { amount: remaining })
+      );
       return;
     }
 
@@ -137,9 +152,7 @@ export class Payment implements OnInit {
         const requestedAmount = Number(order.amount);
 
         if (requestedAmount !== amount) {
-          this.error.set(
-            'Payment amount does not match the UPI request. Please try again.'
-          );
+          this.error.set(this.message('CUSTOMER_PAYMENT.AMOUNT_MISMATCH'));
           this.paying.set(false);
           return;
         }
@@ -149,7 +162,8 @@ export class Payment implements OnInit {
       },
       error: (e) => {
         this.error.set(
-          e.error?.message || 'Could not create UPI payment request'
+          e.error?.message ||
+          this.message('CUSTOMER_PAYMENT.CREATE_ERROR')
         );
         this.paying.set(false);
       },
@@ -164,22 +178,22 @@ export class Payment implements OnInit {
     this.error.set('');
 
     if (!order) {
-      this.error.set('Please create a payment request first');
+      this.error.set(this.message('CUSTOMER_PAYMENT.CREATE_FIRST'));
       return;
     }
 
     if (!utr || utr.length < 6) {
-      this.error.set('Please enter a valid UPI transaction ID');
+      this.error.set(this.message('CUSTOMER_PAYMENT.VALID_UTR'));
       return;
     }
 
     if (!amount || !Number.isInteger(amount) || amount <= 0) {
-      this.error.set('Enter a valid payment amount');
+      this.error.set(this.message('CUSTOMER_PAYMENT.VALID_AMOUNT'));
       return;
     }
 
     if (amount > this.remainingAmount()) {
-      this.error.set('Payment amount cannot exceed the remaining balance');
+      this.error.set(this.message('CUSTOMER_PAYMENT.EXCEEDS_BALANCE'));
       return;
     }
 
@@ -202,7 +216,8 @@ export class Payment implements OnInit {
       },
       error: (e) => {
         this.error.set(
-          e.error?.message || 'Could not submit transaction ID'
+          e.error?.message ||
+          this.message('CUSTOMER_PAYMENT.SUBMIT_ERROR')
         );
         this.submittingUtr.set(false);
       },

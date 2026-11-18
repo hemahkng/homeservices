@@ -6,10 +6,11 @@ import { EmptyState } from '../../shared/components/empty-state/empty-state';
 import { Loader } from '../../shared/components/loader/loader';
 import { StatusBadge } from '../../shared/components/status-badge/status-badge';
 import { AdminApi, AdminBooking } from '../services/admin';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-bookings',
-  imports: [FormsModule, DatePipe, DecimalPipe, RouterLink, Loader, StatusBadge],
+  imports: [FormsModule, DatePipe, DecimalPipe, RouterLink, Loader, StatusBadge, TranslatePipe],
   templateUrl: './bookings.html',
   styleUrl: './bookings.scss',
 })

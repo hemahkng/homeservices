@@ -3,12 +3,13 @@ import { DatePipe } from '@angular/common';
 import { EmptyState } from '../../shared/components/empty-state/empty-state';
 import { Loader } from '../../shared/components/loader/loader';
 import { AdminApi, ProviderRow } from '../services/admin';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type Tab = 'pending' | 'active' | 'blocked';
 
 @Component({
   selector: 'app-provider-approvals',
-  imports: [DatePipe, Loader],
+  imports: [DatePipe, Loader, TranslatePipe],
   templateUrl: './provider-approvals.html',
   styleUrl: './provider-approvals.scss',
 })

@@ -1,6 +1,7 @@
+
 <div class="cu-head">
-  <h1>My profile</h1>
-  <p>Manage your details and password.</p>
+  <h1>{{ 'CUSTOMER_PROFILE.TITLE' | translate }}</h1>
+  <p>{{ 'CUSTOMER_PROFILE.DESCRIPTION' | translate }}</p>
 </div>
 
 @if (loading()) {
@@ -13,66 +14,144 @@
         <span class="av">{{ p.name.charAt(0).toUpperCase() }}</span>
         <h2>{{ p.name }}</h2>
         <small>{{ p.email }}</small>
+
         <div class="stats">
-          <div><b>{{ p.totalBookings }}</b><span>Bookings</span></div>
-          <div><b>{{ p.completedBookings }}</b><span>Completed</span></div>
+          <div>
+            <b>{{ p.totalBookings }}</b>
+            <span>{{ 'CUSTOMER_PROFILE.BOOKINGS' | translate }}</span>
+          </div>
+          <div>
+            <b>{{ p.completedBookings }}</b>
+            <span>{{ 'CUSTOMER_PROFILE.COMPLETED' | translate }}</span>
+          </div>
         </div>
-        <small>Member since {{ p.createdAt | date: 'MMM y' }}</small>
-        <button type="button" class="cu-btn danger block" (click)="auth.logout()">Logout</button>
+
+        <small>
+          {{ 'CUSTOMER_PROFILE.MEMBER_SINCE' | translate: { date: (p.createdAt | date: 'MMM y') } }}
+        </small>
+
+        <button type="button" class="cu-btn danger block" (click)="auth.logout()">
+          {{ 'CUSTOMER_PROFILE.LOGOUT' | translate }}
+        </button>
       </div>
     }
 
     <div class="main">
       <div class="cu-card">
-        <h2>Personal details</h2>
-        @if (error()) { <div class="cu-alert error">{{ error() }}</div> }
-        @if (saved()) { <div class="cu-alert ok">Profile updated ✓</div> }
+        <h2>{{ 'CUSTOMER_PROFILE.PERSONAL_DETAILS' | translate }}</h2>
+
+        @if (error()) {
+          <div class="cu-alert error">{{ error() }}</div>
+        }
+
+        @if (saved()) {
+          <div class="cu-alert ok">
+            {{ 'CUSTOMER_PROFILE.PROFILE_UPDATED' | translate }} ✓
+          </div>
+        }
 
         <form class="cu-form" [formGroup]="form" (ngSubmit)="save()">
           <div class="cols">
             <div class="cu-field">
-              <label for="name">Full name</label>
+              <label for="name">{{ 'CUSTOMER_PROFILE.FULL_NAME' | translate }}</label>
               <input id="name" type="text" formControlName="name" />
-              @if (bad('form', 'name')) { <span class="err">Enter your name</span> }
+              @if (bad('form', 'name')) {
+                <span class="err">{{ 'CUSTOMER_PROFILE.NAME_REQUIRED' | translate }}</span>
+              }
             </div>
+
             <div class="cu-field">
-              <label for="phone">Phone</label>
-              <input id="phone" type="tel" formControlName="phone" placeholder="Digits only" />
-              @if (bad('form', 'phone')) { <span class="err">10 to 15 digits</span> }
+              <label for="phone">{{ 'CUSTOMER_PROFILE.PHONE' | translate }}</label>
+              <input
+                id="phone"
+                type="tel"
+                formControlName="phone"
+                [placeholder]="'CUSTOMER_PROFILE.PHONE_PLACEHOLDER' | translate"
+              />
+              @if (bad('form', 'phone')) {
+                <span class="err">{{ 'CUSTOMER_PROFILE.PHONE_INVALID' | translate }}</span>
+              }
             </div>
+
             <div class="cu-field full">
-              <label for="addr">Default address</label>
-              <textarea id="addr" rows="3" formControlName="address" placeholder="Used to pre-fill your bookings"></textarea>
+              <label for="addr">{{ 'CUSTOMER_PROFILE.DEFAULT_ADDRESS' | translate }}</label>
+              <textarea
+                id="addr"
+                rows="3"
+                formControlName="address"
+                [placeholder]="'CUSTOMER_PROFILE.ADDRESS_PLACEHOLDER' | translate"
+              ></textarea>
             </div>
           </div>
-          <div class="bar"><button type="submit" class="cu-btn" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save changes' }}</button></div>
+
+          <div class="bar">
+            <button type="submit" class="cu-btn" [disabled]="saving()">
+              {{ saving() ? ('CUSTOMER_PROFILE.SAVING' | translate) : ('CUSTOMER_PROFILE.SAVE_CHANGES' | translate) }}
+            </button>
+          </div>
         </form>
       </div>
 
       <div class="cu-card">
-        <h2>Change password</h2>
-        @if (pwdError()) { <div class="cu-alert error">{{ pwdError() }}</div> }
-        @if (pwdOk()) { <div class="cu-alert ok">Password changed ✓</div> }
+        <h2>{{ 'CUSTOMER_PROFILE.CHANGE_PASSWORD' | translate }}</h2>
+
+        @if (pwdError()) {
+          <div class="cu-alert error">{{ pwdError() }}</div>
+        }
+
+        @if (pwdOk()) {
+          <div class="cu-alert ok">
+            {{ 'CUSTOMER_PROFILE.PASSWORD_CHANGED' | translate }} ✓
+          </div>
+        }
 
         <form class="cu-form" [formGroup]="pwd" (ngSubmit)="changePassword()">
           <div class="cols">
             <div class="cu-field full">
-              <label for="cur">Current password</label>
-              <input id="cur" type="password" autocomplete="current-password" formControlName="currentPassword" />
-              @if (bad('pwd', 'currentPassword')) { <span class="err">Required</span> }
+              <label for="cur">{{ 'CUSTOMER_PROFILE.CURRENT_PASSWORD' | translate }}</label>
+              <input
+                id="cur"
+                type="password"
+                autocomplete="current-password"
+                formControlName="currentPassword"
+              />
+              @if (bad('pwd', 'currentPassword')) {
+                <span class="err">{{ 'CUSTOMER_PROFILE.REQUIRED' | translate }}</span>
+              }
             </div>
+
             <div class="cu-field">
-              <label for="np">New password</label>
-              <input id="np" type="password" autocomplete="new-password" formControlName="newPassword" />
-              @if (bad('pwd', 'newPassword')) { <span class="err">At least 6 characters</span> }
+              <label for="np">{{ 'CUSTOMER_PROFILE.NEW_PASSWORD' | translate }}</label>
+              <input
+                id="np"
+                type="password"
+                autocomplete="new-password"
+                formControlName="newPassword"
+              />
+              @if (bad('pwd', 'newPassword')) {
+                <span class="err">{{ 'CUSTOMER_PROFILE.PASSWORD_MIN' | translate }}</span>
+              }
             </div>
+
             <div class="cu-field">
-              <label for="cf">Confirm new password</label>
-              <input id="cf" type="password" autocomplete="new-password" formControlName="confirm" />
-              @if (bad('pwd', 'confirm')) { <span class="err">Required</span> }
+              <label for="cf">{{ 'CUSTOMER_PROFILE.CONFIRM_PASSWORD' | translate }}</label>
+              <input
+                id="cf"
+                type="password"
+                autocomplete="new-password"
+                formControlName="confirm"
+              />
+              @if (bad('pwd', 'confirm')) {
+                <span class="err">{{ 'CUSTOMER_PROFILE.REQUIRED' | translate }}</span>
+              }
             </div>
           </div>
-          <div class="bar"><button type="submit" class="cu-btn" [disabled]="pwdSaving()">{{ pwdSaving() ? 'Updating…' : 'Update password' }}</button></div>
+
+          <div class="bar">
+            <button type="submit" class="cu-btn" [disabled]="pwdSaving()">
+              {{ pwdSaving() ? ('CUSTOMER_PROFILE.UPDATING' | translate) : ('CUSTOMER_PROFILE.UPDATE_PASSWORD' | translate) }}
+            </button>
+          </div>
         </form>
       </div>
     </div>

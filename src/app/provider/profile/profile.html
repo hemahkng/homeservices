@@ -1,12 +1,11 @@
 
 <div class="profile-page">
 
-  <!-- PAGE HEADER -->
   <div class="profile-header">
     <div>
-      <span class="page-eyebrow">ACCOUNT SETTINGS</span>
-      <h1>My Profile</h1>
-      <p>Manage your professional information and account security.</p>
+      <span class="page-eyebrow">{{ 'PROVIDER_PROFILE.EYEBROW' | translate }}</span>
+      <h1>{{ 'PROVIDER_PROFILE.TITLE' | translate }}</h1>
+      <p>{{ 'PROVIDER_PROFILE.DESCRIPTION' | translate }}</p>
     </div>
 
     <div class="header-icon">
@@ -22,7 +21,6 @@
 
     <div class="profile-layout">
 
-      <!-- LEFT PROFILE OVERVIEW -->
       <aside class="profile-sidebar">
 
         @if (info(); as p) {
@@ -34,7 +32,7 @@
 
               <span class="cover-label">
                 <i class="fa-solid fa-user-check"></i>
-                Professional account
+                {{ 'PROVIDER_PROFILE.PROFESSIONAL_ACCOUNT' | translate }}
               </span>
             </div>
 
@@ -48,10 +46,9 @@
 
               <p class="profile-category">
                 <i class="fa-solid fa-briefcase"></i>
-                {{ p.providerProfile?.category?.name || 'Service Provider' }}
+                {{ p.providerProfile?.category?.name || ('PROVIDER_PROFILE.SERVICE_PROVIDER' | translate) }}
               </p>
 
-              <!-- FIX: Safely check providerProfile before accessing city -->
               @if (p.providerProfile; as profile) {
                 @if (profile.city) {
                   <p class="profile-location">
@@ -66,7 +63,7 @@
                   [value]="p.providerProfile?.ratingAvg ?? 0"
                   [size]="20"
                 />
-                <span>Professional rating</span>
+                <span>{{ 'PROVIDER_PROFILE.PROFESSIONAL_RATING' | translate }}</span>
               </div>
 
             </div>
@@ -81,7 +78,7 @@
                 </span>
 
                 <div>
-                  <small>Email address</small>
+                  <small>{{ 'PROVIDER_PROFILE.EMAIL' | translate }}</small>
                   <strong>{{ p.email }}</strong>
                 </div>
               </div>
@@ -92,7 +89,7 @@
                 </span>
 
                 <div>
-                  <small>Account status</small>
+                  <small>{{ 'PROVIDER_PROFILE.ACCOUNT_STATUS' | translate }}</small>
                   <strong class="account-status">
                     <span class="status-dot"></span>
                     {{ p.status }}
@@ -106,7 +103,7 @@
                 </span>
 
                 <div>
-                  <small>Member since</small>
+                  <small>{{ 'PROVIDER_PROFILE.MEMBER_SINCE' | translate }}</small>
                   <strong>{{ p.createdAt | date: 'MMMM y' }}</strong>
                 </div>
               </div>
@@ -117,11 +114,8 @@
               <i class="fa-solid fa-lightbulb"></i>
 
               <div>
-                <strong>Profile tip</strong>
-                <p>
-                  Keep your business details updated to help customers
-                  know more about your services.
-                </p>
+                <strong>{{ 'PROVIDER_PROFILE.PROFILE_TIP' | translate }}</strong>
+                <p>{{ 'PROVIDER_PROFILE.PROFILE_TIP_TEXT' | translate }}</p>
               </div>
             </div>
 
@@ -130,10 +124,8 @@
 
       </aside>
 
-      <!-- RIGHT CONTENT -->
       <main class="profile-main">
 
-        <!-- BUSINESS INFORMATION -->
         <section class="content-card">
 
           <div class="card-heading">
@@ -143,8 +135,8 @@
             </div>
 
             <div>
-              <h2>Business information</h2>
-              <p>Update your personal and professional details.</p>
+              <h2>{{ 'PROVIDER_PROFILE.BUSINESS_INFO' | translate }}</h2>
+              <p>{{ 'PROVIDER_PROFILE.BUSINESS_INFO_DESCRIPTION' | translate }}</p>
             </div>
 
           </div>
@@ -159,7 +151,7 @@
           @if (saved()) {
             <div class="alert alert-success">
               <i class="fa-solid fa-circle-check"></i>
-              Your profile has been updated successfully.
+              {{ 'PROVIDER_PROFILE.PROFILE_UPDATED' | translate }}
             </div>
           }
 
@@ -167,56 +159,51 @@
 
             <div class="form-grid">
 
-              <!-- NAME -->
               <div class="field">
                 <label for="name">
-                  Full name <span>*</span>
+                  {{ 'PROVIDER_PROFILE.FULL_NAME' | translate }} <span>*</span>
                 </label>
 
                 <div class="input-box">
                   <i class="fa-regular fa-user"></i>
-
                   <input
                     id="name"
                     type="text"
                     formControlName="name"
-                    placeholder="Enter your full name"
+                    [placeholder]="'PROVIDER_PROFILE.NAME_PLACEHOLDER' | translate"
                   />
                 </div>
 
                 @if (bad('form', 'name')) {
                   <small class="field-error">
-                    Please enter a valid name.
+                    {{ 'PROVIDER_PROFILE.NAME_ERROR' | translate }}
                   </small>
                 }
               </div>
 
-              <!-- PHONE -->
               <div class="field">
-                <label for="phone">Phone number</label>
+                <label for="phone">{{ 'PROVIDER_PROFILE.PHONE' | translate }}</label>
 
                 <div class="input-box">
                   <i class="fa-solid fa-phone"></i>
-
                   <input
                     id="phone"
                     type="tel"
                     formControlName="phone"
-                    placeholder="Enter your phone number"
+                    [placeholder]="'PROVIDER_PROFILE.PHONE_PLACEHOLDER' | translate"
                   />
                 </div>
 
                 @if (bad('form', 'phone')) {
                   <small class="field-error">
-                    Enter 10 to 15 digits.
+                    {{ 'PROVIDER_PROFILE.PHONE_ERROR' | translate }}
                   </small>
                 }
               </div>
 
-              <!-- CATEGORY -->
               <div class="field">
                 <label for="cat">
-                  Main service category <span>*</span>
+                  {{ 'PROVIDER_PROFILE.MAIN_CATEGORY' | translate }} <span>*</span>
                 </label>
 
                 <div class="input-box select-box">
@@ -224,77 +211,70 @@
 
                   <select id="cat" formControlName="categoryId">
                     <option [ngValue]="0" disabled>
-                      Select category
+                      {{ 'PROVIDER_PROFILE.SELECT_CATEGORY' | translate }}
                     </option>
 
                     @for (c of categories(); track c.id) {
-                      <option [ngValue]="c.id">
-                        {{ c.name }}
-                      </option>
+                      <option [ngValue]="c.id">{{ c.name }}</option>
                     }
                   </select>
                 </div>
 
                 @if (bad('form', 'categoryId')) {
                   <small class="field-error">
-                    Please select a category.
+                    {{ 'PROVIDER_PROFILE.CATEGORY_ERROR' | translate }}
                   </small>
                 }
               </div>
 
-              <!-- CITY -->
               <div class="field">
                 <label for="city">
-                  City / service area <span>*</span>
+                  {{ 'PROVIDER_PROFILE.CITY' | translate }} <span>*</span>
                 </label>
 
                 <div class="input-box">
                   <i class="fa-solid fa-location-dot"></i>
-
                   <input
                     id="city"
                     type="text"
                     formControlName="city"
-                    placeholder="Enter your city"
+                    [placeholder]="'PROVIDER_PROFILE.CITY_PLACEHOLDER' | translate"
                   />
                 </div>
 
                 @if (bad('form', 'city')) {
                   <small class="field-error">
-                    Please enter your city.
+                    {{ 'PROVIDER_PROFILE.CITY_ERROR' | translate }}
                   </small>
                 }
               </div>
 
-              <!-- EXPERIENCE -->
               <div class="field">
                 <label for="exp">
-                  Years of experience <span>*</span>
+                  {{ 'PROVIDER_PROFILE.EXPERIENCE' | translate }} <span>*</span>
                 </label>
 
                 <div class="input-box">
                   <i class="fa-solid fa-award"></i>
-
                   <input
                     id="exp"
                     type="number"
                     min="0"
                     max="60"
                     formControlName="experienceYears"
-                    placeholder="Years of experience"
+                    [placeholder]="'PROVIDER_PROFILE.EXPERIENCE_PLACEHOLDER' | translate"
                   />
                 </div>
 
                 @if (bad('form', 'experienceYears')) {
                   <small class="field-error">
-                    Enter a value between 0 and 60.
+                    {{ 'PROVIDER_PROFILE.EXPERIENCE_ERROR' | translate }}
                   </small>
                 }
               </div>
 
-              <!-- BIO -->
               <div class="field full-width">
-                <label for="bio">About your business</label>
+                <label for="bio">{{ 'PROVIDER_PROFILE.BUSINESS_ABOUT' | translate }}</label>
 
                 <div class="textarea-box">
                   <textarea
@@ -302,18 +282,13 @@
                     rows="5"
                     maxlength="500"
                     formControlName="bio"
-                    placeholder="Describe your skills, experience and the services you provide..."
+                    [placeholder]="'PROVIDER_PROFILE.BIO_PLACEHOLDER' | translate"
                   ></textarea>
                 </div>
 
                 <div class="textarea-footer">
-                  <small>
-                    Introduce yourself to potential customers.
-                  </small>
-
-                  <span>
-                    {{ form.controls.bio.value.length }}/500
-                  </span>
+                  <small>{{ 'PROVIDER_PROFILE.BIO_HINT' | translate }}</small>
+                  <span>{{ form.controls.bio.value.length }}/500</span>
                 </div>
               </div>
 
@@ -322,7 +297,7 @@
             <div class="form-footer">
 
               <span class="required-note">
-                <span>*</span> Required fields
+                <span>*</span> {{ 'PROVIDER_PROFILE.REQUIRED_FIELDS' | translate }}
               </span>
 
               <button
@@ -332,10 +307,10 @@
               >
                 @if (saving()) {
                   <i class="fa-solid fa-spinner fa-spin"></i>
-                  Saving changes...
+                  {{ 'PROVIDER_PROFILE.SAVING' | translate }}
                 } @else {
                   <i class="fa-solid fa-floppy-disk"></i>
-                  Save changes
+                  {{ 'PROVIDER_PROFILE.SAVE_CHANGES' | translate }}
                 }
               </button>
 
@@ -344,7 +319,6 @@
           </form>
         </section>
 
-        <!-- PASSWORD SECTION -->
         <section class="content-card security-card">
 
           <div class="card-heading">
@@ -354,8 +328,8 @@
             </div>
 
             <div>
-              <h2>Account security</h2>
-              <p>Change your password to keep your account secure.</p>
+              <h2>{{ 'PROVIDER_PROFILE.SECURITY' | translate }}</h2>
+              <p>{{ 'PROVIDER_PROFILE.SECURITY_DESCRIPTION' | translate }}</p>
             </div>
 
           </div>
@@ -370,7 +344,7 @@
           @if (pwdOk()) {
             <div class="alert alert-success">
               <i class="fa-solid fa-circle-check"></i>
-              Your password has been changed successfully.
+              {{ 'PROVIDER_PROFILE.PASSWORD_CHANGED' | translate }}
             </div>
           }
 
@@ -378,77 +352,71 @@
 
             <div class="form-grid">
 
-              <!-- CURRENT PASSWORD -->
               <div class="field full-width">
                 <label for="cur">
-                  Current password <span>*</span>
+                  {{ 'PROVIDER_PROFILE.CURRENT_PASSWORD' | translate }} <span>*</span>
                 </label>
 
                 <div class="input-box">
                   <i class="fa-solid fa-lock"></i>
-
                   <input
                     id="cur"
                     type="password"
                     autocomplete="current-password"
                     formControlName="currentPassword"
-                    placeholder="Enter current password"
+                    [placeholder]="'PROVIDER_PROFILE.CURRENT_PASSWORD_PLACEHOLDER' | translate"
                   />
                 </div>
 
                 @if (bad('pwd', 'currentPassword')) {
                   <small class="field-error">
-                    Current password is required.
+                    {{ 'PROVIDER_PROFILE.CURRENT_PASSWORD_ERROR' | translate }}
                   </small>
                 }
               </div>
 
-              <!-- NEW PASSWORD -->
               <div class="field">
                 <label for="np">
-                  New password <span>*</span>
+                  {{ 'PROVIDER_PROFILE.NEW_PASSWORD' | translate }} <span>*</span>
                 </label>
 
                 <div class="input-box">
                   <i class="fa-solid fa-key"></i>
-
                   <input
                     id="np"
                     type="password"
                     autocomplete="new-password"
                     formControlName="newPassword"
-                    placeholder="Enter new password"
+                    [placeholder]="'PROVIDER_PROFILE.NEW_PASSWORD_PLACEHOLDER' | translate"
                   />
                 </div>
 
                 @if (bad('pwd', 'newPassword')) {
                   <small class="field-error">
-                    Minimum 6 characters required.
+                    {{ 'PROVIDER_PROFILE.PASSWORD_MIN_ERROR' | translate }}
                   </small>
                 }
               </div>
 
-              <!-- CONFIRM PASSWORD -->
               <div class="field">
                 <label for="cf">
-                  Confirm new password <span>*</span>
+                  {{ 'PROVIDER_PROFILE.CONFIRM_PASSWORD' | translate }} <span>*</span>
                 </label>
 
                 <div class="input-box">
                   <i class="fa-solid fa-lock"></i>
-
                   <input
                     id="cf"
                     type="password"
                     autocomplete="new-password"
                     formControlName="confirm"
-                    placeholder="Confirm new password"
+                    [placeholder]="'PROVIDER_PROFILE.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
                   />
                 </div>
 
                 @if (bad('pwd', 'confirm')) {
                   <small class="field-error">
-                    Please confirm your password.
+                    {{ 'PROVIDER_PROFILE.CONFIRM_PASSWORD_ERROR' | translate }}
                   </small>
                 }
               </div>
@@ -459,7 +427,7 @@
 
               <span class="security-note">
                 <i class="fa-solid fa-shield-halved"></i>
-                Keep your password private.
+                {{ 'PROVIDER_PROFILE.PASSWORD_PRIVATE' | translate }}
               </span>
 
               <button
@@ -469,10 +437,10 @@
               >
                 @if (pwdSaving()) {
                   <i class="fa-solid fa-spinner fa-spin"></i>
-                  Updating...
+                  {{ 'PROVIDER_PROFILE.UPDATING' | translate }}
                 } @else {
                   <i class="fa-solid fa-lock"></i>
-                  Update password
+                  {{ 'PROVIDER_PROFILE.UPDATE_PASSWORD' | translate }}
                 }
               </button>
 

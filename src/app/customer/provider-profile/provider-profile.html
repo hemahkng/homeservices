@@ -1,4 +1,7 @@
-<a class="cu-back" routerLink="/customer/services">← All services</a>
+
+<a class="cu-back" routerLink="/customer/services">
+  ← {{ 'CUSTOMER_PROVIDER_PROFILE.BACK_SERVICES' | translate }}
+</a>
 
 @if (loading()) {
   <app-loader />
@@ -7,65 +10,132 @@
 } @else if (p(); as p) {
   <div class="cu-card hero">
     <span class="av">{{ p.name.charAt(0).toUpperCase() }}</span>
+
     <div class="info">
       <h1>{{ p.name }}</h1>
+
       @if (p.providerProfile; as pp) {
         <p>{{ pp.category.name }} · {{ pp.city }}</p>
       }
+
       <div class="rt">
-        @if (rating() > 0) { <app-rating-stars [value]="rating()" [size]="18" /> <b>{{ rating() | number: '1.1-1' }}</b> } @else { New provider }
+        @if (rating() > 0) {
+          <app-rating-stars [value]="rating()" [size]="18" />
+          <b>{{ rating() | number: '1.1-1' }}</b>
+        } @else {
+          {{ 'CUSTOMER_PROVIDER_PROFILE.NEW_PROVIDER' | translate }}
+        }
       </div>
     </div>
   </div>
 
   <div class="stats">
-    <div><b>{{ p.completedJobs }}</b><span>Jobs completed</span></div>
-    <div><b>{{ p.reviewCount }}</b><span>Reviews</span></div>
-    <div><b>{{ p.providerProfile?.experienceYears ?? 0 }}</b><span>Years experience</span></div>
-    <div><b>{{ p.createdAt | date: 'MMM y' }}</b><span>Member since</span></div>
+    <div>
+      <b>{{ p.completedJobs }}</b>
+      <span>{{ 'CUSTOMER_PROVIDER_PROFILE.JOBS_COMPLETED' | translate }}</span>
+    </div>
+    <div>
+      <b>{{ p.reviewCount }}</b>
+      <span>{{ 'CUSTOMER_PROVIDER_PROFILE.REVIEWS' | translate }}</span>
+    </div>
+    <div>
+      <b>{{ p.providerProfile?.experienceYears ?? 0 }}</b>
+      <span>{{ 'CUSTOMER_PROVIDER_PROFILE.YEARS_EXPERIENCE' | translate }}</span>
+    </div>
+    <div>
+      <b>{{ p.createdAt | date: 'MMM y' }}</b>
+      <span>{{ 'CUSTOMER_PROVIDER_PROFILE.MEMBER_SINCE' | translate }}</span>
+    </div>
   </div>
 
   @if (p.providerProfile?.bio) {
-    <div class="cu-card"><h2>About</h2><p class="bio">{{ p.providerProfile?.bio }}</p></div>
+    <div class="cu-card">
+      <h2>{{ 'CUSTOMER_PROVIDER_PROFILE.ABOUT' | translate }}</h2>
+      <p class="bio">{{ p.providerProfile?.bio }}</p>
+    </div>
   }
 
   <div class="tabs">
-    <button type="button" class="tab" [class.on]="tab() === 'services'" (click)="tab.set('services')">Services ({{ p.services.length }})</button>
-    <button type="button" class="tab" [class.on]="tab() === 'reviews'" (click)="tab.set('reviews')">Reviews ({{ p.reviewCount }})</button>
+    <button
+      type="button"
+      class="tab"
+      [class.on]="tab() === 'services'"
+      (click)="tab.set('services')"
+    >
+      {{ 'CUSTOMER_PROVIDER_PROFILE.SERVICES_TAB' | translate: { count: p.services.length } }}
+    </button>
+
+    <button
+      type="button"
+      class="tab"
+      [class.on]="tab() === 'reviews'"
+      (click)="tab.set('reviews')"
+    >
+      {{ 'CUSTOMER_PROVIDER_PROFILE.REVIEWS_TAB' | translate: { count: p.reviewCount } }}
+    </button>
   </div>
 
   @if (tab() === 'services') {
     @if (p.services.length === 0) {
-      <app-empty-state icon="🧰" title="No services listed" text="This provider has not added any services yet." />
+      <app-empty-state
+        icon="🧰"
+        [title]="'CUSTOMER_PROVIDER_PROFILE.NO_SERVICES' | translate"
+        [text]="'CUSTOMER_PROVIDER_PROFILE.NO_SERVICES_DESCRIPTION' | translate"
+      />
     }
+
     <div class="list">
       @for (s of p.services; track s.id) {
         <div class="cu-card svc">
           <div class="grow">
-            <a [routerLink]="['/customer/services', s.id]"><strong>{{ s.title }}</strong></a>
+            <a [routerLink]="['/customer/services', s.id]">
+              <strong>{{ s.title }}</strong>
+            </a>
+
             <small>{{ s.category.name }} · {{ duration(s.durationMin) }}</small>
-            @if (s.description) { <p>{{ s.description }}</p> }
+
+            @if (s.description) {
+              <p>{{ s.description }}</p>
+            }
           </div>
+
           <div class="act">
             <b>₹{{ s.price | number }}</b>
-            <a class="cu-btn sm" [routerLink]="['/customer/book', s.id]">Book</a>
+            <a class="cu-btn sm" [routerLink]="['/customer/book', s.id]">
+              {{ 'CUSTOMER_PROVIDER_PROFILE.BOOK' | translate }}
+            </a>
           </div>
         </div>
       }
     </div>
   } @else {
     @if (p.reviews.length === 0) {
-      <app-empty-state icon="⭐" title="No reviews yet" text="Be the first to book and review this provider." />
+      <app-empty-state
+        icon="⭐"
+        [title]="'CUSTOMER_PROVIDER_PROFILE.NO_REVIEWS' | translate"
+        [text]="'CUSTOMER_PROVIDER_PROFILE.NO_REVIEWS_DESCRIPTION' | translate"
+      />
     }
+
     <div class="list">
       @for (r of p.reviews; track r.id) {
         <div class="cu-card rv">
           <div class="rv-top">
             <span class="rav">{{ r.customer.name.charAt(0).toUpperCase() }}</span>
-            <div class="grow"><b>{{ r.customer.name }}</b><small>{{ r.booking.service.title }} · {{ r.createdAt | date: 'd MMM y' }}</small></div>
+
+            <div class="grow">
+              <b>{{ r.customer.name }}</b>
+              <small>
+                {{ r.booking.service.title }} · {{ r.createdAt | date: 'd MMM y' }}
+              </small>
+            </div>
+
             <app-rating-stars [value]="r.rating" [size]="15" />
           </div>
-          @if (r.comment) { <p>{{ r.comment }}</p> }
+
+          @if (r.comment) {
+            <p>{{ r.comment }}</p>
+          }
         </div>
       }
     </div>

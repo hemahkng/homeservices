@@ -17,19 +17,17 @@
 
         <span class="welcome-tag">
           <i class="fa-solid fa-star"></i>
-          PROFESSIONAL PARTNER PROGRAM
+          {{ 'AUTH_PROVIDER_REGISTER.WELCOME_TAG' | translate }}
         </span>
 
         <h1>
-          Turn your
-          <span>skills into</span>
-          opportunities.
+          {{ 'AUTH_PROVIDER_REGISTER.HERO_TITLE_BEFORE' | translate }}
+          <span>{{ 'AUTH_PROVIDER_REGISTER.HERO_TITLE_HIGHLIGHT' | translate }}</span>
+          {{ 'AUTH_PROVIDER_REGISTER.HERO_TITLE_AFTER' | translate }}
         </h1>
 
         <p>
-          Join our growing community of professionals.
-          Connect with customers and build your business
-          with HomeServices.
+          {{ 'AUTH_PROVIDER_REGISTER.HERO_DESCRIPTION' | translate }}
         </p>
 
         <div class="benefit-list">
@@ -39,8 +37,8 @@
               <i class="fa-solid fa-users"></i>
             </div>
             <div>
-              <h4>Reach more customers</h4>
-              <span>Connect with customers in your area.</span>
+              <h4>{{ 'AUTH_PROVIDER_REGISTER.REACH_CUSTOMERS' | translate }}</h4>
+              <span>{{ 'AUTH_PROVIDER_REGISTER.REACH_DESCRIPTION' | translate }}</span>
             </div>
           </div>
 
@@ -49,8 +47,8 @@
               <i class="fa-solid fa-chart-line"></i>
             </div>
             <div>
-              <h4>Grow your business</h4>
-              <span>Get more opportunities for your services.</span>
+              <h4>{{ 'AUTH_PROVIDER_REGISTER.GROW_BUSINESS' | translate }}</h4>
+              <span>{{ 'AUTH_PROVIDER_REGISTER.GROW_DESCRIPTION' | translate }}</span>
             </div>
           </div>
 
@@ -59,8 +57,8 @@
               <i class="fa-solid fa-shield-halved"></i>
             </div>
             <div>
-              <h4>Build your reputation</h4>
-              <span>Showcase your skills and experience.</span>
+              <h4>{{ 'AUTH_PROVIDER_REGISTER.BUILD_REPUTATION' | translate }}</h4>
+              <span>{{ 'AUTH_PROVIDER_REGISTER.REPUTATION_DESCRIPTION' | translate }}</span>
             </div>
           </div>
 
@@ -69,8 +67,15 @@
       </div>
 
       <div class="welcome-bottom">
-        <span><i class="fa-solid fa-circle-check"></i> Simple registration</span>
-        <span><i class="fa-solid fa-circle-check"></i> Admin verified</span>
+        <span>
+          <i class="fa-solid fa-circle-check"></i>
+          {{ 'AUTH_PROVIDER_REGISTER.SIMPLE_REGISTRATION' | translate }}
+        </span>
+
+        <span>
+          <i class="fa-solid fa-circle-check"></i>
+          {{ 'AUTH_PROVIDER_REGISTER.ADMIN_VERIFIED' | translate }}
+        </span>
       </div>
 
       <div class="decoration decoration-one"></div>
@@ -90,14 +95,14 @@
             <i class="fa-solid fa-check"></i>
           </div>
 
-          <span class="success-tag">APPLICATION SUBMITTED</span>
+          <span class="success-tag">
+            {{ 'AUTH_PROVIDER_REGISTER.APPLICATION_SUBMITTED' | translate }}
+          </span>
 
-          <h2>You're almost there!</h2>
+          <h2>{{ 'AUTH_PROVIDER_REGISTER.SUCCESS_TITLE' | translate }}</h2>
 
           <p>
-            Your provider registration has been successfully
-            submitted. Our admin team will review your
-            application shortly.
+            {{ 'AUTH_PROVIDER_REGISTER.SUCCESS_DESCRIPTION' | translate }}
           </p>
 
           <div class="status-card">
@@ -105,18 +110,18 @@
               <i class="fa-solid fa-clock"></i>
             </div>
             <div>
-              <strong>Pending approval</strong>
-              <span>You can log in once your account is approved.</span>
+              <strong>{{ 'AUTH_PROVIDER_REGISTER.PENDING_APPROVAL' | translate }}</strong>
+              <span>{{ 'AUTH_PROVIDER_REGISTER.PENDING_DESCRIPTION' | translate }}</span>
             </div>
           </div>
 
           <a routerLink="/auth/login" class="primary-button">
-            Go to Login
+            {{ 'AUTH_PROVIDER_REGISTER.GO_LOGIN' | translate }}
             <i class="fa-solid fa-arrow-right"></i>
           </a>
 
           <a routerLink="/auth/register" class="secondary-link">
-            Back to registration
+            {{ 'AUTH_PROVIDER_REGISTER.BACK_REGISTRATION' | translate }}
           </a>
 
         </div>
@@ -125,17 +130,19 @@
 
         <div class="form-content">
 
-          <!-- Form Heading -->
+          <!-- FORM HEADING -->
           <div class="form-top">
             <div>
-              <span class="form-step">CREATE YOUR ACCOUNT</span>
-              <h2>Become a partner</h2>
-              <p>Complete the details below to get started.</p>
+              <span class="form-step">
+                {{ 'AUTH_PROVIDER_REGISTER.CREATE_ACCOUNT' | translate }}
+              </span>
+              <h2>{{ 'AUTH_PROVIDER_REGISTER.BECOME_PARTNER' | translate }}</h2>
+              <p>{{ 'AUTH_PROVIDER_REGISTER.FORM_DESCRIPTION' | translate }}</p>
             </div>
 
             <div class="provider-badge">
               <i class="fa-solid fa-user-gear"></i>
-              Provider
+              {{ 'AUTH_PROVIDER_REGISTER.PROVIDER' | translate }}
             </div>
           </div>
 
@@ -145,8 +152,8 @@
             <div class="section-title">
               <span>01</span>
               <div>
-                <h3>Personal details</h3>
-                <p>Your basic contact information</p>
+                <h3>{{ 'AUTH_PROVIDER_REGISTER.PERSONAL_DETAILS' | translate }}</h3>
+                <p>{{ 'AUTH_PROVIDER_REGISTER.PERSONAL_DESCRIPTION' | translate }}</p>
               </div>
             </div>
 
@@ -154,73 +161,89 @@
 
               <!-- Name -->
               <div class="field full-width">
-                <label for="name">Full name <span>*</span></label>
+                <label for="name">
+                  {{ 'AUTH_PROVIDER_REGISTER.FULL_NAME' | translate }} <span>*</span>
+                </label>
                 <div class="input-box">
                   <i class="fa-regular fa-user"></i>
                   <input
                     id="name"
                     type="text"
                     formControlName="name"
-                    placeholder="Enter your full name"
+                    [placeholder]="'AUTH_PROVIDER_REGISTER.NAME_PLACEHOLDER' | translate"
                     autocomplete="name"
                   />
                 </div>
                 @if (form.controls.name.touched && form.controls.name.invalid) {
-                  <small class="field-error">Enter a name with at least 2 characters.</small>
+                  <small class="field-error">
+                    {{ 'AUTH_PROVIDER_REGISTER.NAME_ERROR' | translate }}
+                  </small>
                 }
               </div>
 
               <!-- Email -->
               <div class="field">
-                <label for="email">Email address <span>*</span></label>
+                <label for="email">
+                  {{ 'AUTH_PROVIDER_REGISTER.EMAIL' | translate }} <span>*</span>
+                </label>
                 <div class="input-box">
                   <i class="fa-regular fa-envelope"></i>
                   <input
                     id="email"
                     type="email"
                     formControlName="email"
-                    placeholder="name@example.com"
+                    [placeholder]="'AUTH_PROVIDER_REGISTER.EMAIL_PLACEHOLDER' | translate"
                     autocomplete="email"
                   />
                 </div>
                 @if (form.controls.email.touched && form.controls.email.invalid) {
-                  <small class="field-error">Enter a valid email address.</small>
+                  <small class="field-error">
+                    {{ 'AUTH_PROVIDER_REGISTER.EMAIL_ERROR' | translate }}
+                  </small>
                 }
               </div>
 
               <!-- Phone -->
               <div class="field">
-                <label for="phone">Phone number <span>*</span></label>
+                <label for="phone">
+                  {{ 'AUTH_PROVIDER_REGISTER.PHONE' | translate }} <span>*</span>
+                </label>
                 <div class="input-box">
                   <i class="fa-solid fa-phone"></i>
                   <input
                     id="phone"
                     type="tel"
                     formControlName="phone"
-                    placeholder="Enter phone number"
+                    [placeholder]="'AUTH_PROVIDER_REGISTER.PHONE_PLACEHOLDER' | translate"
                     autocomplete="tel"
                   />
                 </div>
                 @if (form.controls.phone.touched && form.controls.phone.invalid) {
-                  <small class="field-error">Enter 10–15 digits.</small>
+                  <small class="field-error">
+                    {{ 'AUTH_PROVIDER_REGISTER.PHONE_ERROR' | translate }}
+                  </small>
                 }
               </div>
 
               <!-- Password -->
               <div class="field full-width">
-                <label for="password">Password <span>*</span></label>
+                <label for="password">
+                  {{ 'AUTH_PROVIDER_REGISTER.PASSWORD' | translate }} <span>*</span>
+                </label>
                 <div class="input-box">
                   <i class="fa-solid fa-lock"></i>
                   <input
                     id="password"
                     type="password"
                     formControlName="password"
-                    placeholder="Create a password (minimum 6 characters)"
+                    [placeholder]="'AUTH_PROVIDER_REGISTER.PASSWORD_PLACEHOLDER' | translate"
                     autocomplete="new-password"
                   />
                 </div>
                 @if (form.controls.password.touched && form.controls.password.invalid) {
-                  <small class="field-error">Password must have at least 6 characters.</small>
+                  <small class="field-error">
+                    {{ 'AUTH_PROVIDER_REGISTER.PASSWORD_ERROR' | translate }}
+                  </small>
                 }
               </div>
 
@@ -230,8 +253,8 @@
             <div class="section-title professional-title">
               <span>02</span>
               <div>
-                <h3>Professional details</h3>
-                <p>Information about your service business</p>
+                <h3>{{ 'AUTH_PROVIDER_REGISTER.PROFESSIONAL_DETAILS' | translate }}</h3>
+                <p>{{ 'AUTH_PROVIDER_REGISTER.PROFESSIONAL_DESCRIPTION' | translate }}</p>
               </div>
             </div>
 
@@ -239,11 +262,15 @@
 
               <!-- Category -->
               <div class="field full-width">
-                <label for="categoryId">Service category <span>*</span></label>
+                <label for="categoryId">
+                  {{ 'AUTH_PROVIDER_REGISTER.CATEGORY' | translate }} <span>*</span>
+                </label>
                 <div class="input-box">
                   <i class="fa-solid fa-briefcase"></i>
                   <select id="categoryId" formControlName="categoryId">
-                    <option [ngValue]="0" disabled>Select your service category</option>
+                    <option [ngValue]="0" disabled>
+                      {{ 'AUTH_PROVIDER_REGISTER.CATEGORY_PLACEHOLDER' | translate }}
+                    </option>
                     @for (c of categories(); track c.id) {
                       <option [ngValue]="c.id">{{ c.name }}</option>
                     }
@@ -251,51 +278,63 @@
                   <i class="fa-solid fa-chevron-down select-arrow"></i>
                 </div>
                 @if (form.controls.categoryId.touched && form.controls.categoryId.invalid) {
-                  <small class="field-error">Please select a service category.</small>
+                  <small class="field-error">
+                    {{ 'AUTH_PROVIDER_REGISTER.CATEGORY_ERROR' | translate }}
+                  </small>
                 }
               </div>
 
               <!-- City -->
               <div class="field">
-                <label for="city">City / Service area <span>*</span></label>
+                <label for="city">
+                  {{ 'AUTH_PROVIDER_REGISTER.CITY' | translate }} <span>*</span>
+                </label>
                 <div class="input-box">
                   <i class="fa-solid fa-location-dot"></i>
                   <input
                     id="city"
                     type="text"
                     formControlName="city"
-                    placeholder="Enter your city"
+                    [placeholder]="'AUTH_PROVIDER_REGISTER.CITY_PLACEHOLDER' | translate"
                   />
                 </div>
                 @if (form.controls.city.touched && form.controls.city.invalid) {
-                  <small class="field-error">Enter a valid city.</small>
+                  <small class="field-error">
+                    {{ 'AUTH_PROVIDER_REGISTER.CITY_ERROR' | translate }}
+                  </small>
                 }
               </div>
 
               <!-- Experience -->
               <div class="field">
-                <label for="experienceYears">Experience (years)</label>
+                <label for="experienceYears">
+                  {{ 'AUTH_PROVIDER_REGISTER.EXPERIENCE' | translate }}
+                </label>
                 <div class="input-box">
                   <i class="fa-solid fa-award"></i>
                   <input
                     id="experienceYears"
                     type="number"
                     formControlName="experienceYears"
-                    placeholder="e.g. 3"
+                    [placeholder]="'AUTH_PROVIDER_REGISTER.EXPERIENCE_PLACEHOLDER' | translate"
                     min="0"
                     max="60"
                   />
                 </div>
                 @if (form.controls.experienceYears.touched && form.controls.experienceYears.invalid) {
-                  <small class="field-error">Enter a value between 0 and 60.</small>
+                  <small class="field-error">
+                    {{ 'AUTH_PROVIDER_REGISTER.EXPERIENCE_ERROR' | translate }}
+                  </small>
                 }
               </div>
 
               <!-- Bio -->
               <div class="field full-width">
                 <div class="label-row">
-                  <label for="bio">About your services</label>
-                  <span>OPTIONAL</span>
+                  <label for="bio">
+                    {{ 'AUTH_PROVIDER_REGISTER.ABOUT_SERVICES' | translate }}
+                  </label>
+                  <span>{{ 'AUTH_PROVIDER_REGISTER.OPTIONAL' | translate }}</span>
                 </div>
                 <div class="textarea-box">
                   <textarea
@@ -303,11 +342,11 @@
                     rows="3"
                     maxlength="500"
                     formControlName="bio"
-                    placeholder="Tell customers about your skills, experience and services..."
+                    [placeholder]="'AUTH_PROVIDER_REGISTER.BIO_PLACEHOLDER' | translate"
                   ></textarea>
                 </div>
                 <div class="character-count">
-                  {{ form.controls.bio.value.length }} / 500 characters
+                  {{ 'AUTH_PROVIDER_REGISTER.CHARACTERS' | translate:{count: form.controls.bio.value.length} }}
                 </div>
               </div>
 
@@ -321,7 +360,7 @@
               </div>
             }
 
-            <!-- Submit -->
+            <!-- SUBMIT -->
             <div class="form-actions">
               <button
                 type="submit"
@@ -330,25 +369,29 @@
               >
                 @if (loading()) {
                   <i class="fa-solid fa-spinner fa-spin"></i>
-                  Submitting...
+                  {{ 'AUTH_PROVIDER_REGISTER.SUBMITTING' | translate }}
                 } @else {
-                  Submit for approval
+                  {{ 'AUTH_PROVIDER_REGISTER.SUBMIT_APPROVAL' | translate }}
                   <i class="fa-solid fa-arrow-right"></i>
                 }
               </button>
 
               <a routerLink="/auth/register" class="back-link">
                 <i class="fa-solid fa-arrow-left"></i>
-                Back
+                {{ 'AUTH_PROVIDER_REGISTER.BACK' | translate }}
               </a>
             </div>
 
           </form>
 
           <div class="form-footer">
-            Already have an account?
-            <a routerLink="/auth/login">Sign in</a>
-            <span class="footer-copy">© 2026 HomeServices</span>
+            {{ 'AUTH_PROVIDER_REGISTER.ALREADY_ACCOUNT' | translate }}
+            <a routerLink="/auth/login">
+              {{ 'AUTH_PROVIDER_REGISTER.SIGN_IN' | translate }}
+            </a>
+            <span class="footer-copy">
+              {{ 'AUTH_PROVIDER_REGISTER.COPYRIGHT' | translate }}
+            </span>
           </div>
 
         </div>

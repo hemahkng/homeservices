@@ -1,28 +1,27 @@
 
 <div class="dashboard-page">
 
-  <!-- WELCOME HEADER -->
   <header class="dashboard-header">
     <div class="welcome-content">
       <span class="eyebrow">
         <span class="eyebrow-dot"></span>
-        PROVIDER OVERVIEW
+        {{ 'PROVIDER_DASHBOARD.OVERVIEW' | translate }}
       </span>
 
-      <h1>{{ greeting() }}, {{ firstName() }} <span class="wave">👋</span></h1>
-      <p>Here's what's happening with your business today.</p>
+      <h1>{{ greeting() | translate }}, {{ firstName() }} <span class="wave">👋</span></h1>
+      <p>{{ 'PROVIDER_DASHBOARD.WELCOME_DESCRIPTION' | translate }}</p>
     </div>
 
     <a class="add-service-btn" routerLink="/provider/services/new">
       <i class="fa-solid fa-plus"></i>
-      <span>Add new service</span>
+      <span>{{ 'PROVIDER_DASHBOARD.ADD_SERVICE' | translate }}</span>
     </a>
   </header>
 
   @if (loading()) {
     <div class="loading-state">
       <app-loader />
-      <p>Loading your dashboard...</p>
+      <p>{{ 'PROVIDER_DASHBOARD.LOADING' | translate }}</p>
     </div>
   } @else if (error()) {
     <div class="dashboard-error">
@@ -31,7 +30,6 @@
     </div>
   } @else if (stats(); as s) {
 
-    <!-- SETUP CHECKLIST -->
     @if (s.services === 0 || !s.availabilitySet) {
       <section class="setup-card">
         <div class="setup-top">
@@ -40,9 +38,9 @@
           </div>
 
           <div class="setup-heading">
-            <span class="section-eyebrow">GETTING STARTED</span>
-            <h2>Complete your profile setup</h2>
-            <p>Finish these steps to start receiving customer bookings.</p>
+            <span class="section-eyebrow">{{ 'PROVIDER_DASHBOARD.GETTING_STARTED' | translate }}</span>
+            <h2>{{ 'PROVIDER_DASHBOARD.SETUP_TITLE' | translate }}</h2>
+            <p>{{ 'PROVIDER_DASHBOARD.SETUP_DESCRIPTION' | translate }}</p>
           </div>
         </div>
 
@@ -54,7 +52,9 @@
           </div>
 
           <small>
-            {{ (s.services > 0 ? 1 : 0) + (s.availabilitySet ? 1 : 0) }}/2 completed
+            {{ 'PROVIDER_DASHBOARD.SETUP_PROGRESS' | translate:{
+              count: (s.services > 0 ? 1 : 0) + (s.availabilitySet ? 1 : 0)
+            } }}
           </small>
         </div>
 
@@ -70,16 +70,17 @@
             </div>
 
             <div class="step-info">
-              <strong>Add your first service</strong>
-              <small>Tell customers what services you provide.</small>
+              <strong>{{ 'PROVIDER_DASHBOARD.ADD_FIRST_SERVICE' | translate }}</strong>
+              <small>{{ 'PROVIDER_DASHBOARD.ADD_SERVICE_DESCRIPTION' | translate }}</small>
             </div>
 
             @if (s.services === 0) {
               <a routerLink="/provider/services/new" class="step-action">
-                Add service <i class="fa-solid fa-arrow-right"></i>
+                {{ 'PROVIDER_DASHBOARD.ADD_SERVICE_ACTION' | translate }}
+                <i class="fa-solid fa-arrow-right"></i>
               </a>
             } @else {
-              <span class="completed-label">Completed</span>
+              <span class="completed-label">{{ 'PROVIDER_DASHBOARD.COMPLETED' | translate }}</span>
             }
           </div>
 
@@ -93,16 +94,17 @@
             </div>
 
             <div class="step-info">
-              <strong>Set your working hours</strong>
-              <small>Choose when customers can book you.</small>
+              <strong>{{ 'PROVIDER_DASHBOARD.SET_WORKING_HOURS' | translate }}</strong>
+              <small>{{ 'PROVIDER_DASHBOARD.WORKING_HOURS_DESCRIPTION' | translate }}</small>
             </div>
 
             @if (!s.availabilitySet) {
               <a routerLink="/provider/availability" class="step-action">
-                Set hours <i class="fa-solid fa-arrow-right"></i>
+                {{ 'PROVIDER_DASHBOARD.SET_HOURS' | translate }}
+                <i class="fa-solid fa-arrow-right"></i>
               </a>
             } @else {
-              <span class="completed-label">Completed</span>
+              <span class="completed-label">{{ 'PROVIDER_DASHBOARD.COMPLETED' | translate }}</span>
             }
           </div>
 
@@ -110,16 +112,15 @@
       </section>
     }
 
-    <!-- STATISTICS -->
     <section class="stats-section">
       <div class="section-heading">
         <div>
-          <span class="section-eyebrow">BUSINESS PERFORMANCE</span>
-          <h2>Your overview</h2>
+          <span class="section-eyebrow">{{ 'PROVIDER_DASHBOARD.BUSINESS_PERFORMANCE' | translate }}</span>
+          <h2>{{ 'PROVIDER_DASHBOARD.YOUR_OVERVIEW' | translate }}</h2>
         </div>
 
         <span class="live-indicator">
-          <span></span> Live overview
+          <span></span> {{ 'PROVIDER_DASHBOARD.LIVE_OVERVIEW' | translate }}
         </span>
       </div>
 
@@ -136,8 +137,8 @@
           </div>
 
           <div class="stat-value">{{ s.pending }}</div>
-          <div class="stat-label">New requests</div>
-          <div class="stat-foot">Waiting for your response</div>
+          <div class="stat-label">{{ 'PROVIDER_DASHBOARD.NEW_REQUESTS' | translate }}</div>
+          <div class="stat-foot">{{ 'PROVIDER_DASHBOARD.WAITING_RESPONSE' | translate }}</div>
         </a>
 
         <a class="stat-card upcoming-card" routerLink="/provider/requests">
@@ -151,8 +152,8 @@
           </div>
 
           <div class="stat-value">{{ s.accepted + s.inProgress }}</div>
-          <div class="stat-label">Upcoming jobs</div>
-          <div class="stat-foot">Accepted and in progress</div>
+          <div class="stat-label">{{ 'PROVIDER_DASHBOARD.UPCOMING_JOBS' | translate }}</div>
+          <div class="stat-foot">{{ 'PROVIDER_DASHBOARD.ACCEPTED_IN_PROGRESS' | translate }}</div>
         </a>
 
         <a class="stat-card completed-card" routerLink="/provider/requests">
@@ -166,8 +167,8 @@
           </div>
 
           <div class="stat-value">{{ s.completed }}</div>
-          <div class="stat-label">Completed jobs</div>
-          <div class="stat-foot">Successfully delivered</div>
+          <div class="stat-label">{{ 'PROVIDER_DASHBOARD.COMPLETED_JOBS' | translate }}</div>
+          <div class="stat-foot">{{ 'PROVIDER_DASHBOARD.SUCCESSFULLY_DELIVERED' | translate }}</div>
         </a>
 
         <a class="stat-card earnings-card" routerLink="/provider/earnings">
@@ -181,8 +182,8 @@
           </div>
 
           <div class="stat-value money">₹{{ s.net | number }}</div>
-          <div class="stat-label">Net earnings</div>
-          <div class="stat-foot">Your total net earnings</div>
+          <div class="stat-label">{{ 'PROVIDER_DASHBOARD.NET_EARNINGS' | translate }}</div>
+          <div class="stat-foot">{{ 'PROVIDER_DASHBOARD.TOTAL_NET_EARNINGS' | translate }}</div>
         </a>
 
         <a class="stat-card rating-card" routerLink="/provider/reviews">
@@ -202,30 +203,28 @@
             }
           </div>
 
-          <div class="stat-label">Customer rating</div>
+          <div class="stat-label">{{ 'PROVIDER_DASHBOARD.CUSTOMER_RATING' | translate }}</div>
           <div class="stat-foot">
-            {{ s.reviews }} review{{ s.reviews === 1 ? '' : 's' }} received
+            {{ (s.reviews === 1 ? 'PROVIDER_DASHBOARD.REVIEW_RECEIVED' : 'PROVIDER_DASHBOARD.REVIEWS_RECEIVED') | translate:{ count: s.reviews } }}
           </div>
         </a>
 
       </div>
     </section>
 
-    <!-- MAIN CONTENT -->
     <div class="dashboard-content">
 
-      <!-- UPCOMING JOBS -->
       <section class="content-card jobs-card">
 
         <div class="card-header">
           <div>
-            <span class="section-eyebrow">YOUR SCHEDULE</span>
-            <h2>Upcoming jobs</h2>
-            <p>Stay on top of your accepted bookings.</p>
+            <span class="section-eyebrow">{{ 'PROVIDER_DASHBOARD.YOUR_SCHEDULE' | translate }}</span>
+            <h2>{{ 'PROVIDER_DASHBOARD.UPCOMING_JOBS' | translate }}</h2>
+            <p>{{ 'PROVIDER_DASHBOARD.UPCOMING_DESCRIPTION' | translate }}</p>
           </div>
 
           <a routerLink="/provider/requests" class="view-all">
-            View requests
+            {{ 'PROVIDER_DASHBOARD.VIEW_REQUESTS' | translate }}
             <i class="fa-solid fa-arrow-right"></i>
           </a>
         </div>
@@ -235,10 +234,11 @@
             <div class="empty-icon">
               <i class="fa-regular fa-calendar"></i>
             </div>
-            <h3>No upcoming jobs yet</h3>
-            <p>When customers book your services and you accept their requests, they'll appear here.</p>
+            <h3>{{ 'PROVIDER_DASHBOARD.NO_UPCOMING' | translate }}</h3>
+            <p>{{ 'PROVIDER_DASHBOARD.NO_UPCOMING_DESCRIPTION' | translate }}</p>
             <a routerLink="/provider/requests" class="empty-link">
-              Check requests <i class="fa-solid fa-arrow-right"></i>
+              {{ 'PROVIDER_DASHBOARD.CHECK_REQUESTS' | translate }}
+              <i class="fa-solid fa-arrow-right"></i>
             </a>
           </div>
         } @else {
@@ -283,14 +283,13 @@
 
       </section>
 
-      <!-- RIGHT SIDEBAR -->
       <aside class="dashboard-sidebar">
 
         <section class="content-card quick-card">
           <div class="card-header">
             <div>
-              <span class="section-eyebrow">SHORTCUTS</span>
-              <h2>Quick actions</h2>
+              <span class="section-eyebrow">{{ 'PROVIDER_DASHBOARD.SHORTCUTS' | translate }}</span>
+              <h2>{{ 'PROVIDER_DASHBOARD.QUICK_ACTIONS' | translate }}</h2>
             </div>
           </div>
 
@@ -302,8 +301,8 @@
               </span>
 
               <span class="quick-text">
-                <strong>Review requests</strong>
-                <small>Manage customer bookings</small>
+                <strong>{{ 'PROVIDER_DASHBOARD.REVIEW_REQUESTS' | translate }}</strong>
+                <small>{{ 'PROVIDER_DASHBOARD.MANAGE_BOOKINGS' | translate }}</small>
               </span>
 
               <i class="fa-solid fa-chevron-right action-arrow"></i>
@@ -315,8 +314,8 @@
               </span>
 
               <span class="quick-text">
-                <strong>Manage services</strong>
-                <small>Update your service listings</small>
+                <strong>{{ 'PROVIDER_DASHBOARD.MANAGE_SERVICES' | translate }}</strong>
+                <small>{{ 'PROVIDER_DASHBOARD.UPDATE_LISTINGS' | translate }}</small>
               </span>
 
               <i class="fa-solid fa-chevron-right action-arrow"></i>
@@ -328,8 +327,8 @@
               </span>
 
               <span class="quick-text">
-                <strong>Working hours</strong>
-                <small>Manage your availability</small>
+                <strong>{{ 'PROVIDER_DASHBOARD.WORKING_HOURS' | translate }}</strong>
+                <small>{{ 'PROVIDER_DASHBOARD.MANAGE_AVAILABILITY' | translate }}</small>
               </span>
 
               <i class="fa-solid fa-chevron-right action-arrow"></i>
@@ -341,8 +340,8 @@
               </span>
 
               <span class="quick-text">
-                <strong>Edit profile</strong>
-                <small>Update your business details</small>
+                <strong>{{ 'PROVIDER_DASHBOARD.EDIT_PROFILE' | translate }}</strong>
+                <small>{{ 'PROVIDER_DASHBOARD.UPDATE_BUSINESS' | translate }}</small>
               </span>
 
               <i class="fa-solid fa-chevron-right action-arrow"></i>
@@ -351,12 +350,11 @@
           </div>
         </section>
 
-        <!-- RATING SUMMARY -->
         <section class="rating-summary-card">
           <div class="rating-summary-top">
             <div>
-              <span class="section-eyebrow">CUSTOMER FEEDBACK</span>
-              <h3>Your reputation</h3>
+              <span class="section-eyebrow">{{ 'PROVIDER_DASHBOARD.CUSTOMER_FEEDBACK' | translate }}</span>
+              <h3>{{ 'PROVIDER_DASHBOARD.YOUR_REPUTATION' | translate }}</h3>
             </div>
 
             <div class="rating-summary-icon">
@@ -373,18 +371,17 @@
             <app-rating-stars [value]="s.rating" [size]="18" />
 
             <p>
-              Based on {{ s.reviews }}
-              customer review{{ s.reviews === 1 ? '' : 's' }}.
+              {{ (s.reviews === 1 ? 'PROVIDER_DASHBOARD.BASED_ON_REVIEW' : 'PROVIDER_DASHBOARD.BASED_ON_REVIEWS') | translate:{ count: s.reviews } }}
             </p>
           } @else {
             <div class="no-rating">
               <i class="fa-regular fa-star"></i>
-              <p>No ratings yet. Complete jobs and collect customer feedback.</p>
+              <p>{{ 'PROVIDER_DASHBOARD.NO_RATINGS' | translate }}</p>
             </div>
           }
 
           <a routerLink="/provider/reviews" class="rating-link">
-            View customer reviews
+            {{ 'PROVIDER_DASHBOARD.VIEW_REVIEWS' | translate }}
             <i class="fa-solid fa-arrow-right"></i>
           </a>
         </section>

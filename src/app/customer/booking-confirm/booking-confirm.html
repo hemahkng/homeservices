@@ -1,154 +1,164 @@
-
 @if (loading()) {
-  <app-loader />
+<app-loader />
 } @else if (b(); as b) {
-  <div class="cu-confirm">
-    <div class="cu-confirm__container">
+<div class="cu-confirm">
+  <div class="cu-confirm__container">
 
-      <!-- Success Header -->
-      <div class="cu-confirm__hero">
-        <div class="cu-confirm__success-icon">
-          <i class="fa-solid fa-check"></i>
-        </div>
-
-        <span class="cu-confirm__eyebrow">
-          BOOKING REQUEST SUBMITTED
-        </span>
-
-        <h1>You're all set!</h1>
-        <p class="cu-confirm__lead">
-          Your booking request has been successfully sent to
-          <strong>{{ b.provider.name }}</strong>.
-          They'll review your request and notify you shortly.
-        </p>
-
-        <div class="cu-confirm__status">
-          <span class="cu-confirm__status-dot"></span>
-          Waiting for provider confirmation
-        </div>
+    <!-- Success Header -->
+    <div class="cu-confirm__hero">
+      <div class="cu-confirm__success-icon">
+        <i class="fa-solid fa-check"></i>
       </div>
 
-      <!-- Booking Summary -->
-      <section class="cu-confirm__card">
-        <div class="cu-confirm__section-head">
-          <div>
-            <span class="cu-confirm__label">BOOKING SUMMARY</span>
-            <h2>Your booking details</h2>
-          </div>
-          <span class="cu-confirm__booking-id">#{{ b.id }}</span>
-        </div>
+      <span class="cu-confirm__eyebrow">
+        {{ 'CUSTOMER_CONFIRMATION.EYEBROW' | translate }}
+      </span>
 
-        <div class="cu-confirm__service">
-          <div class="cu-confirm__service-icon">
-            <i class="fa-solid fa-house-chimney"></i>
-          </div>
-          <div>
-            <span>YOUR SERVICE</span>
-            <h3>{{ b.service.title }}</h3>
-            <p>Provided by {{ b.provider.name }}</p>
-          </div>
-        </div>
+      <h1>{{ 'CUSTOMER_CONFIRMATION.TITLE' | translate }}</h1>
 
-        <div class="cu-confirm__details">
-          <div class="cu-confirm__detail">
-            <div class="cu-confirm__detail-icon">
-              <i class="fa-regular fa-calendar"></i>
-            </div>
-            <div>
-              <span>Scheduled date & time</span>
-              <strong>{{ b.scheduledAt | date: 'EEE, d MMM y · h:mm a' }}</strong>
-            </div>
-          </div>
-
-          <div class="cu-confirm__detail">
-            <div class="cu-confirm__detail-icon">
-              <i class="fa-solid fa-location-dot"></i>
-            </div>
-            <div>
-              <span>Service address</span>
-              <strong>{{ b.address }}</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="cu-confirm__total">
-          <div>
-            <span>Total booking amount</span>
-            <small>Payment is available after provider acceptance</small>
-          </div>
-          <strong>₹{{ b.total | number }}</strong>
-        </div>
-      </section>
-
-      <!-- Next Steps -->
-      <section class="cu-confirm__next">
-        <div class="cu-confirm__next-heading">
-          <div class="cu-confirm__next-icon">
-            <i class="fa-solid fa-route"></i>
-          </div>
-          <div>
-            <span class="cu-confirm__label">UP NEXT</span>
-            <h2>What happens next?</h2>
-          </div>
-        </div>
-
-        <div class="cu-confirm__timeline">
-          <div class="cu-confirm__step">
-            <div class="cu-confirm__step-number">1</div>
-            <div>
-              <h3>Provider reviews your request</h3>
-              <p>{{ b.provider.name }} will accept or decline your booking.</p>
-            </div>
-          </div>
-
-          <div class="cu-confirm__step">
-            <div class="cu-confirm__step-number">2</div>
-            <div>
-              <h3>Complete your payment</h3>
-              <p>Once accepted, pay securely from your My bookings page.</p>
-            </div>
-          </div>
-
-          <div class="cu-confirm__step">
-            <div class="cu-confirm__step-number">3</div>
-            <div>
-              <h3>Enjoy your service</h3>
-              <p>After the job is completed, share your experience with a review.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Actions -->
-      <div class="cu-confirm__actions">
-        <a class="cu-confirm__primary" [routerLink]="['/customer/bookings', b.id]">
-          View booking details
-          <i class="fa-solid fa-arrow-right"></i>
-        </a>
-
-        <a class="cu-confirm__secondary" routerLink="/customer/home">
-          <i class="fa-solid fa-house"></i>
-          Back to home
-        </a>
-      </div>
-
-      <p class="cu-confirm__footer">
-        <i class="fa-solid fa-shield-halved"></i>
-        Your booking details are safely stored. You can track your request anytime.
+      <p class="cu-confirm__lead">
+        {{ 'CUSTOMER_CONFIRMATION.LEAD_BEFORE' | translate }}
+        <strong>{{ b.provider.name }}</strong>.
+        {{ 'CUSTOMER_CONFIRMATION.LEAD_AFTER' | translate }}
       </p>
 
+      <div class="cu-confirm__status">
+        <span class="cu-confirm__status-dot"></span>
+        {{ 'CUSTOMER_CONFIRMATION.WAITING_STATUS' | translate }}
+      </div>
     </div>
+
+    <!-- Booking Summary -->
+    <section class="cu-confirm__card">
+      <div class="cu-confirm__section-head">
+        <div>
+          <span class="cu-confirm__label">
+            {{ 'CUSTOMER_CONFIRMATION.BOOKING_SUMMARY' | translate }}
+          </span>
+          <h2>{{ 'CUSTOMER_CONFIRMATION.BOOKING_DETAILS' | translate }}</h2>
+        </div>
+        <span class="cu-confirm__booking-id">#{{ b.id }}</span>
+      </div>
+
+      <div class="cu-confirm__service">
+        <div class="cu-confirm__service-icon">
+          <i class="fa-solid fa-house-chimney"></i>
+        </div>
+        <div>
+          <span>{{ 'CUSTOMER_CONFIRMATION.YOUR_SERVICE' | translate }}</span>
+          <h3>{{ b.service.title }}</h3>
+          <p>
+            {{ 'CUSTOMER_CONFIRMATION.PROVIDED_BY' | translate }}
+            {{ b.provider.name }}
+          </p>
+        </div>
+      </div>
+
+      <div class="cu-confirm__details">
+        <div class="cu-confirm__detail">
+          <div class="cu-confirm__detail-icon">
+            <i class="fa-regular fa-calendar"></i>
+          </div>
+          <div>
+            <span>{{ 'CUSTOMER_CONFIRMATION.SCHEDULED_DATE' | translate }}</span>
+            <strong>{{ b.scheduledAt | date: 'EEE, d MMM y · h:mm a' }}</strong>
+          </div>
+        </div>
+
+        <div class="cu-confirm__detail">
+          <div class="cu-confirm__detail-icon">
+            <i class="fa-solid fa-location-dot"></i>
+          </div>
+          <div>
+            <span>{{ 'CUSTOMER_CONFIRMATION.SERVICE_ADDRESS' | translate }}</span>
+            <strong>{{ b.address }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="cu-confirm__total">
+        <div>
+          <span>{{ 'CUSTOMER_CONFIRMATION.TOTAL_AMOUNT' | translate }}</span>
+          <small>{{ 'CUSTOMER_CONFIRMATION.PAYMENT_NOTE' | translate }}</small>
+        </div>
+        <strong>₹{{ b.total | number }}</strong>
+      </div>
+    </section>
+
+    <!-- Next Steps -->
+    <section class="cu-confirm__next">
+      <div class="cu-confirm__next-heading">
+        <div class="cu-confirm__next-icon">
+          <i class="fa-solid fa-route"></i>
+        </div>
+        <div>
+          <span class="cu-confirm__label">
+            {{ 'CUSTOMER_CONFIRMATION.UP_NEXT' | translate }}
+          </span>
+          <h2>{{ 'CUSTOMER_CONFIRMATION.NEXT_TITLE' | translate }}</h2>
+        </div>
+      </div>
+
+      <div class="cu-confirm__timeline">
+        <div class="cu-confirm__step">
+          <div class="cu-confirm__step-number">1</div>
+          <div>
+            <h3>{{ 'CUSTOMER_CONFIRMATION.STEP_1_TITLE' | translate }}</h3>
+            <p>
+              {{ b.provider.name }}
+              {{ 'CUSTOMER_CONFIRMATION.STEP_1_DESCRIPTION' | translate }}
+            </p>
+          </div>
+        </div>
+
+        <div class="cu-confirm__step">
+          <div class="cu-confirm__step-number">2</div>
+          <div>
+            <h3>{{ 'CUSTOMER_CONFIRMATION.STEP_2_TITLE' | translate }}</h3>
+            <p>{{ 'CUSTOMER_CONFIRMATION.STEP_2_DESCRIPTION' | translate }}</p>
+          </div>
+        </div>
+
+        <div class="cu-confirm__step">
+          <div class="cu-confirm__step-number">3</div>
+          <div>
+            <h3>{{ 'CUSTOMER_CONFIRMATION.STEP_3_TITLE' | translate }}</h3>
+            <p>{{ 'CUSTOMER_CONFIRMATION.STEP_3_DESCRIPTION' | translate }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Actions -->
+    <div class="cu-confirm__actions">
+      <a class="cu-confirm__primary" [routerLink]="['/customer/bookings', b.id]">
+        {{ 'CUSTOMER_CONFIRMATION.VIEW_BOOKING' | translate }}
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+
+      <a class="cu-confirm__secondary" routerLink="/customer/home">
+        <i class="fa-solid fa-house"></i>
+        {{ 'CUSTOMER_CONFIRMATION.BACK_HOME' | translate }}
+      </a>
+    </div>
+
+    <p class="cu-confirm__footer">
+      <i class="fa-solid fa-shield-halved"></i>
+      {{ 'CUSTOMER_CONFIRMATION.FOOTER' | translate }}
+    </p>
+
   </div>
+</div>
 } @else {
-  <div class="cu-confirm__not-found">
-    <div class="cu-confirm__not-found-icon">
-      <i class="fa-regular fa-calendar-xmark"></i>
-    </div>
-    <h2>Booking not found</h2>
-    <p>We couldn't find this booking. It may have been removed or the link may be incorrect.</p>
-    <a class="cu-confirm__primary" routerLink="/customer/my-bookings">
-      Go to my bookings
-      <i class="fa-solid fa-arrow-right"></i>
-    </a>
+<div class="cu-confirm__not-found">
+  <div class="cu-confirm__not-found-icon">
+    <i class="fa-regular fa-calendar-xmark"></i>
   </div>
+  <h2>{{ 'CUSTOMER_CONFIRMATION.NOT_FOUND' | translate }}</h2>
+  <p>{{ 'CUSTOMER_CONFIRMATION.NOT_FOUND_DESCRIPTION' | translate }}</p>
+  <a class="cu-confirm__primary" routerLink="/customer/my-bookings">
+    {{ 'CUSTOMER_CONFIRMATION.GO_TO_BOOKINGS' | translate }}
+    <i class="fa-solid fa-arrow-right"></i>
+  </a>
+</div>
 }

@@ -1,7 +1,8 @@
+
 <div class="pv-head">
   <div>
-    <h1>Reviews</h1>
-    <p>What customers say about your work.</p>
+    <h1>{{ 'PROVIDER_REVIEWS.TITLE' | translate }}</h1>
+    <p>{{ 'PROVIDER_REVIEWS.DESCRIPTION' | translate }}</p>
   </div>
 </div>
 
@@ -10,19 +11,31 @@
 } @else if (error()) {
   <div class="pv-alert error">{{ error() }}</div>
 } @else if (items().length === 0) {
-  <app-empty-state icon="⭐" title="No reviews yet" text="Customers can rate you after a job is completed." />
+  <app-empty-state
+    icon="⭐"
+    [title]="'PROVIDER_REVIEWS.NO_REVIEWS' | translate"
+    [text]="'PROVIDER_REVIEWS.EMPTY_DESCRIPTION' | translate"
+  />
 } @else {
   <div class="layout">
     <div class="pv-card summary">
       <div class="big">{{ average() | number: '1.1-1' }}</div>
       <app-rating-stars [value]="average()" [size]="22" />
-      <small>{{ items().length }} review{{ items().length === 1 ? '' : 's' }}</small>
+
+      <small>
+        {{ 'PROVIDER_REVIEWS.REVIEW_COUNT' | translate:{
+          count: items().length,
+          plural: items().length === 1 ? '' : 's'
+        } }}
+      </small>
 
       <div class="bars">
         @for (d of distribution(); track d.star) {
           <div class="bar">
             <span>{{ d.star }}★</span>
-            <div class="track"><div class="fill" [style.width.%]="d.pct"></div></div>
+            <div class="track">
+              <div class="fill" [style.width.%]="d.pct"></div>
+            </div>
             <span class="cnt">{{ d.n }}</span>
           </div>
         }
@@ -33,14 +46,24 @@
       @for (r of items(); track r.id) {
         <article class="pv-card rv">
           <div class="top">
-            <span class="av">{{ r.customer.name.charAt(0).toUpperCase() }}</span>
+            <span class="av">
+              {{ r.customer.name.charAt(0).toUpperCase() }}
+            </span>
+
             <div class="who">
               <b>{{ r.customer.name }}</b>
-              <small>{{ r.booking.service.title }} · {{ r.createdAt | date: 'd MMM y' }}</small>
+              <small>
+                {{ r.booking.service.title }} ·
+                {{ r.createdAt | date: 'd MMM y' }}
+              </small>
             </div>
+
             <app-rating-stars [value]="r.rating" [size]="16" />
           </div>
-          @if (r.comment) { <p>{{ r.comment }}</p> }
+
+          @if (r.comment) {
+            <p>{{ r.comment }}</p>
+          }
         </article>
       }
     </div>

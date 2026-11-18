@@ -1,4 +1,7 @@
-<a class="pv-link-text back" routerLink="/provider/requests">← Back to requests</a>
+
+<a class="pv-link-text back" routerLink="/provider/requests">
+  ← {{ 'PROVIDER_JOB_DETAIL.BACK' | translate }}
+</a>
 
 @if (loading()) {
   <app-loader />
@@ -6,21 +9,29 @@
   <div class="pv-head">
     <div>
       <h1>{{ j.service.title }}</h1>
-      <p>Booking #{{ j.id }}</p>
+      <p>{{ 'PROVIDER_JOB_DETAIL.BOOKING' | translate }} #{{ j.id }}</p>
     </div>
     <app-status-badge [status]="j.status" />
   </div>
 
-  @if (error()) { <div class="pv-alert error">{{ error() }}</div> }
+  @if (error()) {
+    <div class="pv-alert error">{{ error() }}</div>
+  }
 
   @if (j.status === 'rejected' || j.status === 'cancelled') {
-    <div class="pv-alert error">This booking was {{ j.status }}.</div>
+    <div class="pv-alert error">
+      {{ 'PROVIDER_JOB_DETAIL.REJECTED_CANCELLED' | translate: { status: j.status } }}
+    </div>
   } @else {
     <div class="pv-card timeline">
       @for (s of steps; track s; let i = $index) {
         <div class="step" [class.done]="i <= stepIndex()" [class.current]="i === stepIndex()">
-          <span class="dot">{{ i < stepIndex() || (i === stepIndex() && j.status === 'completed') ? '✓' : i + 1 }}</span>
-          <span class="lbl">{{ s }}</span>
+          <span class="dot">
+            {{ i < stepIndex() || (i === stepIndex() && j.status === 'completed') ? '✓' : i + 1 }}
+          </span>
+          <span class="lbl">
+            {{ ('PROVIDER_JOB_DETAIL.' + s.toUpperCase().replace(' ', '_')) | translate }}
+          </span>
         </div>
       }
     </div>
@@ -28,36 +39,92 @@
 
   <div class="grid">
     <div class="pv-card">
-      <h2>Schedule &amp; location</h2>
-      <div class="row"><span>Date</span><b>{{ j.scheduledAt | date: 'EEEE, d MMM y' }}</b></div>
-      <div class="row"><span>Time</span><b>{{ j.scheduledAt | date: 'h:mm a' }} – {{ endsAt() | date: 'h:mm a' }}</b></div>
-      <div class="row"><span>Address</span><b>{{ j.address }}</b></div>
-      <a class="pv-btn ghost sm map" [href]="mapUrl()" target="_blank" rel="noopener">📍 Open in Maps</a>
-      @if (j.notes) { <div class="notes"><span>Customer notes</span><p>{{ j.notes }}</p></div> }
-    </div>
+      <h2>{{ 'PROVIDER_JOB_DETAIL.SCHEDULE_LOCATION' | translate }}</h2>
 
-    <div class="pv-card">
-      <h2>Customer</h2>
-      <div class="row"><span>Name</span><b>{{ j.customer.name }}</b></div>
-      <div class="row"><span>Phone</span><b>{{ j.customer.phone || 'Not provided' }}</b></div>
-      @if (j.customer.phone) { <a class="pv-btn ghost sm map" [href]="'tel:' + j.customer.phone">📞 Call customer</a> }
-    </div>
-
-    <div class="pv-card">
-      <h2>Payment</h2>
-      <div class="row"><span>Amount</span><b class="amt">₹{{ j.total | number }}</b></div>
       <div class="row">
-        <span>Status</span>
-        <b [class.paid]="j.payment?.status === 'paid'">{{ j.payment?.status === 'paid' ? 'Paid ✓' : 'Not paid yet' }}</b>
+        <span>{{ 'PROVIDER_JOB_DETAIL.DATE' | translate }}</span>
+        <b>{{ j.scheduledAt | date: 'EEEE, d MMM y' }}</b>
       </div>
-      @if (j.review) { <div class="row"><span>Customer rating</span><b>{{ j.review.rating }} ★</b></div> }
+
+      <div class="row">
+        <span>{{ 'PROVIDER_JOB_DETAIL.TIME' | translate }}</span>
+        <b>{{ j.scheduledAt | date: 'h:mm a' }} – {{ endsAt() | date: 'h:mm a' }}</b>
+      </div>
+
+      <div class="row">
+        <span>{{ 'PROVIDER_JOB_DETAIL.ADDRESS' | translate }}</span>
+        <b>{{ j.address }}</b>
+      </div>
+
+      <a class="pv-btn ghost sm map" [href]="mapUrl()" target="_blank" rel="noopener">
+        📍 {{ 'PROVIDER_JOB_DETAIL.OPEN_MAPS' | translate }}
+      </a>
+
+      @if (j.notes) {
+        <div class="notes">
+          <span>{{ 'PROVIDER_JOB_DETAIL.CUSTOMER_NOTES' | translate }}</span>
+          <p>{{ j.notes }}</p>
+        </div>
+      }
+    </div>
+
+    <div class="pv-card">
+      <h2>{{ 'PROVIDER_JOB_DETAIL.CUSTOMER' | translate }}</h2>
+
+      <div class="row">
+        <span>{{ 'PROVIDER_JOB_DETAIL.NAME' | translate }}</span>
+        <b>{{ j.customer.name }}</b>
+      </div>
+
+      <div class="row">
+        <span>{{ 'PROVIDER_JOB_DETAIL.PHONE' | translate }}</span>
+        <b>{{ j.customer.phone || ('PROVIDER_JOB_DETAIL.NOT_PROVIDED' | translate) }}</b>
+      </div>
+
+      @if (j.customer.phone) {
+        <a class="pv-btn ghost sm map" [href]="'tel:' + j.customer.phone">
+          📞 {{ 'PROVIDER_JOB_DETAIL.CALL_CUSTOMER' | translate }}
+        </a>
+      }
+    </div>
+
+    <div class="pv-card">
+      <h2>{{ 'PROVIDER_JOB_DETAIL.PAYMENT' | translate }}</h2>
+
+      <div class="row">
+        <span>{{ 'PROVIDER_JOB_DETAIL.AMOUNT' | translate }}</span>
+        <b class="amt">₹{{ j.total | number }}</b>
+      </div>
+
+      <div class="row">
+        <span>{{ 'PROVIDER_JOB_DETAIL.STATUS' | translate }}</span>
+        <b [class.paid]="j.payment?.status === 'paid'">
+          {{ j.payment?.status === 'paid'
+            ? ('PROVIDER_JOB_DETAIL.PAID' | translate) + ' ✓'
+            : ('PROVIDER_JOB_DETAIL.NOT_PAID' | translate) }}
+        </b>
+      </div>
+
+      @if (j.review) {
+        <div class="row">
+          <span>{{ 'PROVIDER_JOB_DETAIL.CUSTOMER_RATING' | translate }}</span>
+          <b>{{ j.review.rating }} ★</b>
+        </div>
+      }
     </div>
   </div>
 
   @if (acts().length) {
     <div class="bar">
       @for (d of acts(); track d.action) {
-        <button type="button" class="pv-btn" [class.danger]="d.kind === 'danger'" [disabled]="busy()" (click)="run(d)">{{ d.label }}</button>
+        <button
+          type="button"
+          class="pv-btn"
+          [class.danger]="d.kind === 'danger'"
+          [disabled]="busy()"
+          (click)="run(d)">
+          {{ d.label }}
+        </button>
       }
     </div>
   }

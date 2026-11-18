@@ -1,18 +1,20 @@
 
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Loader } from '../../shared/components/loader/loader';
 import { categoryIcon } from '../../customer/category-icon';
 import { AdminApi, AdminCategory } from '../services/admin';
 
 @Component({
   selector: 'app-categories',
-  imports: [RouterLink, Loader],
+  imports: [RouterLink, Loader, TranslatePipe],
   templateUrl: './categories.html',
   styleUrl: './categories.scss',
 })
 export class Categories implements OnInit {
   private api = inject(AdminApi);
+  private translate = inject(TranslateService);
 
   readonly icon = categoryIcon;
 
@@ -21,7 +23,6 @@ export class Categories implements OnInit {
   error = signal('');
   busyId = signal<number | null>(null);
 
-  // Summary statistics
   totalCategories = computed(() => this.items().length);
 
   activeCategories = computed(
@@ -49,7 +50,9 @@ export class Categories implements OnInit {
         this.loading.set(false);
       },
       error: (e) => {
-        this.error.set(e.error?.message ?? 'Could not load categories');
+        this.error.set(
+          e.error?.message ?? this.translate.instant('CATEGORIES.LOAD_ERROR')
+        );
         this.loading.set(false);
       },
     });
@@ -59,7 +62,7 @@ export class Categories implements OnInit {
     if (
       c.isActive &&
       !confirm(
-        `Hide "${c.name}"? It will disappear from search and registration, but existing data is kept.`
+        this.translate.instant('CATEGORIES.HIDE_CONFIRM', { name: c.name })
       )
     ) return;
 
@@ -76,7 +79,9 @@ export class Categories implements OnInit {
       },
       error: (e) => {
         this.busyId.set(null);
-        this.error.set(e.error?.message ?? 'Could not update');
+        this.error.set(
+          e.error?.message ?? this.translate.instant('CATEGORIES.UPDATE_ERROR')
+        );
       },
     });
   }

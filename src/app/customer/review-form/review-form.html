@@ -1,10 +1,13 @@
-<a class="cu-back" routerLink="/customer/my-bookings">← My bookings</a>
+
+<a class="cu-back" routerLink="/customer/my-bookings">
+  ← {{ 'CUSTOMER_REVIEW.BACK' | translate }}
+</a>
 
 @if (loading()) {
   <app-loader />
 } @else {
   <div class="cu-card box">
-    <h1>Rate your experience</h1>
+    <h1>{{ 'CUSTOMER_REVIEW.TITLE' | translate }}</h1>
 
     @if (booking(); as b) {
       <p class="for">{{ b.service.title }} · {{ b.provider.name }}</p>
@@ -15,20 +18,42 @@
     } @else {
       <div class="stars" (mouseleave)="hover.set(0)">
         @for (n of stars; track n) {
-          <button type="button" class="star" [class.on]="n <= (hover() || rating())" (mouseenter)="hover.set(n)" (click)="rating.set(n)" [attr.aria-label]="n + ' stars'">★</button>
+          <button
+            type="button"
+            class="star"
+            [class.on]="n <= (hover() || rating())"
+            (mouseenter)="hover.set(n)"
+            (click)="rating.set(n)"
+            [attr.aria-label]="n + ' stars'"
+          >★</button>
         }
       </div>
-      <div class="lbl">{{ label() }}</div>
+
+      <div class="lbl">{{ label() | translate }}</div>
 
       <div class="cu-form">
         <div class="cu-field">
-          <label for="c">Your review (optional)</label>
-          <textarea id="c" rows="4" maxlength="500" placeholder="What went well? Anything others should know?" [ngModel]="comment()" (ngModelChange)="comment.set($event)"></textarea>
+          <label for="c">{{ 'CUSTOMER_REVIEW.YOUR_REVIEW' | translate }}</label>
+          <textarea
+            id="c"
+            rows="4"
+            maxlength="500"
+            [placeholder]="'CUSTOMER_REVIEW.REVIEW_PLACEHOLDER' | translate"
+            [ngModel]="comment()"
+            (ngModelChange)="comment.set($event)"
+          ></textarea>
           <span class="hint">{{ comment().length }}/500</span>
         </div>
       </div>
 
-      <button type="button" class="cu-btn block" [disabled]="saving()" (click)="submit()">{{ saving() ? 'Submitting…' : 'Submit review' }}</button>
+      <button
+        type="button"
+        class="cu-btn block"
+        [disabled]="saving()"
+        (click)="submit()"
+      >
+        {{ saving() ? ('CUSTOMER_REVIEW.SUBMITTING' | translate) : ('CUSTOMER_REVIEW.SUBMIT' | translate) }}
+      </button>
     }
   </div>
 }

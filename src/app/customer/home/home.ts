@@ -1,7 +1,9 @@
+
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { Auth } from '../../core/services/auth';
 import { Booking } from '../../shared/models/booking';
@@ -16,7 +18,15 @@ import { CustomerBooking, canPay } from '../services/customer-booking';
 
 @Component({
   selector: 'app-home',
-  imports: [FormsModule, RouterLink, DatePipe, Loader, ServiceCard, StatusBadge],
+  imports: [
+    FormsModule,
+    RouterLink,
+    DatePipe,
+    Loader,
+    ServiceCard,
+    StatusBadge,
+    TranslatePipe,
+  ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -49,8 +59,12 @@ export class Home implements OnInit {
 
         const now = Date.now();
         const upcoming = bookings
-          .filter((b) => ['pending', 'accepted', 'in_progress'].includes(b.status) && +new Date(b.scheduledAt) >= now - 3600000)
+          .filter((b) =>
+            ['pending', 'accepted', 'in_progress'].includes(b.status) &&
+            +new Date(b.scheduledAt) >= now - 3600000
+          )
           .sort((a, b) => +new Date(a.scheduledAt) - +new Date(b.scheduledAt));
+
         this.next.set(upcoming[0] ?? null);
         this.due.set(bookings.filter(canPay).length);
         this.loading.set(false);
@@ -60,6 +74,8 @@ export class Home implements OnInit {
   }
 
   go() {
-    this.router.navigate(['/customer/services'], { queryParams: { q: this.q.trim() || null } });
+    this.router.navigate(['/customer/services'], {
+      queryParams: { q: this.q.trim() || null },
+    });
   }
 }

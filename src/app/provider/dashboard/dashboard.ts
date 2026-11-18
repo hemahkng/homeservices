@@ -2,6 +2,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Auth } from '../../core/services/auth';
 import {
@@ -15,13 +16,15 @@ import { StatusBadge } from '../../shared/components/status-badge/status-badge';
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
   imports: [
     RouterLink,
     DatePipe,
     DecimalPipe,
     Loader,
     RatingStars,
-    StatusBadge
+    StatusBadge,
+    TranslatePipe
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
@@ -29,6 +32,8 @@ import { StatusBadge } from '../../shared/components/status-badge/status-badge';
 export class Dashboard implements OnInit {
 
   private api = inject(ProviderService);
+  private translate = inject(TranslateService);
+
   auth = inject(Auth);
 
   stats = signal<ProviderStats | null>(null);
@@ -43,14 +48,14 @@ export class Dashboard implements OnInit {
     const hour = new Date().getHours();
 
     if (hour < 12) {
-      return 'Good morning';
+      return 'PROVIDER_DASHBOARD.WELCOME_MORNING';
     }
 
     if (hour < 17) {
-      return 'Good afternoon';
+      return 'PROVIDER_DASHBOARD.WELCOME_AFTERNOON';
     }
 
-    return 'Good evening';
+    return 'PROVIDER_DASHBOARD.WELCOME_EVENING';
   });
 
   ngOnInit(): void {
@@ -61,7 +66,8 @@ export class Dashboard implements OnInit {
       },
       error: (e) => {
         this.error.set(
-          e.error?.message ?? 'Could not load dashboard'
+          e.error?.message ??
+          this.translate.instant('PROVIDER_DASHBOARD.LOAD_ERROR')
         );
         this.loading.set(false);
       },

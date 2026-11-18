@@ -1,15 +1,12 @@
 
 <div class="pv-shell">
 
-  <!-- Mobile overlay -->
   @if (open()) {
     <div class="pv-overlay" (click)="open.set(false)"></div>
   }
 
-  <!-- Sidebar -->
   <aside class="pv-side" [class.open]="open()">
 
-    <!-- Brand -->
     <div class="pv-brand">
       <div class="pv-logo">
         <i class="fa-solid fa-house-chimney"></i>
@@ -17,21 +14,21 @@
 
       <div class="pv-brand-text">
         <b>HomeServices</b>
-        <small>PROVIDER PORTAL</small>
+        <small>{{ 'PROVIDER_LAYOUT.PORTAL' | translate }}</small>
       </div>
 
-      <!-- Mobile close button -->
       <button
         type="button"
         class="pv-close"
         (click)="open.set(false)"
-        aria-label="Close menu">
+        [attr.aria-label]="'PROVIDER_LAYOUT.CLOSE_MENU' | translate">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
 
-    <!-- Navigation -->
-    <div class="pv-nav-heading">WORKSPACE</div>
+    <div class="pv-nav-heading">
+      {{ 'PROVIDER_LAYOUT.WORKSPACE' | translate }}
+    </div>
 
     <nav class="pv-nav">
       @for (l of links; track l.path) {
@@ -43,32 +40,34 @@
           (click)="open.set(false)">
 
           <span class="pv-ico">
-            @switch (l.label) {
-              @case ('Dashboard') {
+            @switch (l.key) {
+              @case ('DASHBOARD') {
                 <i class="fa-solid fa-chart-pie"></i>
               }
-              @case ('Booking requests') {
+              @case ('BOOKING_REQUESTS') {
                 <i class="fa-solid fa-inbox"></i>
               }
-              @case ('My services') {
+              @case ('MY_SERVICES') {
                 <i class="fa-solid fa-toolbox"></i>
               }
-              @case ('Availability') {
+              @case ('AVAILABILITY') {
                 <i class="fa-regular fa-calendar-days"></i>
               }
-              @case ('Earnings') {
+              @case ('EARNINGS') {
                 <i class="fa-solid fa-wallet"></i>
               }
-              @case ('Reviews') {
+              @case ('REVIEWS') {
                 <i class="fa-regular fa-star"></i>
               }
-              @case ('Profile') {
+              @case ('PROFILE') {
                 <i class="fa-regular fa-user"></i>
               }
             }
           </span>
 
-          <span class="pv-link-label">{{ l.label }}</span>
+          <span class="pv-link-label">
+            {{ ('PROVIDER_LAYOUT.' + l.key) | translate }}
+          </span>
 
           @if (l.path === '/provider/requests' && pending() > 0) {
             <span class="pv-count">{{ pending() }}</span>
@@ -79,15 +78,14 @@
       }
     </nav>
 
-    <!-- Sidebar bottom -->
     <div class="pv-sidebar-bottom">
 
       <div class="pv-help">
         <div class="pv-help-icon">
           <i class="fa-regular fa-circle-question"></i>
         </div>
-        <b>Need help?</b>
-        <small>We're here to help you.</small>
+        <b>{{ 'PROVIDER_LAYOUT.NEED_HELP' | translate }}</b>
+        <small>{{ 'PROVIDER_LAYOUT.HELP_DESCRIPTION' | translate }}</small>
       </div>
 
       <div class="pv-user">
@@ -95,14 +93,14 @@
 
         <div class="pv-user-info">
           <b>{{ auth.currentUser()?.name }}</b>
-          <small>Service Provider</small>
+          <small>{{ 'PROVIDER_LAYOUT.SERVICE_PROVIDER' | translate }}</small>
         </div>
 
         <button
           type="button"
           class="pv-logout"
-          title="Logout"
-          aria-label="Logout"
+          [title]="'PROVIDER_LAYOUT.LOGOUT' | translate"
+          [attr.aria-label]="'PROVIDER_LAYOUT.LOGOUT' | translate"
           (click)="auth.logout()">
           <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </button>
@@ -111,51 +109,55 @@
     </div>
   </aside>
 
-  <!-- Main area -->
   <div class="pv-main">
 
-    <!-- Desktop header -->
     <header class="pv-desktop-top">
       <div>
-        <b>Provider Workspace</b>
-        <small>Manage your services and bookings</small>
+        <b>{{ 'PROVIDER_LAYOUT.PROVIDER_WORKSPACE' | translate }}</b>
+        <small>{{ 'PROVIDER_LAYOUT.MANAGE_DESCRIPTION' | translate }}</small>
       </div>
 
       <div class="pv-top-user">
+        <select
+          class="pv-language-select"
+          [value]="language()"
+          (change)="changeLanguage($any($event.target).value)"
+          aria-label="Select language">
+          <option value="en">English</option>
+          <option value="ta">தமிழ்</option>
+        </select>
+
         <div class="pv-avatar light">{{ initial() }}</div>
         <span>{{ auth.currentUser()?.name }}</span>
       </div>
     </header>
 
-    <!-- Mobile header -->
     <header class="pv-mobile-top">
 
       <button
         type="button"
         class="pv-menu"
         (click)="open.set(true)"
-        aria-label="Open menu">
+        [attr.aria-label]="'PROVIDER_LAYOUT.OPEN_MENU' | translate">
         <i class="fa-solid fa-bars"></i>
       </button>
 
       <div class="pv-mobile-brand">
         <b>HomeServices</b>
-        <small>Provider Portal</small>
+        <small>{{ 'PROVIDER_LAYOUT.PORTAL' | translate }}</small>
       </div>
 
       <div class="pv-avatar sm">{{ initial() }}</div>
 
     </header>
 
-    <!-- Router content -->
     <main class="pv-page">
       <router-outlet />
     </main>
 
-    <!-- Footer -->
     <footer class="pv-footer">
       <span>© 2026 HomeServices</span>
-      <span>Provider Portal</span>
+      <span>{{ 'PROVIDER_LAYOUT.FOOTER_PORTAL' | translate }}</span>
     </footer>
 
   </div>

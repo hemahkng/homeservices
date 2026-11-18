@@ -1,4 +1,3 @@
-
 <div class="login-page">
   <div class="login-layout">
 
@@ -13,12 +12,13 @@
         </a>
 
         <div class="welcome-content">
-          <span class="welcome-tag">WELCOME BACK</span>
-          <h1>Your home deserves the best care.</h1>
-          <p>
-            Connect with trusted professionals and manage all your home
-            services from one simple place.
-          </p>
+          <span class="welcome-tag">
+            {{ 'AUTH_LOGIN.WELCOME_BACK' | translate }}
+          </span>
+
+          <h1>{{ 'AUTH_LOGIN.HERO_TITLE' | translate }}</h1>
+
+          <p>{{ 'AUTH_LOGIN.HERO_DESCRIPTION' | translate }}</p>
 
           <div class="feature-list">
             <div class="feature-item">
@@ -26,8 +26,8 @@
                 <i class="fa-solid fa-shield-halved"></i>
               </span>
               <div>
-                <h4>Trusted Professionals</h4>
-                <p>Reliable experts for every home need.</p>
+                <h4>{{ 'AUTH_LOGIN.TRUSTED' | translate }}</h4>
+                <p>{{ 'AUTH_LOGIN.TRUSTED_DESCRIPTION' | translate }}</p>
               </div>
             </div>
 
@@ -36,8 +36,8 @@
                 <i class="fa-solid fa-clock"></i>
               </span>
               <div>
-                <h4>Save Your Time</h4>
-                <p>Book and manage services easily.</p>
+                <h4>{{ 'AUTH_LOGIN.SAVE_TIME' | translate }}</h4>
+                <p>{{ 'AUTH_LOGIN.SAVE_TIME_DESCRIPTION' | translate }}</p>
               </div>
             </div>
 
@@ -46,15 +46,15 @@
                 <i class="fa-solid fa-star"></i>
               </span>
               <div>
-                <h4>Quality Service</h4>
-                <p>Get the service your home deserves.</p>
+                <h4>{{ 'AUTH_LOGIN.QUALITY' | translate }}</h4>
+                <p>{{ 'AUTH_LOGIN.QUALITY_DESCRIPTION' | translate }}</p>
               </div>
             </div>
           </div>
         </div>
 
         <div class="brand-footer">
-          © 2026 HomeServices. All rights reserved.
+          {{ 'AUTH_LOGIN.COPYRIGHT' | translate }}
         </div>
       </div>
 
@@ -74,99 +74,97 @@
         </div>
 
         <div class="form-heading">
-          <span class="heading-label">ACCOUNT LOGIN</span>
-          <h2>Welcome back!</h2>
-          <p>Enter your details to access your account.</p>
+          <span class="heading-label">
+            {{ 'AUTH_LOGIN.ACCOUNT_LOGIN' | translate }}
+          </span>
+          <h2>{{ 'AUTH_LOGIN.TITLE' | translate }}</h2>
+          <p>{{ 'AUTH_LOGIN.DESCRIPTION' | translate }}</p>
         </div>
 
         <form [formGroup]="form" (ngSubmit)="submit()">
 
           <div class="form-group">
-            <label for="email">Email address</label>
+            <label for="email">{{ 'AUTH_LOGIN.EMAIL' | translate }}</label>
+
             <div class="input-wrapper">
               <i class="fa-regular fa-envelope input-icon"></i>
-              <input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                formControlName="email"
-                autocomplete="email"
-              />
+              <input id="email" type="email" [placeholder]="'AUTH_LOGIN.EMAIL_PLACEHOLDER' | translate"
+                formControlName="email" autocomplete="email" />
             </div>
 
             @if (form.controls.email.touched && form.controls.email.invalid) {
-              <small class="validation-error">
-                @if (form.controls.email.hasError('required')) {
-                  Email is required.
-                } @else {
-                  Please enter a valid email address.
-                }
-              </small>
+            <small class="validation-error">
+              @if (form.controls.email.hasError('required')) {
+              {{ 'AUTH_LOGIN.EMAIL_REQUIRED' | translate }}
+              } @else {
+              {{ 'AUTH_LOGIN.EMAIL_INVALID' | translate }}
+              }
+            </small>
             }
           </div>
 
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">{{ 'AUTH_LOGIN.PASSWORD' | translate }}</label>
+
             <div class="input-wrapper">
               <i class="fa-solid fa-lock input-icon"></i>
-              <input
-                id="password"
-                [type]="showPassword() ? 'text' : 'password'"
-                placeholder="Enter your password"
-                formControlName="password"
-                autocomplete="current-password"
-              />
-              <button
-                type="button"
-                class="password-toggle"
-                (click)="togglePassword()"
-                [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
-              >
+              <input id="password" [type]="showPassword() ? 'text' : 'password'"
+                [placeholder]="'AUTH_LOGIN.PASSWORD_PLACEHOLDER' | translate" formControlName="password"
+                autocomplete="current-password" />
+
+              <button type="button" class="password-toggle" (click)="togglePassword()"
+                [attr.aria-label]="(showPassword() ? 'AUTH_LOGIN.HIDE_PASSWORD' : 'AUTH_LOGIN.SHOW_PASSWORD') | translate">
                 <i [class]="showPassword() ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye'"></i>
               </button>
             </div>
 
             @if (form.controls.password.touched && form.controls.password.invalid) {
-              <small class="validation-error">
-                @if (form.controls.password.hasError('required')) {
-                  Password is required.
-                } @else {
-                  Password must contain at least 6 characters.
-                }
-              </small>
+            <small class="validation-error">
+              @if (form.controls.password.hasError('required')) {
+              {{ 'AUTH_LOGIN.PASSWORD_REQUIRED' | translate }}
+              } @else {
+              {{ 'AUTH_LOGIN.PASSWORD_MIN' | translate }}
+              }
+            </small>
             }
           </div>
 
           @if (error()) {
-            <div class="error-message">
-              <i class="fa-solid fa-circle-exclamation"></i>
-              <span>{{ error() }}</span>
-            </div>
+          <div class="error-message">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>{{ error() }}</span>
+          </div>
           }
 
-          <button
-            type="submit"
-            class="login-button"
-            [disabled]="form.invalid || loading()"
-          >
-            <span>{{ loading() ? 'Please wait...' : 'Sign in to account' }}</span>
+          <button type="submit" class="login-button" [disabled]="form.invalid || loading()">
+            <span>
+              {{ (loading() ? 'AUTH_LOGIN.WAIT' : 'AUTH_LOGIN.SIGN_IN') | translate }}
+            </span>
+
             @if (!loading()) {
-              <i class="fa-solid fa-arrow-right"></i>
+            <i class="fa-solid fa-arrow-right"></i>
             } @else {
-              <i class="fa-solid fa-spinner fa-spin"></i>
+            <i class="fa-solid fa-spinner fa-spin"></i>
             }
           </button>
 
         </form>
 
+        <div class="forgot-password-link">
+          <a routerLink="/auth/forgot-password">
+            {{ 'AUTH_LOGIN.FORGOT_PASSWORD' | translate }}
+          </a>
+        </div>
         <div class="signup-section">
-          <span>Don't have an account?</span>
-          <a routerLink="/auth/register">Create account</a>
+          <span>{{ 'AUTH_LOGIN.NO_ACCOUNT' | translate }}</span>
+          <a routerLink="/auth/register">
+            {{ 'AUTH_LOGIN.CREATE_ACCOUNT' | translate }}
+          </a>
         </div>
 
         <div class="secure-note">
           <i class="fa-solid fa-shield-halved"></i>
-          Your information is protected and secure.
+          {{ 'AUTH_LOGIN.SECURE_NOTE' | translate }}
         </div>
 
       </div>

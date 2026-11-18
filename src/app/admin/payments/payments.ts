@@ -10,12 +10,13 @@ import {
   PaymentTransaction,
   PaymentsResponse
 } from '../services/admin';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type Tab = 'all' | 'paid' | 'unpaid';
 
 @Component({
   selector: 'app-payments',
-  imports: [DatePipe, DecimalPipe, RouterLink, Loader, EmptyState],
+  imports: [DatePipe, DecimalPipe, RouterLink, Loader, EmptyState, TranslatePipe],
   templateUrl: './payments.html',
   styleUrl: './payments.scss',
 })

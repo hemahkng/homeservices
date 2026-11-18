@@ -6,20 +6,35 @@
 
     <div class="cu-links">
       @for (l of links; track l.path) {
-        <a class="cu-link" [routerLink]="l.path" routerLinkActive="active">{{ l.label }}</a>
+      <a class="cu-link" [routerLink]="l.path" routerLinkActive="active">
+        {{ l.key | translate }}
+      </a>
       }
     </div>
 
     <div class="cu-right">
-      <a class="cu-bell" routerLink="/customer/notifications" aria-label="Notifications">
+      <select class="cu-language-select" [value]="language()" (change)="changeLanguage($any($event.target).value)"
+        aria-label="Select language">
+        <option value="en">English</option>
+        <option value="ta">தமிழ்</option>
+      </select>
+
+      <a class="cu-bell" routerLink="/customer/notifications"
+        [attr.aria-label]="'CUSTOMER_LAYOUT.NOTIFICATIONS' | translate">
         🔔
-        @if (unread() > 0) { <span class="cu-dot">{{ unread() > 9 ? '9+' : unread() }}</span> }
+        @if (unread() > 0) {
+        <span class="cu-dot">{{ unread() > 9 ? '9+' : unread() }}</span>
+        }
       </a>
+
       <a class="cu-me" routerLink="/customer/profile">
         <span class="cu-avatar">{{ initial() }}</span>
         <span class="cu-name">{{ firstName() }}</span>
       </a>
-      <button type="button" class="cu-out" (click)="auth.logout()">Logout</button>
+
+      <button type="button" class="cu-out" (click)="auth.logout()">
+        {{ 'CUSTOMER_LAYOUT.LOGOUT' | translate }}
+      </button>
     </div>
   </div>
 </header>
@@ -28,11 +43,11 @@
 
 <div class="cu-tabs">
   @for (t of tabs; track t.path) {
-    <a class="cu-tab" [routerLink]="t.path" routerLinkActive="active">
-      <span class="ic">{{ t.icon }}</span>{{ t.label }}
-      @if (t.path === '/customer/notifications' && unread() > 0) {
-        <span class="cu-dot tab">{{ unread() > 9 ? '9+' : unread() }}</span>
-      }
-    </a>
+  <a class="cu-tab" [routerLink]="t.path" routerLinkActive="active">
+    <span class="ic">{{ t.icon }}</span>{{ t.key | translate }}
+    @if (t.path === '/customer/notifications' && unread() > 0) {
+    <span class="cu-dot tab">{{ unread() > 9 ? '9+' : unread() }}</span>
+    }
+  </a>
   }
 </div>

@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { EmptyState } from '../../shared/components/empty-state/empty-state';
 import { Loader } from '../../shared/components/loader/loader';
 import { AdminApi, UserRow } from '../services/admin';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-users',
-  imports: [FormsModule, DatePipe, Loader],
+  imports: [FormsModule, DatePipe, Loader, TranslatePipe],
   templateUrl: './users.html',
   styleUrl: './users.scss',
 })

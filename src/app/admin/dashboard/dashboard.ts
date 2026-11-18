@@ -5,12 +5,13 @@ import { Auth } from '../../core/services/auth';
 import { Loader } from '../../shared/components/loader/loader';
 import { StatusBadge } from '../../shared/components/status-badge/status-badge';
 import { AdminApi, AdminStats } from '../services/admin';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const STATUSES = ['pending', 'accepted', 'in_progress', 'completed', 'rejected', 'cancelled'];
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterLink, DatePipe, DecimalPipe, Loader, StatusBadge],
+  imports: [RouterLink, DatePipe, DecimalPipe, Loader, StatusBadge, TranslatePipe],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })

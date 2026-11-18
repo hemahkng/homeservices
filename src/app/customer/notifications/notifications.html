@@ -4,9 +4,11 @@
   <!-- Page Header -->
   <div class="cu-notifications__header">
     <div>
-      <span class="cu-notifications__eyebrow">YOUR UPDATES</span>
-      <h1>Notifications</h1>
-      <p>Stay up to date with your bookings and activity.</p>
+      <span class="cu-notifications__eyebrow">
+        {{ 'CUSTOMER_NOTIFICATIONS.EYEBROW' | translate }}
+      </span>
+      <h1>{{ 'CUSTOMER_NOTIFICATIONS.TITLE' | translate }}</h1>
+      <p>{{ 'CUSTOMER_NOTIFICATIONS.DESCRIPTION' | translate }}</p>
     </div>
 
     @if (unread() > 0) {
@@ -15,7 +17,7 @@
         class="cu-notifications__mark"
         (click)="markAll()">
         <i class="fa-solid fa-check-double"></i>
-        Mark all as read
+        {{ 'CUSTOMER_NOTIFICATIONS.MARK_ALL' | translate }}
       </button>
     }
   </div>
@@ -27,14 +29,14 @@
     </div>
     <div>
       <strong>{{ unread() }}</strong>
-      <span>Unread notifications</span>
+      <span>{{ 'CUSTOMER_NOTIFICATIONS.UNREAD_COUNT' | translate }}</span>
     </div>
     <div class="cu-notifications__stat-divider"></div>
     <div class="cu-notifications__stat-message">
       @if (unread() > 0) {
-        <span>You have updates waiting for you.</span>
+        <span>{{ 'CUSTOMER_NOTIFICATIONS.UPDATES_WAITING' | translate }}</span>
       } @else {
-        <span>You're all caught up. No pending updates.</span>
+        <span>{{ 'CUSTOMER_NOTIFICATIONS.ALL_CAUGHT_UP' | translate }}</span>
       }
     </div>
   </div>
@@ -50,12 +52,12 @@
   <section class="cu-notifications__section">
     <div class="cu-notifications__section-head">
       <div>
-        <h2>Recent activity</h2>
-        <p>Your latest notifications will appear here.</p>
+        <h2>{{ 'CUSTOMER_NOTIFICATIONS.RECENT_ACTIVITY' | translate }}</h2>
+        <p>{{ 'CUSTOMER_NOTIFICATIONS.LATEST_DESCRIPTION' | translate }}</p>
       </div>
       @if (items().length > 0) {
         <span class="cu-notifications__count">
-          {{ items().length }} updates
+          {{ 'CUSTOMER_NOTIFICATIONS.UPDATE_COUNT' | translate: { count: items().length } }}
         </span>
       }
     </div>
@@ -69,10 +71,9 @@
         <div class="cu-notifications__empty-icon">
           <i class="fa-regular fa-bell-slash"></i>
         </div>
-        <h3>You're all caught up!</h3>
+        <h3>{{ 'CUSTOMER_NOTIFICATIONS.EMPTY_TITLE' | translate }}</h3>
         <p>
-          Updates about your bookings, payments and services
-          will show up here.
+          {{ 'CUSTOMER_NOTIFICATIONS.EMPTY_DESCRIPTION' | translate }}
         </p>
       </div>
     } @else {
@@ -98,7 +99,7 @@
                 @if (!n.isRead) {
                   <span class="cu-notifications__new">
                     <span></span>
-                    New
+                    {{ 'CUSTOMER_NOTIFICATIONS.NEW' | translate }}
                   </span>
                 }
               </span>
@@ -126,7 +127,7 @@
 
   <div class="cu-notifications__footer">
     <i class="fa-solid fa-shield-halved"></i>
-    Your notifications help you keep track of your service activity.
+    {{ 'CUSTOMER_NOTIFICATIONS.FOOTER' | translate }}
   </div>
 
 </div>

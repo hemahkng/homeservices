@@ -6,17 +6,25 @@ import {
   Validators
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
 import { Auth } from '../../core/services/auth';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    TranslatePipe
+  ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
   private fb = inject(FormBuilder);
   private auth = inject(Auth);
+  private translate = inject(TranslateService);
 
   loading = signal(false);
   error = signal('');
@@ -30,11 +38,11 @@ export class Login {
     ]],
   });
 
-  togglePassword() {
+  togglePassword(): void {
     this.showPassword.update(value => !value);
   }
 
-  submit() {
+  submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -51,7 +59,8 @@ export class Login {
       },
       error: (e) => {
         this.error.set(
-          e.error?.message ?? 'Login failed'
+          e.error?.message ??
+          this.translate.instant('AUTH_LOGIN.LOGIN_ERROR')
         );
         this.loading.set(false);
       },

@@ -1,42 +1,33 @@
-
 <div class="cu-services-page">
 
-  <!-- Hero -->
   <section class="cu-services-hero">
     <div class="cu-services-hero-content">
       <div class="cu-services-eyebrow">
         <span class="cu-services-eyebrow-dot"></span>
-        YOUR HOME, IN GOOD HANDS
+        {{ 'CUSTOMER_SERVICES.EYEBROW' | translate }}
       </div>
 
       <h1>
-        Home services,<br />
-        <span>made simple.</span>
+        {{ 'CUSTOMER_SERVICES.TITLE' | translate }}<br />
+        <span>{{ 'CUSTOMER_SERVICES.TITLE_HIGHLIGHT' | translate }}</span>
       </h1>
 
-      <p>
-        From everyday fixes to bigger projects, find skilled local
-        professionals you can count on.
-      </p>
+      <p>{{ 'CUSTOMER_SERVICES.DESCRIPTION' | translate }}</p>
 
       <div class="cu-services-search">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input
-          type="text"
-          placeholder="What do you need help with today?"
-          [(ngModel)]="term"
-          (keyup.enter)="search()"
-        />
+        <input type="text" [placeholder]="'CUSTOMER_SERVICES.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="term"
+          (keyup.enter)="search()" />
         <button type="button" (click)="search()">
-          Find services
+          {{ 'CUSTOMER_SERVICES.FIND_SERVICES' | translate }}
           <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
 
       <div class="cu-services-trust">
-        <span><i class="fa-solid fa-circle-check"></i> Verified professionals</span>
-        <span><i class="fa-solid fa-star"></i> Quality service</span>
-        <span><i class="fa-solid fa-lock"></i> Safe booking</span>
+        <span><i class="fa-solid fa-circle-check"></i> {{ 'CUSTOMER_SERVICES.VERIFIED' | translate }}</span>
+        <span><i class="fa-solid fa-star"></i> {{ 'CUSTOMER_SERVICES.QUALITY' | translate }}</span>
+        <span><i class="fa-solid fa-lock"></i> {{ 'CUSTOMER_SERVICES.SAFE_BOOKING' | translate }}</span>
       </div>
     </div>
 
@@ -48,8 +39,8 @@
           <i class="fa-solid fa-house-chimney"></i>
         </div>
         <div class="cu-services-house-label">
-          <span>HOME CARE</span>
-          <strong>Everything your home needs.</strong>
+          <span>{{ 'CUSTOMER_SERVICES.HOME_CARE' | translate }}</span>
+          <strong>{{ 'CUSTOMER_SERVICES.HOME_NEEDS' | translate }}</strong>
         </div>
       </div>
 
@@ -58,8 +49,8 @@
           <i class="fa-solid fa-screwdriver-wrench"></i>
         </span>
         <span>
-          <strong>Expert repairs</strong>
-          <small>Professional help</small>
+          <strong>{{ 'CUSTOMER_SERVICES.EXPERT_REPAIRS' | translate }}</strong>
+          <small>{{ 'CUSTOMER_SERVICES.PROFESSIONAL_HELP' | translate }}</small>
         </span>
       </div>
 
@@ -68,8 +59,8 @@
           <i class="fa-solid fa-bolt"></i>
         </span>
         <span>
-          <strong>Quick solutions</strong>
-          <small>At your convenience</small>
+          <strong>{{ 'CUSTOMER_SERVICES.QUICK_SOLUTIONS' | translate }}</strong>
+          <small>{{ 'CUSTOMER_SERVICES.CONVENIENCE' | translate }}</small>
         </span>
       </div>
 
@@ -78,154 +69,123 @@
     </div>
   </section>
 
-  <!-- Categories -->
   <section class="cu-services-category-section">
     <div class="cu-services-section-heading">
       <div>
-        <span class="cu-services-kicker">BROWSE SERVICES</span>
-        <h2>What can we help you with?</h2>
-        <p>Choose a category to explore available services.</p>
+        <span class="cu-services-kicker">{{ 'CUSTOMER_SERVICES.BROWSE' | translate }}</span>
+        <h2>{{ 'CUSTOMER_SERVICES.CATEGORY_TITLE' | translate }}</h2>
+        <p>{{ 'CUSTOMER_SERVICES.CATEGORY_DESCRIPTION' | translate }}</p>
       </div>
       <span class="cu-services-category-count">
         <i class="fa-solid fa-layer-group"></i>
-        All categories
+        {{ 'CUSTOMER_SERVICES.ALL_CATEGORIES' | translate }}
       </span>
     </div>
 
     <div class="cu-services-chips">
-      <button
-        type="button"
-        class="cu-services-chip"
-        [class.active]="categoryId() === 0"
-        (click)="search(0)"
-      >
+      <button type="button" class="cu-services-chip" [class.active]="categoryId() === 0" (click)="search(0)">
         <i class="fa-solid fa-border-all"></i>
-        All services
+        {{ 'CUSTOMER_SERVICES.ALL_SERVICES' | translate }}
       </button>
 
       @for (c of categories(); track c.id) {
-        <button
-          type="button"
-          class="cu-services-chip"
-          [class.active]="categoryId() === c.id"
-          (click)="search(c.id)"
-        >
-          <span class="cu-services-chip-icon">{{ icon(c.name) }}</span>
-          {{ c.name }}
-        </button>
+      <button type="button" class="cu-services-chip" [class.active]="categoryId() === c.id" (click)="search(c.id)">
+        <span class="cu-services-chip-icon">{{ icon(c.name) }}</span>
+        {{ c.name }}
+      </button>
       }
     </div>
   </section>
 
-  <!-- Service results -->
   <section class="cu-services-results">
 
     <div class="cu-services-results-heading">
       <div>
-        <span class="cu-services-kicker">THE RIGHT PROFESSIONAL FOR YOU</span>
-        <h2>Explore available services</h2>
-        <p>Compare options and find the right expert for your needs.</p>
+        <span class="cu-services-kicker">{{ 'CUSTOMER_SERVICES.RESULTS_EYEBROW' | translate }}</span>
+        <h2>{{ 'CUSTOMER_SERVICES.RESULTS_TITLE' | translate }}</h2>
+        <p>{{ 'CUSTOMER_SERVICES.RESULTS_DESCRIPTION' | translate }}</p>
       </div>
     </div>
 
-    <!-- Filters -->
     <div class="cu-services-toolbar">
       <div class="cu-services-filter-group">
         <div class="cu-services-filter">
-          <label for="cu-services-sort">SORT BY</label>
+          <label for="cu-services-sort">{{ 'CUSTOMER_SERVICES.SORT_BY' | translate }}</label>
           <div class="cu-services-select-wrap">
             <i class="fa-solid fa-arrow-down-wide-short"></i>
-            <select
-              id="cu-services-sort"
-              [ngModel]="sort()"
-              (ngModelChange)="sort.set($event)"
-              aria-label="Sort services"
-            >
-              <option value="relevance">Newest first</option>
-              <option value="rating">Top rated</option>
-              <option value="price_asc">Price: low to high</option>
-              <option value="price_desc">Price: high to low</option>
+            <select id="cu-services-sort" [ngModel]="sort()" (ngModelChange)="sort.set($event)"
+              aria-label="Sort services">
+              <option value="relevance">{{ 'CUSTOMER_SERVICES.NEWEST' | translate }}</option>
+              <option value="rating">{{ 'CUSTOMER_SERVICES.TOP_RATED' | translate }}</option>
+              <option value="price_asc">{{ 'CUSTOMER_SERVICES.PRICE_LOW_HIGH' | translate }}</option>
+              <option value="price_desc">{{ 'CUSTOMER_SERVICES.PRICE_HIGH_LOW' | translate }}</option>
             </select>
             <i class="fa-solid fa-chevron-down cu-services-select-arrow"></i>
           </div>
         </div>
 
         <div class="cu-services-filter">
-          <label for="cu-services-max-price">MAXIMUM PRICE</label>
+          <label for="cu-services-max-price">{{ 'CUSTOMER_SERVICES.MAX_PRICE' | translate }}</label>
           <div class="cu-services-price-input">
             <span>₹</span>
-            <input
-              id="cu-services-max-price"
-              type="number"
-              min="0"
-              placeholder="Any price"
-              [ngModel]="maxPrice()"
-              (ngModelChange)="maxPrice.set($event || null)"
-            />
+            <input id="cu-services-max-price" type="number" min="0"
+              [placeholder]="'CUSTOMER_SERVICES.ANY_PRICE' | translate" [ngModel]="maxPrice()"
+              (ngModelChange)="maxPrice.set($event || null)" />
           </div>
         </div>
       </div>
     </div>
 
     @if (error()) {
-      <div class="cu-services-error cu-alert error">
-        <i class="fa-solid fa-circle-exclamation"></i>
-        {{ error() }}
-      </div>
+    <div class="cu-services-error cu-alert error">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      {{ error() }}
+    </div>
     }
 
     @if (loading()) {
-      <div class="cu-services-loading">
-        <app-loader />
-      </div>
+    <div class="cu-services-loading">
+      <app-loader />
+    </div>
     } @else if (visible().length === 0) {
-      <div class="cu-services-empty">
-        <app-empty-state
-          icon="🔍"
-          title="No services found"
-          text="We couldn't find any services matching your filters. Try changing your search."
-        >
-          <button type="button" class="cu-services-clear" (click)="clear()">
-            <i class="fa-solid fa-rotate-left"></i>
-            Clear all filters
-          </button>
-        </app-empty-state>
-      </div>
+    <div class="cu-services-empty">
+      <app-empty-state icon="🔍" [title]="'CUSTOMER_SERVICES.NO_SERVICES' | translate"
+        [text]="'CUSTOMER_SERVICES.NO_SERVICES_DESCRIPTION' | translate">
+        <button type="button" class="cu-services-clear" (click)="clear()">
+          <i class="fa-solid fa-rotate-left"></i>
+          {{ 'CUSTOMER_SERVICES.CLEAR_FILTERS' | translate }}
+        </button>
+      </app-empty-state>
+    </div>
     } @else {
-      <div class="cu-services-list-heading">
-        <div>
-          <strong>{{ visible().length }}</strong>
-          <span>
-            service{{ visible().length === 1 ? '' : 's' }} available
-          </span>
-        </div>
-        <span class="cu-services-live-label">
-          <span></span>
-          Available listings
-        </span>
+    <div class="cu-services-list-heading">
+      <div>
+        <strong>{{ visible().length }}</strong>
+        <span>{{ 'CUSTOMER_SERVICES.AVAILABLE' | translate }}</span>
       </div>
+      <span class="cu-services-live-label">
+        <span></span>
+        {{ 'CUSTOMER_SERVICES.AVAILABLE_LISTINGS' | translate }}
+      </span>
+    </div>
 
-      <div class="cu-services-grid">
-        @for (s of visible(); track s.id) {
-          <app-service-card [service]="s" />
-        }
-      </div>
+    <div class="cu-services-grid">
+      @for (s of visible(); track s.id) {
+      <app-service-card [service]="s" />
+      }
+    </div>
     }
   </section>
 
-  <!-- Bottom information banner -->
   <section class="cu-services-bottom-banner">
     <div class="cu-services-banner-art">
       <i class="fa-solid fa-house-circle-check"></i>
     </div>
 
     <div class="cu-services-banner-content">
-      <span>YOUR HOME. YOUR WAY.</span>
-      <h3>Good help makes all the difference.</h3>
-      <p>
-        Find the right professional for your next home project.
-        Simple, convenient and reliable.
-      </p>
+      <span>{{ 'CUSTOMER_SERVICES.BANNER_EYEBROW' | translate }}</span>
+      <h3>{{ 'CUSTOMER_SERVICES.BANNER_TITLE' | translate }}</h3>
+      <p>{{ 'CUSTOMER_SERVICES.BANNER_DESCRIPTION' | translate }}</p>
     </div>
 
     <div class="cu-services-banner-decoration">

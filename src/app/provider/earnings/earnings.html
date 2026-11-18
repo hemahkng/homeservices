@@ -1,7 +1,8 @@
+
 <div class="pv-head">
   <div>
-    <h1>Earnings</h1>
-    <p>Money from paid bookings, after the platform fee.</p>
+    <h1>{{ 'PROVIDER_EARNINGS.TITLE' | translate }}</h1>
+    <p>{{ 'PROVIDER_EARNINGS.DESCRIPTION' | translate }}</p>
   </div>
 </div>
 
@@ -11,26 +12,81 @@
   <div class="pv-alert error">{{ error() }}</div>
 } @else if (data(); as d) {
   <div class="cards">
-    <div class="sum main"><span>Net earnings</span><b>₹{{ d.net | number }}</b><small>from ₹{{ d.gross | number }} paid</small></div>
-    <div class="sum"><span>This month</span><b>₹{{ d.thisMonth | number }}</b><small>net</small></div>
-    <div class="sum"><span>Awaiting payment</span><b>₹{{ d.awaitingPayment | number }}</b><small>completed, not yet paid</small></div>
-    <div class="sum"><span>Platform fee</span><b>₹{{ d.fee | number }}</b><small>{{ d.commissionPercent }}% of each payment</small></div>
+    <div class="sum main">
+      <span>{{ 'PROVIDER_EARNINGS.NET_EARNINGS' | translate }}</span>
+      <b>₹{{ d.net | number }}</b>
+      <small>
+        {{ 'PROVIDER_EARNINGS.FROM_PAID' | translate: { amount: (d.gross | number) } }}
+      </small>
+    </div>
+
+    <div class="sum">
+      <span>{{ 'PROVIDER_EARNINGS.THIS_MONTH' | translate }}</span>
+      <b>₹{{ d.thisMonth | number }}</b>
+      <small>{{ 'PROVIDER_EARNINGS.NET' | translate }}</small>
+    </div>
+
+    <div class="sum">
+      <span>{{ 'PROVIDER_EARNINGS.AWAITING_PAYMENT' | translate }}</span>
+      <b>₹{{ d.awaitingPayment | number }}</b>
+      <small>{{ 'PROVIDER_EARNINGS.COMPLETED_NOT_PAID' | translate }}</small>
+    </div>
+
+    <div class="sum">
+      <span>{{ 'PROVIDER_EARNINGS.PLATFORM_FEE' | translate }}</span>
+      <b>₹{{ d.fee | number }}</b>
+      <small>
+        {{ 'PROVIDER_EARNINGS.COMMISSION' | translate: { percent: d.commissionPercent } }}
+      </small>
+    </div>
   </div>
 
   @if (d.items.length === 0) {
-    <app-empty-state icon="💰" title="No payments yet" text="Once customers pay for completed or accepted jobs, your earnings will be listed here." />
+    <app-empty-state
+      icon="💰"
+      [title]="'PROVIDER_EARNINGS.NO_PAYMENTS' | translate"
+      [text]="'PROVIDER_EARNINGS.NO_PAYMENTS_DESCRIPTION' | translate"
+    />
   } @else {
     <div class="pv-card table">
-      <h2>Payment history</h2>
-      <div class="tr th"><span>Date</span><span>Service</span><span>Customer</span><span class="r">Amount</span><span class="r">Fee</span><span class="r">Net</span></div>
+      <h2>{{ 'PROVIDER_EARNINGS.PAYMENT_HISTORY' | translate }}</h2>
+
+      <div class="tr th">
+        <span>{{ 'PROVIDER_EARNINGS.DATE' | translate }}</span>
+        <span>{{ 'PROVIDER_EARNINGS.SERVICE' | translate }}</span>
+        <span>{{ 'PROVIDER_EARNINGS.CUSTOMER' | translate }}</span>
+        <span class="r">{{ 'PROVIDER_EARNINGS.AMOUNT' | translate }}</span>
+        <span class="r">{{ 'PROVIDER_EARNINGS.FEE' | translate }}</span>
+        <span class="r">{{ 'PROVIDER_EARNINGS.NET' | translate }}</span>
+      </div>
+
       @for (i of d.items; track i.id) {
         <div class="tr">
-          <span data-l="Date">{{ i.paidAt | date: 'd MMM y' }}</span>
-          <span data-l="Service"><a [routerLink]="['/provider/jobs', i.booking.id]">{{ i.booking.service.title }}</a></span>
-          <span data-l="Customer">{{ i.booking.customer.name }}</span>
-          <span class="r" data-l="Amount">₹{{ i.amount | number }}</span>
-          <span class="r fee" data-l="Fee">−₹{{ i.fee | number }}</span>
-          <span class="r net" data-l="Net">₹{{ i.net | number }}</span>
+          <span [attr.data-l]="'PROVIDER_EARNINGS.DATE' | translate">
+            {{ i.paidAt | date: 'd MMM y' }}
+          </span>
+
+          <span [attr.data-l]="'PROVIDER_EARNINGS.SERVICE' | translate">
+            <a [routerLink]="['/provider/jobs', i.booking.id]">
+              {{ i.booking.service.title }}
+            </a>
+          </span>
+
+          <span [attr.data-l]="'PROVIDER_EARNINGS.CUSTOMER' | translate">
+            {{ i.booking.customer.name }}
+          </span>
+
+          <span class="r" [attr.data-l]="'PROVIDER_EARNINGS.AMOUNT' | translate">
+            ₹{{ i.amount | number }}
+          </span>
+
+          <span class="r fee" [attr.data-l]="'PROVIDER_EARNINGS.FEE' | translate">
+            −₹{{ i.fee | number }}
+          </span>
+
+          <span class="r net" [attr.data-l]="'PROVIDER_EARNINGS.NET' | translate">
+            ₹{{ i.net | number }}
+          </span>
         </div>
       }
     </div>

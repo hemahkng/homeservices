@@ -4,13 +4,13 @@
   <!-- Header -->
   <div class="page-header">
     <div>
-      <div class="page-label">WORKSPACE / BOOKINGS</div>
-      <h1>Bookings</h1>
-      <p>Stay on top of customer requests and manage your appointments.</p>
+      <div class="page-label">{{ 'PROVIDER_REQUESTS.WORKSPACE' | translate }}</div>
+      <h1>{{ 'PROVIDER_REQUESTS.TITLE' | translate }}</h1>
+      <p>{{ 'PROVIDER_REQUESTS.DESCRIPTION' | translate }}</p>
     </div>
 
     <div class="header-count">
-      <span>All requests</span>
+      <span>{{ 'PROVIDER_REQUESTS.ALL_REQUESTS' | translate }}</span>
       <strong>{{ counts().all }}</strong>
     </div>
   </div>
@@ -20,20 +20,26 @@
     <div class="highlight-left">
       <div class="highlight-icon">↗</div>
       <div>
-        <strong>{{ counts().pending }} requests need your attention</strong>
-        <span>Review pending requests and respond to your customers.</span>
+        <strong>
+          {{ 'PROVIDER_REQUESTS.NEED_ATTENTION' | translate:{ count: counts().pending } }}
+        </strong>
+        <span>{{ 'PROVIDER_REQUESTS.PENDING_DESCRIPTION' | translate }}</span>
       </div>
     </div>
+
     <button type="button" class="review-btn" (click)="tab.set('pending')">
-      Review requests <span>→</span>
+      {{ 'PROVIDER_REQUESTS.REVIEW_REQUESTS' | translate }} <span>→</span>
     </button>
   </div>
 
   <!-- Filters -->
   <div class="filter-section">
     <div class="filter-heading">
-      <h2>Manage bookings</h2>
-      <span>{{ visible().length }} results</span>
+      <h2>{{ 'PROVIDER_REQUESTS.MANAGE_BOOKINGS' | translate }}</h2>
+      <span>
+        {{ visible().length }}
+        {{ 'PROVIDER_REQUESTS.RESULTS' | translate }}
+      </span>
     </div>
 
     <div class="filter-tabs">
@@ -44,7 +50,7 @@
           [class.active]="tab() === t.key"
           (click)="tab.set(t.key)"
         >
-          {{ t.label }}
+          {{ t.translationKey | translate }}
           <span class="filter-count">{{ counts()[t.key] }}</span>
         </button>
       }
@@ -68,8 +74,8 @@
     <div class="empty-area">
       <app-empty-state
         icon="📭"
-        title="No bookings yet"
-        text="Bookings matching this filter will appear here."
+        [title]="'PROVIDER_REQUESTS.NO_BOOKINGS' | translate"
+        [text]="'PROVIDER_REQUESTS.EMPTY_DESCRIPTION' | translate"
       />
     </div>
   }
@@ -79,11 +85,11 @@
     <div class="booking-container">
 
       <div class="table-heading">
-        <span>BOOKING DETAILS</span>
-        <span>SCHEDULE</span>
-        <span>AMOUNT</span>
-        <span>STATUS</span>
-        <span>ACTIONS</span>
+        <span>{{ 'PROVIDER_REQUESTS.BOOKING_DETAILS' | translate }}</span>
+        <span>{{ 'PROVIDER_REQUESTS.SCHEDULE' | translate }}</span>
+        <span>{{ 'PROVIDER_REQUESTS.AMOUNT' | translate }}</span>
+        <span>{{ 'PROVIDER_REQUESTS.STATUS' | translate }}</span>
+        <span>{{ 'PROVIDER_REQUESTS.ACTIONS' | translate }}</span>
       </div>
 
       @for (b of visible(); track b.id) {
@@ -123,9 +129,9 @@
             <a
               class="details-btn"
               [routerLink]="['/provider/jobs', b.id]"
-              title="View booking details"
+              [title]="'PROVIDER_REQUESTS.VIEW_DETAILS' | translate"
             >
-              View
+              {{ 'PROVIDER_REQUESTS.VIEW' | translate }}
             </a>
 
             <div class="action-dropdown">
@@ -146,13 +152,13 @@
           <!-- Mobile additional details -->
           <div class="mobile-details">
             <div>
-              <span>Location</span>
+              <span>{{ 'PROVIDER_REQUESTS.LOCATION' | translate }}</span>
               <strong>{{ b.address }}</strong>
             </div>
 
             @if (b.customer.phone) {
               <div>
-                <span>Contact</span>
+                <span>{{ 'PROVIDER_REQUESTS.CONTACT' | translate }}</span>
                 <a [href]="'tel:' + b.customer.phone">
                   {{ b.customer.phone }}
                 </a>
@@ -161,7 +167,7 @@
 
             @if (b.notes) {
               <div>
-                <span>Customer notes</span>
+                <span>{{ 'PROVIDER_REQUESTS.CUSTOMER_NOTES' | translate }}</span>
                 <strong>{{ b.notes }}</strong>
               </div>
             }

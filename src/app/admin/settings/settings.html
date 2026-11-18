@@ -3,9 +3,9 @@
 
   <div class="settings-heading">
     <div>
-      <span class="eyebrow">PLATFORM CONFIGURATION</span>
-      <h1>Settings</h1>
-      <p>Manage your platform identity, support details and commission structure.</p>
+      <span class="eyebrow">{{ 'SETTINGS.EYEBROW' | translate }}</span>
+      <h1>{{ 'SETTINGS.TITLE' | translate }}</h1>
+      <p>{{ 'SETTINGS.DESCRIPTION' | translate }}</p>
     </div>
 
     <div class="heading-icon">
@@ -27,13 +27,12 @@
     @if (saved()) {
       <div class="settings-alert success">
         <i class="fa-solid fa-circle-check"></i>
-        <span>Settings saved successfully.</span>
+        <span>{{ 'SETTINGS.SAVED_SUCCESS' | translate }}</span>
       </div>
     }
 
     <form [formGroup]="form" (ngSubmit)="save()" class="settings-form">
 
-      <!-- General Settings -->
       <section class="settings-card">
 
         <div class="section-heading">
@@ -41,27 +40,29 @@
             <i class="fa-solid fa-building"></i>
           </div>
           <div>
-            <h2>General information</h2>
-            <p>Configure your platform name and customer support details.</p>
+            <h2>{{ 'SETTINGS.GENERAL_INFORMATION' | translate }}</h2>
+            <p>{{ 'SETTINGS.GENERAL_DESCRIPTION' | translate }}</p>
           </div>
         </div>
 
         <div class="section-body">
 
           <div class="settings-field full">
-            <label for="pn">Platform name <span>*</span></label>
+            <label for="pn">
+              {{ 'SETTINGS.PLATFORM_NAME' | translate }} <span>*</span>
+            </label>
             <div class="input-wrap">
               <i class="fa-solid fa-store"></i>
               <input
                 id="pn"
                 type="text"
                 formControlName="platformName"
-                placeholder="Enter platform name"
+                [placeholder]="'SETTINGS.PLATFORM_NAME_PLACEHOLDER' | translate"
               />
             </div>
             @if (bad('platformName')) {
               <span class="field-error">
-                Enter a name (2 to 60 characters).
+                {{ 'SETTINGS.PLATFORM_NAME_ERROR' | translate }}
               </span>
             }
           </div>
@@ -69,34 +70,42 @@
           <div class="settings-grid">
 
             <div class="settings-field">
-              <label for="em">Support email <span>*</span></label>
+              <label for="em">
+                {{ 'SETTINGS.SUPPORT_EMAIL' | translate }} <span>*</span>
+              </label>
               <div class="input-wrap">
                 <i class="fa-regular fa-envelope"></i>
                 <input
                   id="em"
                   type="email"
                   formControlName="supportEmail"
-                  placeholder="help@example.com"
+                  [placeholder]="'SETTINGS.SUPPORT_EMAIL_PLACEHOLDER' | translate"
                 />
               </div>
               @if (bad('supportEmail')) {
-                <span class="field-error">Enter a valid email address.</span>
+                <span class="field-error">
+                  {{ 'SETTINGS.SUPPORT_EMAIL_ERROR' | translate }}
+                </span>
               }
             </div>
 
             <div class="settings-field">
-              <label for="ph">Support phone <span>*</span></label>
+              <label for="ph">
+                {{ 'SETTINGS.SUPPORT_PHONE' | translate }} <span>*</span>
+              </label>
               <div class="input-wrap">
                 <i class="fa-solid fa-phone"></i>
                 <input
                   id="ph"
                   type="tel"
                   formControlName="supportPhone"
-                  placeholder="Digits only"
+                  [placeholder]="'SETTINGS.SUPPORT_PHONE_PLACEHOLDER' | translate"
                 />
               </div>
               @if (bad('supportPhone')) {
-                <span class="field-error">Enter 10 to 15 digits.</span>
+                <span class="field-error">
+                  {{ 'SETTINGS.SUPPORT_PHONE_ERROR' | translate }}
+                </span>
               }
             </div>
 
@@ -104,7 +113,6 @@
         </div>
       </section>
 
-      <!-- Commission Settings -->
       <section class="settings-card">
 
         <div class="section-heading">
@@ -112,8 +120,8 @@
             <i class="fa-solid fa-percent"></i>
           </div>
           <div>
-            <h2>Commission configuration</h2>
-            <p>Manage the platform's commission percentage on bookings.</p>
+            <h2>{{ 'SETTINGS.COMMISSION_CONFIGURATION' | translate }}</h2>
+            <p>{{ 'SETTINGS.COMMISSION_DESCRIPTION' | translate }}</p>
           </div>
         </div>
 
@@ -122,7 +130,9 @@
           <div class="commission-layout">
 
             <div class="settings-field commission-input">
-              <label for="cm">Platform commission <span>*</span></label>
+              <label for="cm">
+                {{ 'SETTINGS.PLATFORM_COMMISSION' | translate }} <span>*</span>
+              </label>
 
               <div class="input-wrap percent-input">
                 <i class="fa-solid fa-percent"></i>
@@ -133,17 +143,19 @@
                   max="50"
                   step="0.5"
                   formControlName="commissionPercent"
-                  placeholder="Enter percentage"
+                  [placeholder]="'SETTINGS.COMMISSION_PLACEHOLDER' | translate"
                 />
                 <span class="percent-suffix">%</span>
               </div>
 
               @if (bad('commissionPercent')) {
-                <span class="field-error">Enter a value between 0 and 50.</span>
+                <span class="field-error">
+                  {{ 'SETTINGS.COMMISSION_ERROR' | translate }}
+                </span>
               }
 
               <span class="field-hint">
-                Allowed commission range: 0% to 50%.
+                {{ 'SETTINGS.COMMISSION_HINT' | translate }}
               </span>
             </div>
 
@@ -152,10 +164,9 @@
                 <i class="fa-solid fa-calculator"></i>
               </div>
               <div>
-                <strong>How commission works</strong>
+                <strong>{{ 'SETTINGS.HOW_COMMISSION_WORKS' | translate }}</strong>
                 <p>
-                  The configured percentage is deducted from paid booking amounts
-                  before calculating provider earnings.
+                  {{ 'SETTINGS.COMMISSION_EXPLANATION' | translate }}
                 </p>
               </div>
             </div>
@@ -165,10 +176,9 @@
           <div class="commission-warning">
             <i class="fa-solid fa-triangle-exclamation"></i>
             <div>
-              <strong>Important: Existing earnings</strong>
+              <strong>{{ 'SETTINGS.IMPORTANT' | translate }}</strong>
               <p>
-                Changes apply to all earnings and payout balances, including past
-                payments. Review the impact before saving a new commission rate.
+                {{ 'SETTINGS.EXISTING_EARNINGS_WARNING' | translate }}
               </p>
             </div>
           </div>
@@ -176,20 +186,19 @@
         </div>
       </section>
 
-      <!-- Save Actions -->
       <div class="settings-footer">
         <div class="footer-info">
           <i class="fa-solid fa-shield-halved"></i>
-          <span>Your platform configuration is managed securely.</span>
+          <span>{{ 'SETTINGS.SECURITY_NOTE' | translate }}</span>
         </div>
 
         <button type="submit" class="save-btn" [disabled]="saving()">
           @if (saving()) {
             <i class="fa-solid fa-spinner fa-spin"></i>
-            Saving settings...
+            {{ 'SETTINGS.SAVING' | translate }}
           } @else {
             <i class="fa-solid fa-floppy-disk"></i>
-            Save settings
+            {{ 'SETTINGS.SAVE' | translate }}
           }
         </button>
       </div>

@@ -1,208 +1,177 @@
-
 <div class="cu-bookings-page">
 
-  <!-- Page heading -->
   <section class="cu-bookings-heading">
     <div>
       <span class="cu-bookings-kicker">
         <i class="fa-solid fa-calendar-check"></i>
-        YOUR ACTIVITY
+        {{ 'CUSTOMER_BOOKINGS.EYEBROW' | translate }}
       </span>
-      <h1>My bookings</h1>
-      <p>Manage your appointments, payments and service history.</p>
+      <h1>{{ 'CUSTOMER_BOOKINGS.TITLE' | translate }}</h1>
+      <p>{{ 'CUSTOMER_BOOKINGS.DESCRIPTION' | translate }}</p>
     </div>
 
     <a class="cu-bookings-browse" routerLink="/customer/services">
       <i class="fa-solid fa-plus"></i>
-      Book a service
+      {{ 'CUSTOMER_BOOKINGS.BOOK_SERVICE' | translate }}
     </a>
   </section>
 
-  <!-- Booking tabs -->
   <section class="cu-bookings-tabs">
     @for (t of tabs; track t.key) {
-      <button
-        type="button"
-        class="cu-bookings-tab"
-        [class.active]="tab() === t.key"
-        (click)="tab.set(t.key)"
-      >
-        <span>{{ t.label }}</span>
-        <span class="cu-bookings-count">{{ counts()[t.key] }}</span>
-      </button>
+    <button type="button" class="cu-bookings-tab" [class.active]="tab() === t.key" (click)="tab.set(t.key)">
+      <span>{{ ('CUSTOMER_BOOKINGS.' + t.key.toUpperCase()) | translate }}</span>
+      <span class="cu-bookings-count">{{ counts()[t.key] }}</span>
+    </button>
     }
   </section>
 
-  <!-- Error -->
   @if (error()) {
-    <div class="cu-bookings-error cu-alert error">
-      <i class="fa-solid fa-circle-exclamation"></i>
-      {{ error() }}
-    </div>
+  <div class="cu-bookings-error cu-alert error">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    {{ error() }}
+  </div>
   }
 
-  <!-- Loading -->
   @if (loading()) {
-    <div class="cu-bookings-loading">
-      <app-loader />
-    </div>
+  <div class="cu-bookings-loading">
+    <app-loader />
+  </div>
   } @else if (visible().length === 0) {
 
-    <!-- Empty state -->
-    <div class="cu-bookings-empty">
-      <app-empty-state
-        icon="📅"
-        title="No bookings here"
-        text="Your bookings will appear here once you book a service."
-      >
-        <a class="cu-bookings-empty-btn" routerLink="/customer/services">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          Explore services
-        </a>
-      </app-empty-state>
-    </div>
+  <div class="cu-bookings-empty">
+    <app-empty-state icon="📅" [title]="'CUSTOMER_BOOKINGS.NO_BOOKINGS' | translate"
+      [text]="'CUSTOMER_BOOKINGS.EMPTY_DESCRIPTION' | translate">
+      <a class="cu-bookings-empty-btn" routerLink="/customer/services">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        {{ 'CUSTOMER_BOOKINGS.EXPLORE_SERVICES' | translate }}
+      </a>
+    </app-empty-state>
+  </div>
 
   } @else {
 
-    <!-- Results heading -->
-    <div class="cu-bookings-results-heading">
-      <div>
-        <h2>Your appointments</h2>
-        <p>Keep track of all your service bookings.</p>
+  <div class="cu-bookings-results-heading">
+    <div>
+      <h2>{{ 'CUSTOMER_BOOKINGS.APPOINTMENTS' | translate }}</h2>
+      <p>{{ 'CUSTOMER_BOOKINGS.APPOINTMENTS_DESCRIPTION' | translate }}</p>
+    </div>
+
+    <span class="cu-bookings-results-count">
+      {{ 'CUSTOMER_BOOKINGS.BOOKING_COUNT' | translate: { count: visible().length } }}
+    </span>
+  </div>
+
+  <div class="cu-bookings-list">
+    @for (b of visible(); track b.id) {
+    <article class="cu-booking-card">
+
+      <div class="cu-booking-top">
+        <div class="cu-booking-service">
+          <div class="cu-booking-service-icon">
+            <i class="fa-solid fa-house-chimney"></i>
+          </div>
+
+          <div class="cu-booking-title">
+            <span class="cu-booking-reference">
+              {{ 'CUSTOMER_BOOKINGS.BOOKING_REFERENCE' | translate: { id: b.id } }}
+            </span>
+            <h3>{{ b.service.title }}</h3>
+            <p>
+              <i class="fa-solid fa-user-tie"></i>
+              {{ b.provider.name }}
+            </p>
+          </div>
+        </div>
+
+        <div class="cu-booking-status">
+          <app-status-badge [status]="b.status" />
+        </div>
       </div>
 
-      <span class="cu-bookings-results-count">
-        {{ visible().length }} booking{{ visible().length === 1 ? '' : 's' }}
-      </span>
-    </div>
+      <div class="cu-booking-information">
 
-    <!-- Booking list -->
-    <div class="cu-bookings-list">
-      @for (b of visible(); track b.id) {
-        <article class="cu-booking-card">
-
-          <!-- Card top -->
-          <div class="cu-booking-top">
-            <div class="cu-booking-service">
-              <div class="cu-booking-service-icon">
-                <i class="fa-solid fa-house-chimney"></i>
-              </div>
-
-              <div class="cu-booking-title">
-                <span class="cu-booking-reference">BOOKING #{{ b.id }}</span>
-                <h3>{{ b.service.title }}</h3>
-                <p>
-                  <i class="fa-solid fa-user-tie"></i>
-                  {{ b.provider.name }}
-                </p>
-              </div>
-            </div>
-
-            <div class="cu-booking-status">
-              <app-status-badge [status]="b.status" />
-            </div>
+        <div class="cu-booking-info-item">
+          <span class="cu-booking-info-icon date">
+            <i class="fa-regular fa-calendar"></i>
+          </span>
+          <div>
+            <small>{{ 'CUSTOMER_BOOKINGS.APPOINTMENT_DATE' | translate }}</small>
+            <strong>{{ b.scheduledAt | date: 'EEE, d MMM y' }}</strong>
           </div>
+        </div>
 
-          <!-- Appointment information -->
-          <div class="cu-booking-information">
-
-            <div class="cu-booking-info-item">
-              <span class="cu-booking-info-icon date">
-                <i class="fa-regular fa-calendar"></i>
-              </span>
-              <div>
-                <small>APPOINTMENT DATE</small>
-                <strong>{{ b.scheduledAt | date: 'EEE, d MMM y' }}</strong>
-              </div>
-            </div>
-
-            <div class="cu-booking-info-item">
-              <span class="cu-booking-info-icon time">
-                <i class="fa-regular fa-clock"></i>
-              </span>
-              <div>
-                <small>START TIME</small>
-                <strong>{{ b.scheduledAt | date: 'h:mm a' }}</strong>
-              </div>
-            </div>
-
-            <div class="cu-booking-info-item address">
-              <span class="cu-booking-info-icon location">
-                <i class="fa-solid fa-location-dot"></i>
-              </span>
-              <div>
-                <small>SERVICE LOCATION</small>
-                <strong>{{ b.address }}</strong>
-              </div>
-            </div>
-
+        <div class="cu-booking-info-item">
+          <span class="cu-booking-info-icon time">
+            <i class="fa-regular fa-clock"></i>
+          </span>
+          <div>
+            <small>{{ 'CUSTOMER_BOOKINGS.START_TIME' | translate }}</small>
+            <strong>{{ b.scheduledAt | date: 'h:mm a' }}</strong>
           </div>
+        </div>
 
-          <!-- Card footer -->
-          <div class="cu-booking-footer">
-
-            <div class="cu-booking-payment">
-              <small>TOTAL AMOUNT</small>
-              <div class="cu-booking-amount">
-                <strong>₹{{ b.total | number }}</strong>
-
-                @if (b.payment?.status === 'paid') {
-                  <span class="cu-booking-paid">
-                    <i class="fa-solid fa-circle-check"></i>
-                    Paid
-                  </span>
-                }
-              </div>
-            </div>
-
-            <div class="cu-booking-actions">
-
-              <a
-                class="cu-booking-btn secondary"
-                [routerLink]="['/customer/bookings', b.id]"
-              >
-                <i class="fa-regular fa-eye"></i>
-                Details
-              </a>
-
-              @if (canPay(b)) {
-                <a
-                  class="cu-booking-btn primary"
-                  [routerLink]="['/customer/payment', b.id]"
-                >
-                  <i class="fa-solid fa-credit-card"></i>
-                  Pay now
-                </a>
-              }
-
-              @if (canRate(b)) {
-                <a
-                  class="cu-booking-btn review"
-                  [routerLink]="['/customer/review', b.id]"
-                >
-                  <i class="fa-solid fa-star"></i>
-                  Rate service
-                </a>
-              }
-
-              @if (canCancel(b)) {
-                <button
-                  type="button"
-                  class="cu-booking-btn cancel"
-                  [disabled]="busyId() === b.id"
-                  (click)="cancel(b)"
-                >
-                  <i class="fa-solid fa-xmark"></i>
-                  {{ busyId() === b.id ? 'Cancelling...' : 'Cancel' }}
-                </button>
-              }
-
-            </div>
+        <div class="cu-booking-info-item address">
+          <span class="cu-booking-info-icon location">
+            <i class="fa-solid fa-location-dot"></i>
+          </span>
+          <div>
+            <small>{{ 'CUSTOMER_BOOKINGS.SERVICE_LOCATION' | translate }}</small>
+            <strong>{{ b.address }}</strong>
           </div>
+        </div>
 
-        </article>
-      }
-    </div>
+      </div>
+
+      <div class="cu-booking-footer">
+
+        <div class="cu-booking-payment">
+          <small>{{ 'CUSTOMER_BOOKINGS.TOTAL_AMOUNT' | translate }}</small>
+          <div class="cu-booking-amount">
+            <strong>₹{{ b.total | number }}</strong>
+
+            @if (b.payment?.status === 'paid') {
+            <span class="cu-booking-paid">
+              <i class="fa-solid fa-circle-check"></i>
+              {{ 'CUSTOMER_BOOKINGS.PAID' | translate }}
+            </span>
+            }
+          </div>
+        </div>
+
+        <div class="cu-booking-actions">
+
+          <a class="cu-booking-btn secondary" [routerLink]="['/customer/bookings', b.id]">
+            <i class="fa-regular fa-eye"></i>
+            {{ 'CUSTOMER_BOOKINGS.DETAILS' | translate }}
+          </a>
+
+          @if (canPay(b)) {
+          <a class="cu-booking-btn primary" [routerLink]="['/customer/payment', b.id]">
+            <i class="fa-solid fa-credit-card"></i>
+            {{ 'CUSTOMER_BOOKINGS.PAY_NOW' | translate }}
+          </a>
+          }
+
+          @if (canRate(b)) {
+          <a class="cu-booking-btn review" [routerLink]="['/customer/review', b.id]">
+            <i class="fa-solid fa-star"></i>
+            {{ 'CUSTOMER_BOOKINGS.RATE_SERVICE' | translate }}
+          </a>
+          }
+
+          @if (canCancel(b)) {
+          <button type="button" class="cu-booking-btn cancel" [disabled]="busyId() === b.id" (click)="cancel(b)">
+            <i class="fa-solid fa-xmark"></i>
+            {{ (busyId() === b.id ? 'CUSTOMER_BOOKINGS.CANCELLING' : 'CUSTOMER_BOOKINGS.CANCEL') | translate }}
+          </button>
+          }
+
+        </div>
+      </div>
+
+    </article>
+    }
+  </div>
   }
 
 </div>

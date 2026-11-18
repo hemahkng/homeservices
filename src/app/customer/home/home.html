@@ -1,42 +1,40 @@
+
 <div class="cu-home">
 
-  <!-- Hero -->
   <section class="cu-home-hero">
     <div class="cu-home-hero-content">
       <span class="cu-home-eyebrow">
         <i class="fa-solid fa-sparkles"></i>
-        YOUR HOME, MADE BETTER
+        {{ 'CUSTOMER_HOME.EYEBROW' | translate }}
       </span>
 
       <h1>
-        Hi {{ firstName() }} 👋
+        {{ 'CUSTOMER_LAYOUT.HOME' | translate }} {{ firstName() }} 👋
         <br />
-        Let's take care of <span>your home.</span>
+        {{ 'CUSTOMER_HOME.GREETING' | translate }}
+        <span>{{ 'CUSTOMER_HOME.YOUR_HOME' | translate }}</span>
       </h1>
 
-      <p>
-        From quick fixes to home improvements, find the right professional
-        and get things done without the hassle.
-      </p>
+      <p>{{ 'CUSTOMER_HOME.HERO_DESCRIPTION' | translate }}</p>
 
       <div class="cu-home-search">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input
           type="text"
-          placeholder="Try AC repair, plumbing, cleaning..."
+          [placeholder]="'CUSTOMER_HOME.SEARCH_PLACEHOLDER' | translate"
           [(ngModel)]="q"
           (keyup.enter)="go()"
         />
         <button type="button" (click)="go()">
-          Find a service
+          {{ 'CUSTOMER_HOME.FIND_SERVICE' | translate }}
           <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
 
       <div class="cu-home-trust">
-        <span><i class="fa-solid fa-circle-check"></i> Verified experts</span>
-        <span><i class="fa-solid fa-shield-halved"></i> Safe payments</span>
-        <span><i class="fa-solid fa-clock"></i> Easy booking</span>
+        <span><i class="fa-solid fa-circle-check"></i> {{ 'CUSTOMER_HOME.VERIFIED_EXPERTS' | translate }}</span>
+        <span><i class="fa-solid fa-shield-halved"></i> {{ 'CUSTOMER_HOME.SAFE_PAYMENTS' | translate }}</span>
+        <span><i class="fa-solid fa-clock"></i> {{ 'CUSTOMER_HOME.EASY_BOOKING' | translate }}</span>
       </div>
     </div>
 
@@ -46,25 +44,25 @@
 
       <div class="cu-home-hero-main-icon">
         <i class="fa-solid fa-house-chimney"></i>
-        <span class="cu-home-hero-tool tool-one">
-          <i class="fa-solid fa-screwdriver-wrench"></i>
-        </span>
-        <span class="cu-home-hero-tool tool-two">
-          <i class="fa-solid fa-bolt"></i>
-        </span>
-        <span class="cu-home-hero-tool tool-three">
-          <i class="fa-solid fa-paint-roller"></i>
-        </span>
+        <span class="cu-home-hero-tool tool-one"><i class="fa-solid fa-screwdriver-wrench"></i></span>
+        <span class="cu-home-hero-tool tool-two"><i class="fa-solid fa-bolt"></i></span>
+        <span class="cu-home-hero-tool tool-three"><i class="fa-solid fa-paint-roller"></i></span>
       </div>
 
       <div class="cu-home-hero-note cu-home-hero-note-top">
         <span class="cu-home-note-icon"><i class="fa-solid fa-star"></i></span>
-        <span><strong>Trusted service</strong><small>Quality professionals</small></span>
+        <span>
+          <strong>{{ 'CUSTOMER_HOME.TRUSTED_SERVICE' | translate }}</strong>
+          <small>{{ 'CUSTOMER_HOME.QUALITY_PROFESSIONALS' | translate }}</small>
+        </span>
       </div>
 
       <div class="cu-home-hero-note cu-home-hero-note-bottom">
         <span class="cu-home-note-icon success"><i class="fa-solid fa-check"></i></span>
-        <span><strong>Booking made easy</strong><small>Just a few simple steps</small></span>
+        <span>
+          <strong>{{ 'CUSTOMER_HOME.BOOKING_EASY' | translate }}</strong>
+          <small>{{ 'CUSTOMER_HOME.SIMPLE_STEPS' | translate }}</small>
+        </span>
       </div>
     </div>
 
@@ -77,7 +75,6 @@
     </div>
   } @else {
 
-    <!-- Payment alert -->
     @if (due() > 0) {
       <div class="cu-home-payment">
         <div class="cu-home-payment-icon">
@@ -85,30 +82,28 @@
         </div>
 
         <div class="cu-home-payment-info">
-          <strong>Payment pending</strong>
-          <span>
-            {{ due() }} booking{{ due() === 1 ? '' : 's' }} waiting for payment.
-          </span>
+          <strong>{{ 'CUSTOMER_HOME.PAYMENT_PENDING' | translate }}</strong>
+          <span>{{ 'CUSTOMER_HOME.BOOKINGS_WAITING' | translate: { count: due() } }}</span>
         </div>
 
         <a routerLink="/customer/my-bookings">
-          View bookings
+          {{ 'CUSTOMER_HOME.VIEW_BOOKINGS' | translate }}
           <i class="fa-solid fa-arrow-right"></i>
         </a>
       </div>
     }
 
-    <!-- Upcoming booking -->
     @if (next(); as b) {
       <section class="cu-home-next">
         <div class="cu-home-section-heading">
           <div>
-            <span class="cu-home-kicker">COMING UP</span>
-            <h2>Your next appointment</h2>
+            <span class="cu-home-kicker">{{ 'CUSTOMER_HOME.COMING_UP' | translate }}</span>
+            <h2>{{ 'CUSTOMER_HOME.NEXT_APPOINTMENT' | translate }}</h2>
           </div>
 
           <a routerLink="/customer/my-bookings">
-            All bookings <i class="fa-solid fa-arrow-right"></i>
+            {{ 'CUSTOMER_HOME.ALL_BOOKINGS' | translate }}
+            <i class="fa-solid fa-arrow-right"></i>
           </a>
         </div>
 
@@ -120,7 +115,7 @@
           </div>
 
           <div class="cu-home-booking-info">
-            <span class="cu-home-booking-label">YOUR NEXT SERVICE</span>
+            <span class="cu-home-booking-label">{{ 'CUSTOMER_HOME.NEXT_SERVICE' | translate }}</span>
             <strong>{{ b.service.title }}</strong>
 
             <div class="cu-home-booking-meta">
@@ -139,22 +134,22 @@
       </section>
     }
 
-    <!-- Categories -->
     <section class="cu-home-section">
       <div class="cu-home-section-heading">
         <div>
-          <span class="cu-home-kicker">BROWSE CATEGORIES</span>
-          <h2>What does your home need?</h2>
-          <p>Find the right help for every corner of your home.</p>
+          <span class="cu-home-kicker">{{ 'CUSTOMER_HOME.BROWSE_CATEGORIES' | translate }}</span>
+          <h2>{{ 'CUSTOMER_HOME.HOME_NEEDS' | translate }}</h2>
+          <p>{{ 'CUSTOMER_HOME.CATEGORY_DESCRIPTION' | translate }}</p>
         </div>
 
         <a routerLink="/customer/services">
-          Explore all <i class="fa-solid fa-arrow-right"></i>
+          {{ 'CUSTOMER_HOME.EXPLORE_ALL' | translate }}
+          <i class="fa-solid fa-arrow-right"></i>
         </a>
       </div>
 
       @if (categories().length === 0) {
-        <p class="cu-home-empty">No categories available yet.</p>
+        <p class="cu-home-empty">{{ 'CUSTOMER_HOME.NO_CATEGORIES' | translate }}</p>
       } @else {
         <div class="cu-home-categories">
           @for (c of categories(); track c.id) {
@@ -163,13 +158,11 @@
               routerLink="/customer/services"
               [queryParams]="{ categoryId: c.id }"
             >
-              <span class="cu-home-category-icon">
-                {{ icon(c.name) }}
-              </span>
+              <span class="cu-home-category-icon">{{ icon(c.name) }}</span>
 
               <span class="cu-home-category-info">
                 <strong>{{ c.name }}</strong>
-                <small>Find a professional</small>
+                <small>{{ 'CUSTOMER_HOME.FIND_PROFESSIONAL' | translate }}</small>
               </span>
 
               <span class="cu-home-category-arrow">
@@ -181,17 +174,17 @@
       }
     </section>
 
-    <!-- Popular services -->
     <section class="cu-home-section cu-home-popular">
       <div class="cu-home-section-heading">
         <div>
-          <span class="cu-home-kicker">POPULAR RIGHT NOW</span>
-          <h2>Services worth checking out</h2>
-          <p>Discover highly rated professionals for your next task.</p>
+          <span class="cu-home-kicker">{{ 'CUSTOMER_HOME.POPULAR_NOW' | translate }}</span>
+          <h2>{{ 'CUSTOMER_HOME.POPULAR_SERVICES' | translate }}</h2>
+          <p>{{ 'CUSTOMER_HOME.POPULAR_DESCRIPTION' | translate }}</p>
         </div>
 
         <a routerLink="/customer/services">
-          View all services <i class="fa-solid fa-arrow-right"></i>
+          {{ 'CUSTOMER_HOME.VIEW_ALL_SERVICES' | translate }}
+          <i class="fa-solid fa-arrow-right"></i>
         </a>
       </div>
 
@@ -200,8 +193,8 @@
           <span class="cu-home-empty-icon">
             <i class="fa-solid fa-magnifying-glass"></i>
           </span>
-          <strong>No services available yet</strong>
-          <p>Please check back soon for available professionals.</p>
+          <strong>{{ 'CUSTOMER_HOME.NO_SERVICES' | translate }}</strong>
+          <p>{{ 'CUSTOMER_HOME.CHECK_BACK' | translate }}</p>
         </div>
       } @else {
         <div class="cu-home-services">
@@ -212,13 +205,12 @@
       }
     </section>
 
-    <!-- How it works -->
     <section class="cu-home-how">
       <div class="cu-home-how-top">
         <div class="cu-home-how-heading">
-          <span class="cu-home-kicker">HOW IT WORKS</span>
-          <h2>Home services, made simple.</h2>
-          <p>Getting the help you need is only three steps away.</p>
+          <span class="cu-home-kicker">{{ 'CUSTOMER_HOME.HOW_IT_WORKS' | translate }}</span>
+          <h2>{{ 'CUSTOMER_HOME.SIMPLE_SERVICES' | translate }}</h2>
+          <p>{{ 'CUSTOMER_HOME.THREE_STEPS' | translate }}</p>
         </div>
 
         <div class="cu-home-how-decoration">
@@ -229,29 +221,23 @@
       <div class="cu-home-steps">
         <div class="cu-home-step">
           <span class="cu-home-step-number">01</span>
-          <div class="cu-home-step-icon">
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </div>
-          <strong>Choose a service</strong>
-          <p>Explore services and find the right professional for your needs.</p>
+          <div class="cu-home-step-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <strong>{{ 'CUSTOMER_HOME.STEP_CHOOSE' | translate }}</strong>
+          <p>{{ 'CUSTOMER_HOME.STEP_CHOOSE_DESCRIPTION' | translate }}</p>
         </div>
 
         <div class="cu-home-step">
           <span class="cu-home-step-number">02</span>
-          <div class="cu-home-step-icon">
-            <i class="fa-regular fa-calendar-check"></i>
-          </div>
-          <strong>Schedule a booking</strong>
-          <p>Pick a date and time that works best for your schedule.</p>
+          <div class="cu-home-step-icon"><i class="fa-regular fa-calendar-check"></i></div>
+          <strong>{{ 'CUSTOMER_HOME.STEP_SCHEDULE' | translate }}</strong>
+          <p>{{ 'CUSTOMER_HOME.STEP_SCHEDULE_DESCRIPTION' | translate }}</p>
         </div>
 
         <div class="cu-home-step">
           <span class="cu-home-step-number">03</span>
-          <div class="cu-home-step-icon">
-            <i class="fa-solid fa-house-circle-check"></i>
-          </div>
-          <strong>Enjoy peace of mind</strong>
-          <p>Let the professional handle the work while you relax.</p>
+          <div class="cu-home-step-icon"><i class="fa-solid fa-house-circle-check"></i></div>
+          <strong>{{ 'CUSTOMER_HOME.STEP_ENJOY' | translate }}</strong>
+          <p>{{ 'CUSTOMER_HOME.STEP_ENJOY_DESCRIPTION' | translate }}</p>
         </div>
       </div>
     </section>

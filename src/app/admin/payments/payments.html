@@ -1,14 +1,13 @@
 <div class="payments-page">
 
-  <!-- Page Header -->
   <div class="payments-header">
     <div class="header-content">
       <div class="eyebrow">
         <i class="fa-solid fa-wallet"></i>
-        FINANCE MANAGEMENT
+        {{ 'PAYMENTS.EYEBROW' | translate }}
       </div>
-      <h1>Payments</h1>
-      <p>Track transactions, monitor collections and review payment activity.</p>
+      <h1>{{ 'PAYMENTS.TITLE' | translate }}</h1>
+      <p>{{ 'PAYMENTS.DESCRIPTION' | translate }}</p>
     </div>
 
     <div class="header-icon">
@@ -16,24 +15,15 @@
     </div>
   </div>
 
-  <!-- Loading -->
   @if (loading()) {
-  <div class="state-card">
-    <app-loader />
-  </div>
-  }
-
-  <!-- Error -->
-  @else if (error()) {
+  <app-loader />
+  } @else if (error()) {
   <div class="payment-error">
     <i class="fa-solid fa-circle-exclamation"></i>
-    <span>{{ error() }}</span>
+    {{ error() }}
   </div>
-  }
+  } @else {
 
-  @else if (data(); as d) {
-
-  <!-- Summary Cards -->
   <div class="summary-grid">
 
     <div class="summary-card received">
@@ -41,33 +31,30 @@
         <div class="summary-icon">
           <i class="fa-solid fa-indian-rupee-sign"></i>
         </div>
-        <span class="summary-label">TOTAL RECEIVED</span>
+        <span class="summary-label">
+          {{ 'PAYMENTS.TOTAL_RECEIVED' | translate }}
+        </span>
       </div>
-
       <div class="summary-value">
-        ₹{{ d.paidTotal | number }}
+        ₹{{ (data()?.paidTotal || 0) | number:'1.0-0' }}
       </div>
-
       <div class="summary-description">
-        <i class="fa-solid fa-circle-check"></i>
-        Successfully collected
+        {{ 'PAYMENTS.SUCCESSFULLY_COLLECTED' | translate }}
       </div>
     </div>
 
     <div class="summary-card">
       <div class="summary-top">
         <div class="summary-icon green">
-          <i class="fa-solid fa-check-double"></i>
+          <i class="fa-solid fa-circle-check"></i>
         </div>
-        <span class="summary-label">SUCCESSFUL PAYMENTS</span>
+        <span class="summary-label">
+          {{ 'PAYMENTS.SUCCESSFUL_PAYMENTS' | translate }}
+        </span>
       </div>
-
-      <div class="summary-value">
-        {{ d.paidCount }}
-      </div>
-
+      <div class="summary-value">{{ data()?.paidCount || 0 }}</div>
       <div class="summary-description">
-        Fully paid bookings
+        {{ 'PAYMENTS.FULLY_PAID_BOOKINGS' | translate }}
       </div>
     </div>
 
@@ -76,141 +63,100 @@
         <div class="summary-icon orange">
           <i class="fa-solid fa-clock"></i>
         </div>
-        <span class="summary-label">PENDING TRANSACTIONS</span>
+        <span class="summary-label">
+          {{ 'PAYMENTS.PENDING_TRANSACTIONS' | translate }}
+        </span>
       </div>
-
-      <div class="summary-value">
-        {{ d.pendingCount }}
-      </div>
-
+      <div class="summary-value">{{ data()?.pendingCount || 0 }}</div>
       <div class="summary-description">
-        Awaiting admin verification
+        {{ 'PAYMENTS.AWAITING_VERIFICATION' | translate }}
       </div>
     </div>
 
     <div class="summary-card">
       <div class="summary-top">
         <div class="summary-icon green">
-          <i class="fa-solid fa-chart-pie"></i>
+          <i class="fa-solid fa-money-bill-transfer"></i>
         </div>
-        <span class="summary-label">PARTIAL PAYMENTS</span>
+        <span class="summary-label">
+          {{ 'PAYMENTS.PARTIAL_PAYMENTS' | translate }}
+        </span>
       </div>
-
-      <div class="summary-value">
-        {{ d.partialCount }}
-      </div>
-
+      <div class="summary-value">{{ data()?.partialCount || 0 }}</div>
       <div class="summary-description">
-        Bookings with remaining balance
+        {{ 'PAYMENTS.REMAINING_BALANCE' | translate }}
       </div>
     </div>
 
   </div>
 
-  <!-- Verification Success -->
-  @if (actionMessage()) {
-  <div class="payment-success">
-    <i class="fa-solid fa-circle-check"></i>
-    <span>{{ actionMessage() }}</span>
-  </div>
-  }
-
-  <!-- Verification Error -->
-  @if (actionError()) {
-  <div class="payment-error">
-    <i class="fa-solid fa-circle-exclamation"></i>
-    <span>{{ actionError() }}</span>
-  </div>
-  }
-
-  <!-- Transactions Section -->
   <section class="transactions-section">
 
     <div class="section-heading">
       <div>
-        <h2>Transaction history</h2>
-        <p>Review and verify individual customer payment transactions.</p>
+        <h2>{{ 'PAYMENTS.TRANSACTION_HISTORY' | translate }}</h2>
+        <p>{{ 'PAYMENTS.HISTORY_DESCRIPTION' | translate }}</p>
       </div>
 
-      <div class="transaction-count">
+      <span class="transaction-count">
         <i class="fa-solid fa-receipt"></i>
-        {{ visible().length }} bookings
-      </div>
+        {{ visible().length }} {{ 'PAYMENTS.BOOKINGS' | translate }}
+      </span>
     </div>
 
-    <!-- Filters -->
     <div class="filter-bar">
       <div class="filter-tabs">
-
         @for (t of tabs; track t.key) {
         <button type="button" class="filter-tab" [class.active]="tab() === t.key" (click)="tab.set(t.key)">
-          {{ t.label }}
+          {{ ('PAYMENTS.TAB_' + t.key.toUpperCase()) | translate }}
         </button>
         }
-
       </div>
     </div>
 
-    <!-- Empty State -->
     @if (visible().length === 0) {
-
     <div class="empty-wrapper">
-      <app-empty-state icon="💳" title="No payments found"
-        text="Payment transactions will appear here once customers make a payment." />
+      <app-empty-state icon="💳" [title]="'PAYMENTS.NO_PAYMENTS' | translate"
+        [text]="'PAYMENTS.EMPTY_DESCRIPTION' | translate" />
     </div>
-
-    }
-
-    @else {
+    } @else {
 
     <div class="table-container">
       <div class="table-scroll">
-
         <table class="payments-table">
 
           <thead>
             <tr>
-              <th>DATE</th>
-              <th>BOOKING</th>
-              <th>CUSTOMER</th>
-              <th>PROVIDER</th>
-              <th>UTR / TRANSACTION ID</th>
-              <th>PAYMENT REFERENCE</th>
-              <th>SUBMITTED</th>
-              <th>VERIFIED</th>
-              <th>TRANSACTION STATUS</th>
-              <th>ACTION</th>
+              <th>{{ 'PAYMENTS.DATE' | translate }}</th>
+              <th>{{ 'PAYMENTS.BOOKING' | translate }}</th>
+              <th>{{ 'PAYMENTS.CUSTOMER' | translate }}</th>
+              <th>{{ 'PAYMENTS.PROVIDER' | translate }}</th>
+              <th>{{ 'PAYMENTS.UTR_TRANSACTION_ID' | translate }}</th>
+              <th>{{ 'PAYMENTS.PAYMENT_REFERENCE' | translate }}</th>
+              <th>{{ 'PAYMENTS.SUBMITTED' | translate }}</th>
+              <th>{{ 'PAYMENTS.VERIFIED' | translate }}</th>
+              <th>{{ 'PAYMENTS.TRANSACTION_STATUS' | translate }}</th>
+              <th>{{ 'PAYMENTS.ACTION' | translate }}</th>
             </tr>
           </thead>
 
           <tbody>
-
             @for (p of visible(); track p.id) {
-
-            <!-- Individual UTR transactions -->
-            @for (tx of (p.transactions || []); track tx.id) {
-
             <tr>
 
               <td>
                 <div class="date-cell">
                   <span class="date-main">
-                    {{ tx.createdAt | date: 'd MMM y' }}
-                  </span>
-                  <span class="date-time">
-                    <i class="fa-regular fa-clock"></i>
-                    {{ tx.createdAt | date: 'h:mm a' }}
+                    {{ p.createdAt | date:'dd MMM yyyy' }}
                   </span>
                 </div>
               </td>
 
               <td>
                 <div class="booking-cell">
-                  <a [routerLink]="['/admin/bookings', p.booking.id]">
+                  <a [routerLink]="['/admin/bookings']">
                     #{{ p.booking.id }}
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
                   </a>
-                  <span>{{ p.booking.service.title }}</span>
                 </div>
               </td>
 
@@ -232,180 +178,138 @@
                 </div>
               </td>
 
-              <!-- UTR -->
               <td>
-                <span class="transaction-id">
-                  {{ tx.txnId }}
-                </span>
-              </td>
-
-              <!-- Payment Reference -->
-              <td>
-                <span class="transaction-id">
-                  {{ tx.paymentRequest?.reference || p.orderId }}
-                </span>
-              </td>
-
-              <!-- Submitted Amount -->
-              <td>
-                <span class="amount-value">
-                  ₹{{ tx.amount | number }}
-                </span>
+                @if (p.transactions.length > 0) {
+                @for (tx of p.transactions; track tx.id) {
+                <div class="transaction-id">{{ tx.txnId }}</div>
+                }
+                } @else {
+                <span class="transaction-id">{{ p.txnId || '—' }}</span>
+                }
               </td>
 
               <td>
+                @if (p.transactions.length > 0) {
+                @for (tx of p.transactions; track tx.id) {
+                <div class="transaction-id">
+                  {{ tx.paymentRequest?.reference || p.orderId || '—' }}
+                </div>
+                }
+                } @else {
+                <span class="transaction-id">{{ p.orderId || '—' }}</span>
+                }
+              </td>
+
+              <td>
+                @if (p.transactions.length > 0) {
+                @for (tx of p.transactions; track tx.id) {
+                <div class="amount-value">
+                  ₹{{ tx.amount | number:'1.0-0' }}
+                </div>
+                }
+                } @else {
+                —
+                }
+              </td>
+
+              <td>
+                @if (p.transactions.length > 0) {
+                @for (tx of p.transactions; track tx.id) {
                 @if (tx.verifiedAmount !== null) {
-                <span class="amount-value">
-                  ₹{{ tx.verifiedAmount | number }}
-                </span>
+                <div class="amount-value">
+                  ₹{{ tx.verifiedAmount | number:'1.0-0' }}
+                </div>
                 } @else {
-                <span class="waiting-label">Not verified</span>
+                <span class="waiting-label">
+                  {{ 'PAYMENTS.NOT_VERIFIED' | translate }}
+                </span>
+                }
+                }
+                } @else {
+                —
                 }
               </td>
 
               <td>
+                @if (p.transactions.length > 0) {
+                @for (tx of p.transactions; track tx.id) {
                 <span class="payment-status" [attr.data-status]="tx.status">
-
-                  @if (tx.status === 'verified') {
-                  <i class="fa-solid fa-circle-check"></i>
-                  Verified
-                  } @else if (tx.status === 'rejected') {
-                  <i class="fa-solid fa-circle-xmark"></i>
-                  Rejected
-                  } @else {
-                  <i class="fa-solid fa-clock"></i>
-                  {{ tx.status }}
-                  }
-
+                  {{ ('PAYMENTS.' + tx.status.toUpperCase()) | translate }}
                 </span>
-              </td>
-
-              <td>
-                @if (tx.status === 'submitted') {
-
-                <button type="button" class="verify-btn" [disabled]="verifyingId() === tx.id" (click)="verify(p, tx)">
-
-                  @if (verifyingId() === tx.id) {
-                  <i class="fa-solid fa-spinner fa-spin"></i>
-                  Verifying...
-                  } @else {
-                  <i class="fa-solid fa-check"></i>
-                  Verify UTR
-                  }
-
-                </button>
-
-                } @else if (tx.status === 'verified') {
-
-                <span class="verified-label">
-                  <i class="fa-solid fa-circle-check"></i>
-                  Completed
-                </span>
-
-                } @else {
-
-                <span class="waiting-label">
-                  No action
-                </span>
-
                 }
-              </td>
-
-            </tr>
-
-            }
-
-            <!-- Legacy payment without transaction records -->
-            @if (!p.transactions || p.transactions.length === 0) {
-
-            <tr>
-
-              <td>
-                <div class="date-cell">
-                  <span class="date-main">
-                    {{ (p.paidAt || p.createdAt) | date: 'd MMM y' }}
-                  </span>
-                  <span class="date-time">
-                    {{ (p.paidAt || p.createdAt) | date: 'h:mm a' }}
-                  </span>
-                </div>
-              </td>
-
-              <td>
-                <div class="booking-cell">
-                  <a [routerLink]="['/admin/bookings', p.booking.id]">
-                    #{{ p.booking.id }}
-                  </a>
-                  <span>{{ p.booking.service.title }}</span>
-                </div>
-              </td>
-
-              <td>{{ p.booking.customer.name }}</td>
-              <td>{{ p.booking.provider.name }}</td>
-
-              <td>
-                <span class="transaction-id">
-                  {{ p.txnId || '—' }}
-                </span>
-              </td>
-
-              <td>
-                <span class="transaction-id">
-                  {{ p.orderId }}
-                </span>
-              </td>
-
-              <td>₹{{ p.amount | number }}</td>
-              <td>₹{{ p.paidAmount | number }}</td>
-
-              <td>
+                } @else {
                 <span class="payment-status" [attr.data-status]="p.status">
-                  {{ p.status }}
+                  {{ ('PAYMENTS.' + p.status.toUpperCase()) | translate }}
                 </span>
+                }
               </td>
 
               <td>
-                @if (p.status === 'paid') {
+                @if (p.transactions.length > 0) {
+                @for (tx of p.transactions; track tx.id) {
+                @if (tx.status === 'submitted') {
+                <button type="button" class="verify-btn" [disabled]="verifyingId() === tx.id" (click)="verify(p, tx)">
+                  {{ verifyingId() === tx.id
+                  ? ('PAYMENTS.VERIFYING' | translate)
+                  : ('PAYMENTS.VERIFY_UTR' | translate) }}
+                </button>
+                } @else if (tx.status === 'verified') {
                 <span class="verified-label">
-                  <i class="fa-solid fa-circle-check"></i>
-                  Verified
+                  <i class="fa-solid fa-check-circle"></i>
+                  {{ 'PAYMENTS.COMPLETED' | translate }}
                 </span>
                 } @else {
                 <span class="waiting-label">
-                  No transaction submitted
+                  {{ 'PAYMENTS.NO_ACTION' | translate }}
+                </span>
+                }
+                }
+                } @else {
+                <span class="waiting-label">
+                  {{ 'PAYMENTS.NO_TRANSACTION_SUBMITTED' | translate }}
                 </span>
                 }
               </td>
 
             </tr>
 
-            }
-
-            <!-- Payment balance summary -->
             <tr class="payment-balance-row">
               <td colspan="10">
-                <strong>Booking #{{ p.booking.id }} summary:</strong>
-                Total ₹{{ p.amount | number }}
+                {{ 'PAYMENTS.BOOKING_SUMMARY' | translate: { id: p.booking.id } }}
                 <span class="balance-separator">|</span>
-                Paid ₹{{ p.paidAmount | number }}
+                <strong>{{ 'PAYMENTS.TOTAL' | translate }}:</strong>
+                ₹{{ p.amount | number:'1.0-0' }}
                 <span class="balance-separator">|</span>
-                Remaining ₹{{ (p.amount - p.paidAmount) | number }}
+                <strong>{{ 'PAYMENTS.PAID' | translate }}:</strong>
+                ₹{{ p.paidAmount | number:'1.0-0' }}
+                <span class="balance-separator">|</span>
+                <strong>{{ 'PAYMENTS.REMAINING' | translate }}:</strong>
+                ₹{{ (p.amount - p.paidAmount) | number:'1.0-0' }}
               </td>
             </tr>
-
             }
-
           </tbody>
 
         </table>
-
       </div>
     </div>
-
     }
 
   </section>
+  }
 
+  @if (actionError()) {
+  <div class="payment-error">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    {{ actionError() }}
+  </div>
+  }
+
+  @if (actionMessage()) {
+  <div class="payment-success">
+    <i class="fa-solid fa-circle-check"></i>
+    {{ actionMessage() }}
+  </div>
   }
 
 </div>

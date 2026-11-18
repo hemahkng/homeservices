@@ -1,6 +1,5 @@
 
 <div class="register-page">
-
   <div class="register-container">
 
     <!-- LEFT WELCOME PANEL -->
@@ -14,53 +13,49 @@
       <div class="welcome-content">
 
         <span class="welcome-label">
-          YOUR HOME, OUR PRIORITY
+          {{ 'AUTH_REGISTER.WELCOME_LABEL' | translate }}
         </span>
 
         <h1>
-          Everything your
-          <span>home needs,</span>
-          in one place.
+          {{ 'AUTH_REGISTER.HERO_TITLE_BEFORE' | translate }}
+          <span>{{ 'AUTH_REGISTER.HERO_TITLE_HIGHLIGHT' | translate }}</span>
+          {{ 'AUTH_REGISTER.HERO_TITLE_AFTER' | translate }}
         </h1>
 
-        <p>
-          Create your account and discover trusted professionals
-          who make everyday home services simple and convenient.
-        </p>
+        <p>{{ 'AUTH_REGISTER.HERO_DESCRIPTION' | translate }}</p>
 
         <div class="welcome-benefits">
 
           <div class="benefit-item">
             <div class="benefit-icon">✓</div>
             <div>
-              <strong>Trusted professionals</strong>
-              <span>Find reliable experts for your home.</span>
+              <strong>{{ 'AUTH_REGISTER.TRUSTED' | translate }}</strong>
+              <span>{{ 'AUTH_REGISTER.TRUSTED_DESCRIPTION' | translate }}</span>
             </div>
           </div>
 
           <div class="benefit-item">
             <div class="benefit-icon">⌂</div>
             <div>
-              <strong>Services made simple</strong>
-              <span>Book services without any hassle.</span>
+              <strong>{{ 'AUTH_REGISTER.SIMPLE' | translate }}</strong>
+              <span>{{ 'AUTH_REGISTER.SIMPLE_DESCRIPTION' | translate }}</span>
             </div>
           </div>
 
           <div class="benefit-item">
             <div class="benefit-icon">♡</div>
             <div>
-              <strong>Customer first</strong>
-              <span>Your comfort and satisfaction matter.</span>
+              <strong>{{ 'AUTH_REGISTER.CUSTOMER_FIRST' | translate }}</strong>
+              <span>{{ 'AUTH_REGISTER.CUSTOMER_DESCRIPTION' | translate }}</span>
             </div>
           </div>
 
         </div>
-
       </div>
 
       <div class="welcome-footer">
-        <span>© 2026 HomeServices</span>
-        <span>Made for better living.</span>
+        <span>{{ 'AUTH_REGISTER.COPYRIGHT' | translate }}</span>
+        <span>{{ 'AUTH_REGISTER.FOOTER' | translate }}</span>
       </div>
 
       <div class="circle-decoration circle-one"></div>
@@ -69,32 +64,28 @@
 
     </aside>
 
-
     <!-- RIGHT REGISTRATION PANEL -->
     <main class="form-panel">
 
       <div class="form-content">
 
-        <!-- FORM HEADING -->
         <div class="form-heading">
 
           <div class="heading-top">
-            <span class="form-step">GET STARTED</span>
+            <span class="form-step">
+              {{ 'AUTH_REGISTER.GET_STARTED' | translate }}
+            </span>
 
             <div class="account-badge">
               <span class="online-dot"></span>
-              Customer account
+              {{ 'AUTH_REGISTER.CUSTOMER_ACCOUNT' | translate }}
             </div>
           </div>
 
-          <h2>Create your account</h2>
-
-          <p>
-            Enter your details below to get started with HomeServices.
-          </p>
+          <h2>{{ 'AUTH_REGISTER.TITLE' | translate }}</h2>
+          <p>{{ 'AUTH_REGISTER.DESCRIPTION' | translate }}</p>
 
         </div>
-
 
         <!-- REGISTRATION FORM -->
         <form [formGroup]="form" (ngSubmit)="submit()">
@@ -103,7 +94,8 @@
           <div class="form-group">
 
             <label for="name">
-              Full name <span class="required">*</span>
+              {{ 'AUTH_REGISTER.FULL_NAME' | translate }}
+              <span class="required">*</span>
             </label>
 
             <div class="input-wrapper">
@@ -112,7 +104,7 @@
               <input
                 id="name"
                 type="text"
-                placeholder="Enter your full name"
+                [placeholder]="'AUTH_REGISTER.NAME_PLACEHOLDER' | translate"
                 formControlName="name"
                 autocomplete="name"
               />
@@ -120,24 +112,24 @@
 
             @if (form.controls.name.touched && form.controls.name.hasError('required')) {
               <small class="field-error">
-                Full name is required
+                {{ 'AUTH_REGISTER.NAME_REQUIRED' | translate }}
               </small>
             }
 
             @if (form.controls.name.touched && form.controls.name.hasError('minlength')) {
               <small class="field-error">
-                Name must contain at least 2 characters
+                {{ 'AUTH_REGISTER.NAME_MIN' | translate }}
               </small>
             }
 
           </div>
 
-
           <!-- EMAIL -->
           <div class="form-group">
 
             <label for="email">
-              Email address <span class="required">*</span>
+              {{ 'AUTH_REGISTER.EMAIL' | translate }}
+              <span class="required">*</span>
             </label>
 
             <div class="input-wrapper">
@@ -146,7 +138,7 @@
               <input
                 id="email"
                 type="email"
-                placeholder="name@example.com"
+                [placeholder]="'AUTH_REGISTER.EMAIL_PLACEHOLDER' | translate"
                 formControlName="email"
                 autocomplete="email"
               />
@@ -154,25 +146,26 @@
 
             @if (form.controls.email.touched && form.controls.email.hasError('required')) {
               <small class="field-error">
-                Email is required
+                {{ 'AUTH_REGISTER.EMAIL_REQUIRED' | translate }}
               </small>
             }
 
             @if (form.controls.email.touched && form.controls.email.hasError('email')) {
               <small class="field-error">
-                Enter a valid email address
+                {{ 'AUTH_REGISTER.EMAIL_INVALID' | translate }}
               </small>
             }
 
           </div>
 
-
           <!-- PHONE -->
           <div class="form-group">
 
             <label for="phone">
-              Phone number
-              <span class="optional">(Optional)</span>
+              {{ 'AUTH_REGISTER.PHONE' | translate }}
+              <span class="optional">
+                {{ 'AUTH_REGISTER.OPTIONAL' | translate }}
+              </span>
             </label>
 
             <div class="input-wrapper">
@@ -181,7 +174,7 @@
               <input
                 id="phone"
                 type="tel"
-                placeholder="Enter your phone number"
+                [placeholder]="'AUTH_REGISTER.PHONE_PLACEHOLDER' | translate"
                 formControlName="phone"
                 autocomplete="tel"
               />
@@ -189,18 +182,18 @@
 
             @if (form.controls.phone.touched && form.controls.phone.invalid) {
               <small class="field-error">
-                Enter 10 to 15 digits only
+                {{ 'AUTH_REGISTER.PHONE_INVALID' | translate }}
               </small>
             }
 
           </div>
 
-
           <!-- PASSWORD -->
           <div class="form-group">
 
             <label for="password">
-              Password <span class="required">*</span>
+              {{ 'AUTH_REGISTER.PASSWORD' | translate }}
+              <span class="required">*</span>
             </label>
 
             <div class="input-wrapper">
@@ -209,30 +202,29 @@
               <input
                 id="password"
                 type="password"
-                placeholder="Create a password"
+                [placeholder]="'AUTH_REGISTER.PASSWORD_PLACEHOLDER' | translate"
                 formControlName="password"
                 autocomplete="new-password"
               />
             </div>
 
             <small class="input-hint">
-              Use at least 6 characters for your password.
+              {{ 'AUTH_REGISTER.PASSWORD_HINT' | translate }}
             </small>
 
             @if (form.controls.password.touched && form.controls.password.hasError('required')) {
               <small class="field-error">
-                Password is required
+                {{ 'AUTH_REGISTER.PASSWORD_REQUIRED' | translate }}
               </small>
             }
 
             @if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
               <small class="field-error">
-                Minimum 6 characters required
+                {{ 'AUTH_REGISTER.PASSWORD_MIN' | translate }}
               </small>
             }
 
           </div>
-
 
           <!-- API ERROR -->
           @if (error()) {
@@ -242,7 +234,6 @@
             </div>
           }
 
-
           <!-- SUBMIT BUTTON -->
           <button
             type="submit"
@@ -251,7 +242,11 @@
           >
 
             <span>
-              {{ loading() ? 'Creating account...' : 'Create My Account' }}
+              {{
+                (loading()
+                  ? 'AUTH_REGISTER.CREATING'
+                  : 'AUTH_REGISTER.CREATE_ACCOUNT') | translate
+              }}
             </span>
 
             @if (!loading()) {
@@ -266,27 +261,26 @@
 
         </form>
 
-
         <!-- SIGN IN -->
         <div class="signin-section">
-          <span>Already have an account?</span>
-          <a routerLink="/auth/login">Sign in</a>
+          <span>{{ 'AUTH_REGISTER.ALREADY_ACCOUNT' | translate }}</span>
+          <a routerLink="/auth/login">
+            {{ 'AUTH_REGISTER.SIGN_IN' | translate }}
+          </a>
         </div>
-
 
         <!-- BACK LINK -->
         <div class="back-link">
           <a routerLink="/auth/register">
             <span>←</span>
-            Back to registration options
+            {{ 'AUTH_REGISTER.BACK_REGISTER' | translate }}
           </a>
         </div>
-
 
         <!-- SECURITY FOOTER -->
         <div class="security-footer">
           <span class="security-icon">✓</span>
-          Your information is safe and secure.
+          {{ 'AUTH_REGISTER.SECURITY' | translate }}
         </div>
 
       </div>
@@ -294,5 +288,4 @@
     </main>
 
   </div>
-
 </div>

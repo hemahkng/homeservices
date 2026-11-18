@@ -1,13 +1,16 @@
+
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Api } from '../../core/services/api';
 import { Auth } from '../../core/services/auth';
 import { Category } from '../../shared/models/category';
 
 @Component({
   selector: 'app-register-provider',
-  imports: [ReactiveFormsModule, RouterLink],
+  standalone: true,
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   templateUrl: './register-provider.html',
   styleUrl: './register-provider.scss',
 })
@@ -15,6 +18,7 @@ export class RegisterProvider implements OnInit {
   private fb = inject(FormBuilder);
   private api = inject(Api);
   private auth = inject(Auth);
+  private translate = inject(TranslateService);
 
   categories = signal<Category[]>([]);
   loading = signal(false);
@@ -35,17 +39,30 @@ export class RegisterProvider implements OnInit {
   ngOnInit() {
     this.api.get<Category[]>('/categories').subscribe({
       next: (c) => this.categories.set(c),
-      error: () => this.error.set('Could not load categories. Is the server running?'),
+      error: () => {
+        this.error.set(
+          this.translate.instant('AUTH_PROVIDER_REGISTER.LOAD_CATEGORIES_ERROR')
+        );
+      },
     });
   }
 
   submit() {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
     this.loading.set(true);
     this.error.set('');
 
     const v = this.form.getRawValue();
-    const payload: any = { ...v, role: 'provider', bio: v.bio || undefined };
+
+    const payload: any = {
+      ...v,
+      role: 'provider',
+      bio: v.bio || undefined,
+    };
 
     this.auth.register(payload).subscribe({
       next: () => {
@@ -53,7 +70,10 @@ export class RegisterProvider implements OnInit {
         this.done.set(true);
       },
       error: (e) => {
-        this.error.set(e.error?.message ?? 'Registration failed');
+        this.error.set(
+          e.error?.message ??
+          this.translate.instant('AUTH_PROVIDER_REGISTER.REGISTER_ERROR')
+        );
         this.loading.set(false);
       },
     });

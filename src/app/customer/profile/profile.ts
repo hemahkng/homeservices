@@ -1,19 +1,30 @@
+
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
 import { Auth } from '../../core/services/auth';
 import { Loader } from '../../shared/components/loader/loader';
 import { CustomerAccount, CustomerProfile } from '../services/customer-account';
 
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule, DatePipe, Loader],
+  standalone: true,
+  imports: [ReactiveFormsModule, DatePipe, Loader, TranslatePipe],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
 export class Profile implements OnInit {
   private fb = inject(FormBuilder);
   private account = inject(CustomerAccount);
+  private translate = inject(TranslateService);
+
   auth = inject(Auth);
 
   info = signal<CustomerProfile | null>(null);
@@ -38,45 +49,95 @@ export class Profile implements OnInit {
     confirm: ['', Validators.required],
   });
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.account.profile().subscribe({
-      next: (p) => { this.apply(p); this.loading.set(false); },
-      error: (e) => { this.error.set(e.error?.message ?? 'Could not load profile'); this.loading.set(false); },
+      next: (p) => {
+        this.apply(p);
+        this.loading.set(false);
+      },
+      error: (e) => {
+        this.error.set(
+          e.error?.message ??
+          this.translate.instant('CUSTOMER_PROFILE.LOAD_ERROR')
+        );
+        this.loading.set(false);
+      },
     });
   }
 
-  private apply(p: CustomerProfile) {
+  private apply(p: CustomerProfile): void {
     this.info.set(p);
-    this.form.patchValue({ name: p.name, phone: p.phone ?? '', address: p.address ?? '' });
+    this.form.patchValue({
+      name: p.name,
+      phone: p.phone ?? '',
+      address: p.address ?? '',
+    });
   }
 
-  save() {
-    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+  save(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
     this.saving.set(true);
     this.error.set('');
+    this.saved.set(false);
+
     this.account.saveProfile(this.form.getRawValue()).subscribe({
       next: (p) => {
         this.apply(p);
-        this.auth.patchUser({ name: p.name, phone: p.phone ?? undefined });
+        this.auth.patchUser({
+          name: p.name,
+          phone: p.phone ?? undefined,
+        });
         this.saving.set(false);
         this.saved.set(true);
         setTimeout(() => this.saved.set(false), 3000);
       },
-      error: (e) => { this.error.set(e.error?.message ?? 'Could not save'); this.saving.set(false); },
+      error: (e) => {
+        this.error.set(
+          e.error?.message ??
+          this.translate.instant('CUSTOMER_PROFILE.SAVE_ERROR')
+        );
+        this.saving.set(false);
+      },
     });
   }
 
-  changePassword() {
+  changePassword(): void {
     this.pwdError.set('');
     this.pwdOk.set(false);
-    if (this.pwd.invalid) { this.pwd.markAllAsTouched(); return; }
+
+    if (this.pwd.invalid) {
+      this.pwd.markAllAsTouched();
+      return;
+    }
+
     const v = this.pwd.getRawValue();
-    if (v.newPassword !== v.confirm) { this.pwdError.set('New passwords do not match'); return; }
+
+    if (v.newPassword !== v.confirm) {
+      this.pwdError.set(
+        this.translate.instant('CUSTOMER_PROFILE.PASSWORD_MISMATCH')
+      );
+      return;
+    }
 
     this.pwdSaving.set(true);
+
     this.account.changePassword(v.currentPassword, v.newPassword).subscribe({
-      next: () => { this.pwdSaving.set(false); this.pwdOk.set(true); this.pwd.reset(); },
-      error: (e) => { this.pwdSaving.set(false); this.pwdError.set(e.error?.message ?? 'Could not change password'); },
+      next: () => {
+        this.pwdSaving.set(false);
+        this.pwdOk.set(true);
+        this.pwd.reset();
+      },
+      error: (e) => {
+        this.pwdSaving.set(false);
+        this.pwdError.set(
+          e.error?.message ??
+          this.translate.instant('CUSTOMER_PROFILE.PASSWORD_ERROR')
+        );
+      },
     });
   }
 

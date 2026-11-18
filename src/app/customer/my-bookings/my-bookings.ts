@@ -1,6 +1,9 @@
+
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
 import { Booking } from '../../shared/models/booking';
 import { EmptyState } from '../../shared/components/empty-state/empty-state';
 import { Loader } from '../../shared/components/loader/loader';
@@ -11,12 +14,22 @@ type Tab = 'upcoming' | 'completed' | 'cancelled' | 'all';
 
 @Component({
   selector: 'app-my-bookings',
-  imports: [DatePipe, DecimalPipe, RouterLink, Loader, EmptyState, StatusBadge],
+  imports: [
+    DatePipe,
+    DecimalPipe,
+    RouterLink,
+    Loader,
+    EmptyState,
+    StatusBadge,
+    TranslatePipe
+  ],
   templateUrl: './my-bookings.html',
   styleUrl: './my-bookings.scss',
 })
 export class MyBookings implements OnInit {
   private svc = inject(CustomerBooking);
+  private translate = inject(TranslateService);
+
   readonly canPay = canPay;
   readonly canCancel = canCancel;
   readonly canRate = canRate;
@@ -36,23 +49,36 @@ export class MyBookings implements OnInit {
 
   private match(b: Booking, t: Tab) {
     switch (t) {
-      case 'upcoming': return ['pending', 'accepted', 'in_progress'].includes(b.status);
-      case 'completed': return b.status === 'completed';
-      case 'cancelled': return ['rejected', 'cancelled'].includes(b.status);
-      default: return true;
+      case 'upcoming':
+        return ['pending', 'accepted', 'in_progress'].includes(b.status);
+      case 'completed':
+        return b.status === 'completed';
+      case 'cancelled':
+        return ['rejected', 'cancelled'].includes(b.status);
+      default:
+        return true;
     }
   }
 
   counts = computed(() => {
     const l = this.all();
-    return Object.fromEntries(this.tabs.map((t) => [t.key, l.filter((b) => this.match(b, t.key)).length])) as Record<Tab, number>;
+
+    return Object.fromEntries(
+      this.tabs.map((t) => [
+        t.key,
+        l.filter((b) => this.match(b, t.key)).length
+      ])
+    ) as Record<Tab, number>;
   });
 
   visible = computed(() => {
     const t = this.tab();
     const list = this.all().filter((b) => this.match(b, t));
+
     return list.sort((a, b) =>
-      t === 'upcoming' ? +new Date(a.scheduledAt) - +new Date(b.scheduledAt) : +new Date(b.scheduledAt) - +new Date(a.scheduledAt)
+      t === 'upcoming'
+        ? +new Date(a.scheduledAt) - +new Date(b.scheduledAt)
+        : +new Date(b.scheduledAt) - +new Date(a.scheduledAt)
     );
   });
 
@@ -61,19 +87,43 @@ export class MyBookings implements OnInit {
       next: (r) => {
         this.all.set(r);
         this.loading.set(false);
-        if (this.counts().upcoming === 0 && r.length) this.tab.set('all');
+
+        if (this.counts().upcoming === 0 && r.length) {
+          this.tab.set('all');
+        }
       },
-      error: (e) => { this.error.set(e.error?.message ?? 'Could not load bookings'); this.loading.set(false); },
+      error: (e) => {
+        this.error.set(
+          e.error?.message ??
+          this.translate.instant('CUSTOMER_BOOKINGS.LOAD_ERROR')
+        );
+        this.loading.set(false);
+      },
     });
   }
 
   cancel(b: Booking) {
-    if (!confirm('Cancel this booking?')) return;
+    if (!confirm(this.translate.instant('CUSTOMER_BOOKINGS.CANCEL_CONFIRM'))) {
+      return;
+    }
+
     this.busyId.set(b.id);
     this.error.set('');
+
     this.svc.cancel(b.id).subscribe({
-      next: (u) => { this.all.update((l) => l.map((x) => (x.id === u.id ? u : x))); this.busyId.set(null); },
-      error: (e) => { this.error.set(e.error?.message ?? 'Could not cancel'); this.busyId.set(null); },
+      next: (u) => {
+        this.all.update((l) =>
+          l.map((x) => (x.id === u.id ? u : x))
+        );
+        this.busyId.set(null);
+      },
+      error: (e) => {
+        this.error.set(
+          e.error?.message ??
+          this.translate.instant('CUSTOMER_BOOKINGS.CANCEL_ERROR')
+        );
+        this.busyId.set(null);
+      },
     });
   }
 }

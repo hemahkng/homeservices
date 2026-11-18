@@ -1,15 +1,13 @@
-
 <div class="bk-page">
 
-  <!-- Page heading -->
   <div class="bk-heading">
     <div>
       <span class="bk-eyebrow">
         <i class="fa-solid fa-calendar-check"></i>
-        BOOKING MANAGEMENT
+        {{ 'BOOKINGS.EYEBROW' | translate }}
       </span>
-      <h1>Bookings</h1>
-      <p>Track service requests, monitor payments and manage bookings.</p>
+      <h1>{{ 'BOOKINGS.TITLE' | translate }}</h1>
+      <p>{{ 'BOOKINGS.DESCRIPTION' | translate }}</p>
     </div>
 
     <div class="bk-count-card">
@@ -18,270 +16,236 @@
       </span>
       <div>
         <strong>{{ items().length }}</strong>
-        <small>Bookings shown</small>
+        <small>{{ 'BOOKINGS.BOOKINGS_SHOWN' | translate }}</small>
       </div>
     </div>
   </div>
 
-  <!-- Search and filters -->
   <div class="bk-filter-card">
     <div class="bk-search">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <input
-        type="search"
-        placeholder="Search booking ID, service, customer or provider..."
-        [(ngModel)]="q"
-        (keyup.enter)="load()"
-      />
+      <input type="search" [placeholder]="'BOOKINGS.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="q"
+        (keyup.enter)="load()" />
     </div>
 
     <div class="bk-select">
       <i class="fa-solid fa-filter"></i>
-      <select
-        [ngModel]="status"
-        (ngModelChange)="status = $event; load()"
-        aria-label="Filter by booking status">
-        <option value="">All statuses</option>
+      <select [ngModel]="status" (ngModelChange)="status = $event; load()"
+        [attr.aria-label]="'BOOKINGS.FILTER_STATUS' | translate">
+        <option value="">{{ 'BOOKINGS.ALL_STATUSES' | translate }}</option>
         @for (s of statuses; track s) {
-          <option [value]="s">{{ s.replace('_', ' ') }}</option>
+        <option [value]="s">{{ s.replace('_', ' ') }}</option>
         }
       </select>
       <i class="fa-solid fa-chevron-down arrow"></i>
     </div>
 
-    <button
-      type="button"
-      class="bk-search-btn"
-      (click)="load()"
-      [disabled]="loading()">
+    <button type="button" class="bk-search-btn" (click)="load()" [disabled]="loading()">
       <i class="fa-solid fa-magnifying-glass"></i>
-      Search
+      {{ 'BOOKINGS.SEARCH' | translate }}
     </button>
   </div>
 
-  <!-- Error -->
   @if (error()) {
-    <div class="bk-alert">
-      <i class="fa-solid fa-circle-exclamation"></i>
-      <span>{{ error() }}</span>
-    </div>
+  <div class="bk-alert">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <span>{{ error() }}</span>
+  </div>
   }
 
-  <!-- Loading -->
   @if (loading()) {
-    <div class="bk-loading">
-      <app-loader />
-    </div>
+  <div class="bk-loading">
+    <app-loader />
+  </div>
   } @else if (items().length === 0) {
 
-    <!-- Empty state -->
-    <div class="bk-empty">
-      <div class="bk-empty-icon">
-        <i class="fa-solid fa-calendar-xmark"></i>
-      </div>
-      <h3>No bookings found</h3>
-      <p>There are no bookings matching your search or selected status.</p>
-      <button type="button" (click)="q = ''; status = ''; load()">
-        <i class="fa-solid fa-rotate-left"></i>
-        Clear filters
-      </button>
+  <div class="bk-empty">
+    <div class="bk-empty-icon">
+      <i class="fa-solid fa-calendar-xmark"></i>
     </div>
+    <h3>{{ 'BOOKINGS.NO_BOOKINGS' | translate }}</h3>
+    <p>{{ 'BOOKINGS.EMPTY_DESCRIPTION' | translate }}</p>
+    <button type="button" (click)="q = ''; status = ''; load()">
+      <i class="fa-solid fa-rotate-left"></i>
+      {{ 'BOOKINGS.CLEAR_FILTERS' | translate }}
+    </button>
+  </div>
 
   } @else {
 
-    <!-- Booking table -->
-    <div class="bk-table-card">
+  <div class="bk-table-card">
 
-      <div class="bk-table-heading">
-        <div>
-          <h3>All bookings</h3>
-          <p>Showing the latest 200 booking records.</p>
-        </div>
-
-        <span class="bk-result-count">
-          {{ items().length }} results
-        </span>
+    <div class="bk-table-heading">
+      <div>
+        <h3>{{ 'BOOKINGS.ALL_BOOKINGS' | translate }}</h3>
+        <p>{{ 'BOOKINGS.LATEST_RECORDS' | translate }}</p>
       </div>
 
-      <div class="bk-table-scroll">
-        <table class="bk-table">
-          <thead>
-            <tr>
-              <th>BOOKING</th>
-              <th>SERVICE</th>
-              <th>CUSTOMER</th>
-              <th>PROVIDER</th>
-              <th>SCHEDULED FOR</th>
-              <th class="text-right">AMOUNT</th>
-              <th>PAYMENT</th>
-              <th>STATUS</th>
-            </tr>
-          </thead>
+      <span class="bk-result-count">
+        {{ items().length }} {{ 'BOOKINGS.RESULTS' | translate }}
+      </span>
+    </div>
 
-          <tbody>
-            @for (b of items(); track b.id) {
-              <tr>
+    <div class="bk-table-scroll">
+      <table class="bk-table">
+        <thead>
+          <tr>
+            <th>{{ 'BOOKINGS.BOOKING' | translate }}</th>
+            <th>{{ 'BOOKINGS.SERVICE' | translate }}</th>
+            <th>{{ 'BOOKINGS.CUSTOMER' | translate }}</th>
+            <th>{{ 'BOOKINGS.PROVIDER' | translate }}</th>
+            <th>{{ 'BOOKINGS.SCHEDULED_FOR' | translate }}</th>
+            <th class="text-right">{{ 'BOOKINGS.AMOUNT' | translate }}</th>
+            <th>{{ 'BOOKINGS.PAYMENT' | translate }}</th>
+            <th>{{ 'BOOKINGS.STATUS' | translate }}</th>
+          </tr>
+        </thead>
 
-                <!-- Booking ID -->
-                <td>
-                  <a class="bk-id" [routerLink]="['/admin/bookings', b.id]">
-                    #{{ b.id }}
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                  </a>
-                </td>
+        <tbody>
+          @for (b of items(); track b.id) {
+          <tr>
+            <td>
+              <a class="bk-id" [routerLink]="['/admin/bookings', b.id]">
+                #{{ b.id }}
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+            </td>
 
-                <!-- Service -->
-                <td>
-                  <a class="bk-service" [routerLink]="['/admin/bookings', b.id]">
-                    <strong>{{ b.service.title }}</strong>
-                  </a>
-                  <span class="bk-sub">
-                    <i class="fa-solid fa-layer-group"></i>
-                    {{ b.service.category.name }}
-                  </span>
-                </td>
-
-                <!-- Customer -->
-                <td>
-                  <div class="bk-person">
-                    <span class="bk-avatar customer">
-                      {{ b.customer.name.charAt(0).toUpperCase() }}
-                    </span>
-                    <strong>{{ b.customer.name }}</strong>
-                  </div>
-                </td>
-
-                <!-- Provider -->
-                <td>
-                  <div class="bk-person">
-                    <span class="bk-avatar provider">
-                      {{ b.provider.name.charAt(0).toUpperCase() }}
-                    </span>
-                    <strong>{{ b.provider.name }}</strong>
-                  </div>
-                </td>
-
-                <!-- Date and time -->
-                <td>
-                  <div class="bk-schedule">
-                    <span>
-                      <i class="fa-regular fa-calendar"></i>
-                      {{ b.scheduledAt | date: 'd MMM y' }}
-                    </span>
-                    <small>
-                      <i class="fa-regular fa-clock"></i>
-                      {{ b.scheduledAt | date: 'h:mm a' }}
-                    </small>
-                  </div>
-                </td>
-
-                <!-- Amount -->
-                <td class="text-right">
-                  <strong class="bk-amount">
-                    ₹{{ b.total | number }}
-                  </strong>
-                </td>
-
-                <!-- Payment -->
-                <td>
-                  <span
-                    class="bk-payment"
-                    [attr.data-payment]="b.payment?.status === 'paid' ? 'paid' : 'pending'">
-                    <i
-                      class="fa-solid"
-                      [class.fa-circle-check]="b.payment?.status === 'paid'"
-                      [class.fa-clock]="b.payment?.status !== 'paid'">
-                    </i>
-                    {{ b.payment?.status === 'paid' ? 'Paid' : 'Unpaid' }}
-                  </span>
-                </td>
-
-                <!-- Booking status -->
-                <td>
-                  <app-status-badge [status]="b.status" />
-                </td>
-
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Mobile booking cards -->
-      <div class="bk-mobile-list">
-        @for (b of items(); track b.id) {
-          <article class="bk-mobile-card">
-
-            <div class="bk-mobile-header">
-              <div>
-                <span class="bk-mobile-label">BOOKING ID</span>
-                <a class="bk-id" [routerLink]="['/admin/bookings', b.id]">
-                  #{{ b.id }}
-                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                </a>
-              </div>
-
-              <app-status-badge [status]="b.status" />
-            </div>
-
-            <a class="bk-mobile-service" [routerLink]="['/admin/bookings', b.id]">
-              <span class="bk-service-icon">
-                <i class="fa-solid fa-screwdriver-wrench"></i>
-              </span>
-              <div>
+            <td>
+              <a class="bk-service" [routerLink]="['/admin/bookings', b.id]">
                 <strong>{{ b.service.title }}</strong>
-                <small>{{ b.service.category.name }}</small>
-              </div>
-              <i class="fa-solid fa-chevron-right arrow"></i>
-            </a>
+              </a>
+              <span class="bk-sub">
+                <i class="fa-solid fa-layer-group"></i>
+                {{ b.service.category.name }}
+              </span>
+            </td>
 
-            <div class="bk-mobile-people">
-              <div>
-                <small>Customer</small>
+            <td>
+              <div class="bk-person">
+                <span class="bk-avatar customer">
+                  {{ b.customer.name.charAt(0).toUpperCase() }}
+                </span>
                 <strong>{{ b.customer.name }}</strong>
               </div>
-              <div>
-                <small>Provider</small>
+            </td>
+
+            <td>
+              <div class="bk-person">
+                <span class="bk-avatar provider">
+                  {{ b.provider.name.charAt(0).toUpperCase() }}
+                </span>
                 <strong>{{ b.provider.name }}</strong>
               </div>
-            </div>
+            </td>
 
-            <div class="bk-mobile-info">
-              <div>
-                <small><i class="fa-regular fa-calendar"></i> Scheduled</small>
-                <strong>{{ b.scheduledAt | date: 'd MMM y' }}</strong>
-                <span>{{ b.scheduledAt | date: 'h:mm a' }}</span>
+            <td>
+              <div class="bk-schedule">
+                <span>
+                  <i class="fa-regular fa-calendar"></i>
+                  {{ b.scheduledAt | date: 'd MMM y' }}
+                </span>
+                <small>
+                  <i class="fa-regular fa-clock"></i>
+                  {{ b.scheduledAt | date: 'h:mm a' }}
+                </small>
               </div>
+            </td>
 
-              <div>
-                <small><i class="fa-solid fa-wallet"></i> Amount</small>
-                <strong class="bk-mobile-amount">₹{{ b.total | number }}</strong>
-              </div>
-            </div>
+            <td class="text-right">
+              <strong class="bk-amount">
+                ₹{{ b.total | number }}
+              </strong>
+            </td>
 
-            <div class="bk-mobile-footer">
-              <span
-                class="bk-payment"
-                [attr.data-payment]="b.payment?.status === 'paid' ? 'paid' : 'pending'">
-                <i
-                  class="fa-solid"
-                  [class.fa-circle-check]="b.payment?.status === 'paid'"
+            <td>
+              <span class="bk-payment" [attr.data-payment]="b.payment?.status === 'paid' ? 'paid' : 'pending'">
+                <i class="fa-solid" [class.fa-circle-check]="b.payment?.status === 'paid'"
                   [class.fa-clock]="b.payment?.status !== 'paid'">
                 </i>
-                {{ b.payment?.status === 'paid' ? 'Paid' : 'Unpaid' }}
+                {{ b.payment?.status === 'paid' ? ('BOOKINGS.PAID' | translate) : ('BOOKINGS.UNPAID' | translate) }}
               </span>
+            </td>
 
-              <a [routerLink]="['/admin/bookings', b.id]" class="bk-view-link">
-                View details
-                <i class="fa-solid fa-arrow-right"></i>
-              </a>
-            </div>
-
-          </article>
-        }
-      </div>
-
+            <td>
+              <app-status-badge [status]="b.status" />
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
     </div>
+
+    <div class="bk-mobile-list">
+      @for (b of items(); track b.id) {
+      <article class="bk-mobile-card">
+
+        <div class="bk-mobile-header">
+          <div>
+            <span class="bk-mobile-label">{{ 'BOOKINGS.BOOKING_ID' | translate }}</span>
+            <a class="bk-id" [routerLink]="['/admin/bookings', b.id]">
+              #{{ b.id }}
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </div>
+
+          <app-status-badge [status]="b.status" />
+        </div>
+
+        <a class="bk-mobile-service" [routerLink]="['/admin/bookings', b.id]">
+          <span class="bk-service-icon">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+          </span>
+          <div>
+            <strong>{{ b.service.title }}</strong>
+            <small>{{ b.service.category.name }}</small>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow"></i>
+        </a>
+
+        <div class="bk-mobile-people">
+          <div>
+            <small>{{ 'BOOKINGS.CUSTOMER' | translate }}</small>
+            <strong>{{ b.customer.name }}</strong>
+          </div>
+          <div>
+            <small>{{ 'BOOKINGS.PROVIDER' | translate }}</small>
+            <strong>{{ b.provider.name }}</strong>
+          </div>
+        </div>
+
+        <div class="bk-mobile-info">
+          <div>
+            <small><i class="fa-regular fa-calendar"></i> {{ 'BOOKINGS.SCHEDULED' | translate }}</small>
+            <strong>{{ b.scheduledAt | date: 'd MMM y' }}</strong>
+            <span>{{ b.scheduledAt | date: 'h:mm a' }}</span>
+          </div>
+
+          <div>
+            <small><i class="fa-solid fa-wallet"></i> {{ 'BOOKINGS.AMOUNT' | translate }}</small>
+            <strong class="bk-mobile-amount">₹{{ b.total | number }}</strong>
+          </div>
+        </div>
+
+        <div class="bk-mobile-footer">
+          <span class="bk-payment" [attr.data-payment]="b.payment?.status === 'paid' ? 'paid' : 'pending'">
+            <i class="fa-solid" [class.fa-circle-check]="b.payment?.status === 'paid'"
+              [class.fa-clock]="b.payment?.status !== 'paid'">
+            </i>
+            {{ b.payment?.status === 'paid' ? ('BOOKINGS.PAID' | translate) : ('BOOKINGS.UNPAID' | translate) }}
+          </span>
+
+          <a [routerLink]="['/admin/bookings', b.id]" class="bk-view-link">
+            {{ 'BOOKINGS.VIEW_DETAILS' | translate }}
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
+      </article>
+      }
+    </div>
+
+  </div>
   }
 
 </div>

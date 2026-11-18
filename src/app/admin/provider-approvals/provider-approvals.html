@@ -1,214 +1,191 @@
-
 <div class="pa-page">
 
-  <!-- Page heading -->
   <div class="pa-heading">
     <div class="pa-heading-copy">
       <span class="pa-eyebrow">
         <i class="fa-solid fa-shield-halved"></i>
-        PROVIDER MANAGEMENT
+        {{ 'PROVIDER_APPROVALS.EYEBROW' | translate }}
       </span>
-      <h1>Provider approvals</h1>
-      <p>Review applications, approve trusted professionals and manage provider access.</p>
+      <h1>{{ 'PROVIDER_APPROVALS.TITLE' | translate }}</h1>
+      <p>{{ 'PROVIDER_APPROVALS.DESCRIPTION' | translate }}</p>
     </div>
   </div>
 
-  <!-- Tabs -->
   <div class="pa-toolbar">
     <div class="pa-tabs">
       @for (t of tabs; track t.key) {
-        <button
-          type="button"
-          class="pa-tab"
-          [class.active]="tab() === t.key"
-          (click)="select(t.key)">
-          @switch (t.key) {
-            @case ('pending') {
-              <i class="fa-solid fa-hourglass-half"></i>
-            }
-            @case ('active') {
-              <i class="fa-solid fa-circle-check"></i>
-            }
-            @case ('blocked') {
-              <i class="fa-solid fa-ban"></i>
-            }
-          }
-          <span>{{ t.label }}</span>
-        </button>
+      <button type="button" class="pa-tab" [class.active]="tab() === t.key" (click)="select(t.key)">
+        @switch (t.key) {
+        @case ('pending') {
+        <i class="fa-solid fa-hourglass-half"></i>
+        }
+        @case ('active') {
+        <i class="fa-solid fa-circle-check"></i>
+        }
+        @case ('blocked') {
+        <i class="fa-solid fa-ban"></i>
+        }
+        }
+        <span>{{ ('PROVIDER_APPROVALS.' + t.key.toUpperCase()) | translate }}</span>
+      </button>
       }
     </div>
+
     <span class="pa-total">
-      {{ items().length }} {{ items().length === 1 ? 'provider' : 'providers' }}
+      {{ items().length }}
+      {{ (items().length === 1 ? 'PROVIDER_APPROVALS.PROVIDER' : 'PROVIDER_APPROVALS.PROVIDERS') | translate }}
     </span>
   </div>
 
-  <!-- Error -->
   @if (error()) {
-    <div class="pa-alert">
-      <i class="fa-solid fa-circle-exclamation"></i>
-      <span>{{ error() }}</span>
-    </div>
+  <div class="pa-alert">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <span>{{ error() }}</span>
+  </div>
   }
 
-  <!-- Loading -->
   @if (loading()) {
-    <div class="pa-loading">
-      <app-loader />
-    </div>
+  <div class="pa-loading">
+    <app-loader />
+  </div>
   } @else if (items().length === 0) {
 
-    <!-- Empty state -->
-    <div class="pa-empty">
-      <div class="pa-empty-icon">
-        <i class="fa-solid fa-user-shield"></i>
-      </div>
-      <h3>No providers found</h3>
-      <p>There are no providers in this section right now.</p>
+  <div class="pa-empty">
+    <div class="pa-empty-icon">
+      <i class="fa-solid fa-user-shield"></i>
     </div>
+    <h3>{{ 'PROVIDER_APPROVALS.NO_PROVIDERS' | translate }}</h3>
+    <p>{{ 'PROVIDER_APPROVALS.EMPTY_DESCRIPTION' | translate }}</p>
+  </div>
 
   } @else {
 
-    <!-- Provider cards -->
-    <div class="pa-grid">
-      @for (p of items(); track p.id) {
-        <article class="pa-card">
+  <div class="pa-grid">
+    @for (p of items(); track p.id) {
+    <article class="pa-card">
 
-          <!-- Card header -->
-          <div class="pa-card-header">
-            <div class="pa-provider">
-              <div class="pa-avatar">
-                {{ p.name.charAt(0).toUpperCase() }}
-              </div>
-
-              <div class="pa-provider-info">
-                <h3>{{ p.name }}</h3>
-                <p>
-                  <i class="fa-regular fa-envelope"></i>
-                  {{ p.email }}
-                </p>
-                <p>
-                  <i class="fa-solid fa-phone"></i>
-                  {{ p.phone || 'No phone number' }}
-                </p>
-              </div>
-            </div>
-
-            <span class="pa-status" [attr.data-status]="p.status">
-              <span class="pa-status-dot"></span>
-              {{ p.status }}
-            </span>
+      <div class="pa-card-header">
+        <div class="pa-provider">
+          <div class="pa-avatar">
+            {{ p.name.charAt(0).toUpperCase() }}
           </div>
 
-          <div class="pa-divider"></div>
+          <div class="pa-provider-info">
+            <h3>{{ p.name }}</h3>
+            <p>
+              <i class="fa-regular fa-envelope"></i>
+              {{ p.email }}
+            </p>
+            <p>
+              <i class="fa-solid fa-phone"></i>
+              {{ p.phone || ('PROVIDER_APPROVALS.NO_PHONE' | translate) }}
+            </p>
+          </div>
+        </div>
 
-          <!-- Provider details -->
-          @if (p.providerProfile; as pr) {
-            <div class="pa-details">
+        <span class="pa-status" [attr.data-status]="p.status">
+          <span class="pa-status-dot"></span>
+          {{ ('PROVIDER_APPROVALS.' + p.status.toUpperCase()) | translate }}
+        </span>
+      </div>
 
-              <div class="pa-detail">
-                <span class="pa-detail-icon category">
-                  <i class="fa-solid fa-briefcase"></i>
-                </span>
-                <div>
-                  <small>Category</small>
-                  <b>{{ pr.category.name }}</b>
-                </div>
-              </div>
+      <div class="pa-divider"></div>
 
-              <div class="pa-detail">
-                <span class="pa-detail-icon location">
-                  <i class="fa-solid fa-location-dot"></i>
-                </span>
-                <div>
-                  <small>City</small>
-                  <b>{{ pr.city }}</b>
-                </div>
-              </div>
+      @if (p.providerProfile; as pr) {
+      <div class="pa-details">
 
-              <div class="pa-detail">
-                <span class="pa-detail-icon experience">
-                  <i class="fa-solid fa-award"></i>
-                </span>
-                <div>
-                  <small>Experience</small>
-                  <b>{{ pr.experienceYears }} year{{ pr.experienceYears === 1 ? '' : 's' }}</b>
-                </div>
-              </div>
+        <div class="pa-detail">
+          <span class="pa-detail-icon category">
+            <i class="fa-solid fa-briefcase"></i>
+          </span>
+          <div>
+            <small>{{ 'PROVIDER_APPROVALS.CATEGORY' | translate }}</small>
+            <b>{{ pr.category.name }}</b>
+          </div>
+        </div>
 
-              <div class="pa-detail">
-                <span class="pa-detail-icon applied">
-                  <i class="fa-regular fa-calendar"></i>
-                </span>
-                <div>
-                  <small>Applied on</small>
-                  <b>{{ p.createdAt | date: 'd MMM y' }}</b>
-                </div>
-              </div>
+        <div class="pa-detail">
+          <span class="pa-detail-icon location">
+            <i class="fa-solid fa-location-dot"></i>
+          </span>
+          <div>
+            <small>{{ 'PROVIDER_APPROVALS.CITY' | translate }}</small>
+            <b>{{ pr.city }}</b>
+          </div>
+        </div>
 
-            </div>
+        <div class="pa-detail">
+          <span class="pa-detail-icon experience">
+            <i class="fa-solid fa-award"></i>
+          </span>
+          <div>
+            <small>{{ 'PROVIDER_APPROVALS.EXPERIENCE' | translate }}</small>
+            <b>
+              {{ pr.experienceYears }}
+              {{ (pr.experienceYears === 1 ? 'PROVIDER_APPROVALS.YEAR' : 'PROVIDER_APPROVALS.YEARS') | translate }}
+            </b>
+          </div>
+        </div>
 
-            @if (pr.bio) {
-              <div class="pa-bio">
-                <i class="fa-solid fa-quote-left"></i>
-                <p>{{ pr.bio }}</p>
-              </div>
-            }
+        <div class="pa-detail">
+          <span class="pa-detail-icon applied">
+            <i class="fa-regular fa-calendar"></i>
+          </span>
+          <div>
+            <small>{{ 'PROVIDER_APPROVALS.APPLIED_ON' | translate }}</small>
+            <b>{{ p.createdAt | date: 'd MMM y' }}</b>
+          </div>
+        </div>
+
+      </div>
+
+      @if (pr.bio) {
+      <div class="pa-bio">
+        <i class="fa-solid fa-quote-left"></i>
+        <p>{{ pr.bio }}</p>
+      </div>
+      }
+      }
+
+      <div class="pa-card-footer">
+        <span class="pa-provider-id">
+          {{ 'PROVIDER_APPROVALS.PROVIDER_ID' | translate }} #{{ p.id }}
+        </span>
+
+        <div class="pa-actions">
+          @switch (tab()) {
+          @case ('pending') {
+          <button type="button" class="pa-btn approve" [disabled]="busyId() === p.id" (click)="approve(p)">
+            <i class="fa-solid fa-check"></i>
+            {{ 'PROVIDER_APPROVALS.APPROVE' | translate }}
+          </button>
+
+          <button type="button" class="pa-btn reject" [disabled]="busyId() === p.id" (click)="reject(p)">
+            <i class="fa-solid fa-xmark"></i>
+            {{ 'PROVIDER_APPROVALS.REJECT' | translate }}
+          </button>
           }
 
-          <!-- Actions -->
-          <div class="pa-card-footer">
-            <span class="pa-provider-id">Provider #{{ p.id }}</span>
+          @case ('active') {
+          <button type="button" class="pa-btn block" [disabled]="busyId() === p.id" (click)="block(p)">
+            <i class="fa-solid fa-ban"></i>
+            {{ 'PROVIDER_APPROVALS.BLOCK_PROVIDER' | translate }}
+          </button>
+          }
 
-            <div class="pa-actions">
-              @switch (tab()) {
-                @case ('pending') {
-                  <button
-                    type="button"
-                    class="pa-btn approve"
-                    [disabled]="busyId() === p.id"
-                    (click)="approve(p)">
-                    <i class="fa-solid fa-check"></i>
-                    Approve
-                  </button>
+          @case ('blocked') {
+          <button type="button" class="pa-btn reactivate" [disabled]="busyId() === p.id" (click)="reactivate(p)">
+            <i class="fa-solid fa-rotate-right"></i>
+            {{ 'PROVIDER_APPROVALS.REACTIVATE' | translate }}
+          </button>
+          }
+          }
+        </div>
+      </div>
 
-                  <button
-                    type="button"
-                    class="pa-btn reject"
-                    [disabled]="busyId() === p.id"
-                    (click)="reject(p)">
-                    <i class="fa-solid fa-xmark"></i>
-                    Reject
-                  </button>
-                }
-
-                @case ('active') {
-                  <button
-                    type="button"
-                    class="pa-btn block"
-                    [disabled]="busyId() === p.id"
-                    (click)="block(p)">
-                    <i class="fa-solid fa-ban"></i>
-                    Block provider
-                  </button>
-                }
-
-                @case ('blocked') {
-                  <button
-                    type="button"
-                    class="pa-btn reactivate"
-                    [disabled]="busyId() === p.id"
-                    (click)="reactivate(p)">
-                    <i class="fa-solid fa-rotate-right"></i>
-                    Reactivate
-                  </button>
-                }
-              }
-            </div>
-          </div>
-
-        </article>
-      }
-    </div>
+    </article>
+    }
+  </div>
   }
 
 </div>

@@ -1,58 +1,120 @@
+
 <div class="pv-head">
   <div>
-    <h1>{{ id ? 'Edit service' : 'Add a service' }}</h1>
-    <p>Customers see this title, price and duration when booking.</p>
+    <h1>
+      {{ (id ? 'PROVIDER_SERVICE_FORM.EDIT_TITLE' : 'PROVIDER_SERVICE_FORM.ADD_TITLE') | translate }}
+    </h1>
+    <p>{{ 'PROVIDER_SERVICE_FORM.DESCRIPTION' | translate }}</p>
   </div>
-  <a class="pv-btn ghost" routerLink="/provider/services">Cancel</a>
+
+  <a class="pv-btn ghost" routerLink="/provider/services">
+    {{ 'PROVIDER_SERVICE_FORM.CANCEL' | translate }}
+  </a>
 </div>
 
 <div class="pv-card">
-  @if (error()) { <div class="pv-alert error">{{ error() }}</div> }
+  @if (error()) {
+    <div class="pv-alert error">{{ error() }}</div>
+  }
 
   <form class="pv-form" [formGroup]="form" (ngSubmit)="submit()">
     <div class="cols">
+
       <div class="pv-field full">
-        <label for="title">Service title</label>
-        <input id="title" type="text" formControlName="title" placeholder="e.g. Tap leak repair" />
-        @if (err('title')) { <span class="err">{{ err('title') }}</span> }
+        <label for="title">{{ 'PROVIDER_SERVICE_FORM.SERVICE_TITLE' | translate }}</label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          [placeholder]="'PROVIDER_SERVICE_FORM.TITLE_PLACEHOLDER' | translate"
+        />
+        @if (err('title')) {
+          <span class="err">{{ err('title') }}</span>
+        }
       </div>
 
       <div class="pv-field">
-        <label for="cat">Category</label>
+        <label for="cat">{{ 'PROVIDER_SERVICE_FORM.CATEGORY' | translate }}</label>
         <select id="cat" formControlName="categoryId">
-          <option [ngValue]="0" disabled>Select category</option>
-          @for (c of categories(); track c.id) { <option [ngValue]="c.id">{{ c.name }}</option> }
+          <option [ngValue]="0" disabled>
+            {{ 'PROVIDER_SERVICE_FORM.SELECT_CATEGORY' | translate }}
+          </option>
+          @for (c of categories(); track c.id) {
+            <option [ngValue]="c.id">{{ c.name }}</option>
+          }
         </select>
-        @if (err('categoryId')) { <span class="err">{{ err('categoryId') }}</span> }
+        @if (err('categoryId')) {
+          <span class="err">{{ err('categoryId') }}</span>
+        }
       </div>
 
       <div class="pv-field">
-        <label for="price">Price (₹)</label>
-        <input id="price" type="number" min="1" formControlName="price" placeholder="e.g. 499" />
-        @if (err('price')) { <span class="err">{{ err('price') }}</span> }
+        <label for="price">{{ 'PROVIDER_SERVICE_FORM.PRICE' | translate }}</label>
+        <input
+          id="price"
+          type="number"
+          min="1"
+          formControlName="price"
+          [placeholder]="'PROVIDER_SERVICE_FORM.PRICE_PLACEHOLDER' | translate"
+        />
+        @if (err('price')) {
+          <span class="err">{{ err('price') }}</span>
+        }
       </div>
 
       <div class="pv-field full">
-        <label for="dur">Duration (minutes)</label>
-        <input id="dur" type="number" min="15" step="5" formControlName="durationMin" />
+        <label for="dur">{{ 'PROVIDER_SERVICE_FORM.DURATION' | translate }}</label>
+        <input
+          id="dur"
+          type="number"
+          min="15"
+          step="5"
+          formControlName="durationMin"
+        />
+
         <div class="presets">
           @for (p of presets; track p) {
-            <button type="button" class="preset" [class.on]="form.controls.durationMin.value === p" (click)="setDuration(p)">{{ p }} min</button>
+            <button
+              type="button"
+              class="preset"
+              [class.on]="form.controls.durationMin.value === p"
+              (click)="setDuration(p)"
+            >
+              {{ p }} {{ 'PROVIDER_SERVICE_FORM.MINUTES' | translate }}
+            </button>
           }
         </div>
-        @if (err('durationMin')) { <span class="err">{{ err('durationMin') }}</span> }
+
+        @if (err('durationMin')) {
+          <span class="err">{{ err('durationMin') }}</span>
+        }
       </div>
 
       <div class="pv-field full">
-        <label for="desc">Description</label>
-        <textarea id="desc" rows="5" formControlName="description" placeholder="What is included, tools you bring, anything customers should prepare…"></textarea>
+        <label for="desc">{{ 'PROVIDER_SERVICE_FORM.SERVICE_DESCRIPTION' | translate }}</label>
+        <textarea
+          id="desc"
+          rows="5"
+          formControlName="description"
+          [placeholder]="'PROVIDER_SERVICE_FORM.DESCRIPTION_PLACEHOLDER' | translate"
+        ></textarea>
         <span class="hint">{{ form.controls.description.value.length }}/1000</span>
       </div>
+
     </div>
 
     <div class="bar">
-      <a class="pv-btn ghost" routerLink="/provider/services">Cancel</a>
-      <button type="submit" class="pv-btn" [disabled]="loading()">{{ loading() ? 'Saving…' : (id ? 'Save changes' : 'Create service') }}</button>
+      <a class="pv-btn ghost" routerLink="/provider/services">
+        {{ 'PROVIDER_SERVICE_FORM.CANCEL' | translate }}
+      </a>
+
+      <button type="submit" class="pv-btn" [disabled]="loading()">
+        @if (loading()) {
+          {{ 'PROVIDER_SERVICE_FORM.SAVING' | translate }}
+        } @else {
+          {{ (id ? 'PROVIDER_SERVICE_FORM.SAVE_CHANGES' : 'PROVIDER_SERVICE_FORM.CREATE_SERVICE') | translate }}
+        }
+      </button>
     </div>
   </form>
 </div>

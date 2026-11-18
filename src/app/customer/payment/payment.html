@@ -1,337 +1,312 @@
-
 <div class="cu-payment">
 
   <a class="cu-payment__back" routerLink="/customer/my-bookings">
     <i class="fa-solid fa-arrow-left"></i>
-    My bookings
+    {{ 'CUSTOMER_PAYMENT.BACK' | translate }}
   </a>
 
   @if (loading()) {
-    <div class="cu-payment__loading">
-      <app-loader />
-    </div>
+  <div class="cu-payment__loading">
+    <app-loader />
+  </div>
   } @else if (done()) {
-    <div class="cu-payment__container">
-      <div class="cu-payment__success">
-        <div class="cu-payment__success-icon">
-          <i class="fa-solid fa-check"></i>
-        </div>
-
-        <h1>Payment completed!</h1>
-
-        <p class="cu-payment__success-text">
-          Your booking payment has been fully verified.
-        </p>
-
-        <div class="cu-payment__success-info">
-          <i class="fa-solid fa-circle-check"></i>
-          Total paid: ₹{{ paidAmount() }}
-        </div>
-
-        <a routerLink="/customer/my-bookings" class="cu-payment__primary">
-          Back to my bookings
-        </a>
+  <div class="cu-payment__container">
+    <div class="cu-payment__success">
+      <div class="cu-payment__success-icon">
+        <i class="fa-solid fa-check"></i>
       </div>
+
+      <h1>{{ 'CUSTOMER_PAYMENT.SUCCESS_TITLE' | translate }}</h1>
+
+      <p class="cu-payment__success-text">
+        {{ 'CUSTOMER_PAYMENT.SUCCESS_DESCRIPTION' | translate }}
+      </p>
+
+      <div class="cu-payment__success-info">
+        <i class="fa-solid fa-circle-check"></i>
+        {{ 'CUSTOMER_PAYMENT.TOTAL_PAID' | translate }}: ₹{{ paidAmount() }}
+      </div>
+
+      <a routerLink="/customer/my-bookings" class="cu-payment__primary">
+        {{ 'CUSTOMER_PAYMENT.BACK_TO_BOOKINGS' | translate }}
+      </a>
     </div>
+  </div>
 
   } @else if (booking(); as b) {
 
-    <div class="cu-payment__container">
+  <div class="cu-payment__container">
 
-      <div class="cu-payment__header">
-        <div class="cu-payment__header-icon">
-          <i class="fa-solid fa-wallet"></i>
-        </div>
-
-        <span class="cu-payment__eyebrow">
-          SECURE BOOKING PAYMENT
-        </span>
-
-        <h1>Complete your payment</h1>
-
-        <p>Pay in full or split your payment into multiple UPI transactions.</p>
+    <div class="cu-payment__header">
+      <div class="cu-payment__header-icon">
+        <i class="fa-solid fa-wallet"></i>
       </div>
 
-      <div class="cu-payment__card">
+      <span class="cu-payment__eyebrow">
+        {{ 'CUSTOMER_PAYMENT.SECURE_PAYMENT' | translate }}
+      </span>
 
-        <div class="cu-payment__card-head">
-          <div>
-            <span class="cu-payment__label">BOOKING PAYMENT</span>
-            <h2>Booking #{{ b.id }}</h2>
-          </div>
+      <h1>{{ 'CUSTOMER_PAYMENT.TITLE' | translate }}</h1>
 
-          <span class="cu-payment__pending">
-            <span></span>
-            Balance pending
+      <p>{{ 'CUSTOMER_PAYMENT.DESCRIPTION' | translate }}</p>
+    </div>
+
+    <div class="cu-payment__card">
+
+      <div class="cu-payment__card-head">
+        <div>
+          <span class="cu-payment__label">
+            {{ 'CUSTOMER_PAYMENT.BOOKING_PAYMENT' | translate }}
           </span>
+          <h2>{{ 'CUSTOMER_PAYMENT.BOOKING_NUMBER' | translate: { id: b.id } }}</h2>
         </div>
 
-        <div class="cu-payment__amount">
+        <span class="cu-payment__pending">
+          <span></span>
+          {{ 'CUSTOMER_PAYMENT.BALANCE_PENDING' | translate }}
+        </span>
+      </div>
+
+      <div class="cu-payment__amount">
+        <div>
+          <span>{{ 'CUSTOMER_PAYMENT.TOTAL_AMOUNT' | translate }}</span>
+          <small>{{ 'CUSTOMER_PAYMENT.BOOKING_AMOUNT' | translate }}</small>
+        </div>
+        <strong>₹{{ totalAmount() }}</strong>
+      </div>
+
+      <div class="cu-payment__amount">
+        <div>
+          <span>{{ 'CUSTOMER_PAYMENT.ALREADY_VERIFIED' | translate }}</span>
+          <small>{{ 'CUSTOMER_PAYMENT.AMOUNT_RECEIVED' | translate }}</small>
+        </div>
+        <strong>₹{{ paidAmount() }}</strong>
+      </div>
+
+      <div class="cu-payment__amount">
+        <div>
+          <span>{{ 'CUSTOMER_PAYMENT.REMAINING_BALANCE' | translate }}</span>
+          <small>{{ 'CUSTOMER_PAYMENT.AMOUNT_PAYABLE' | translate }}</small>
+        </div>
+        <strong>₹{{ remainingAmount() }}</strong>
+      </div>
+
+      @if (error()) {
+      <div class="cu-payment__error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>{{ error() }}</span>
+      </div>
+      }
+
+      @if (transactions().length > 0) {
+      <div class="cu-upi cu-history">
+        <div class="cu-upi__heading">
+          <div class="cu-upi__icon">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
           <div>
-            <span>Total amount</span>
-            <small>Booking payment amount</small>
+            <h3>{{ 'CUSTOMER_PAYMENT.PAYMENT_HISTORY' | translate }}</h3>
+            <p>{{ 'CUSTOMER_PAYMENT.HISTORY_DESCRIPTION' | translate }}</p>
           </div>
-          <strong>₹{{ totalAmount() }}</strong>
         </div>
 
-        <div class="cu-payment__amount">
-          <div>
-            <span>Already verified</span>
-            <small>Amount received and confirmed</small>
+        @for (tx of transactions(); track tx.id) {
+        <div class="cu-upi-details">
+          <div class="cu-upi-details__row">
+            <span>{{ 'CUSTOMER_PAYMENT.TRANSACTION_ID' | translate }}</span>
+            <strong>{{ tx.txnId }}</strong>
           </div>
-          <strong>₹{{ paidAmount() }}</strong>
-        </div>
 
-        <div class="cu-payment__amount">
-          <div>
-            <span>Remaining balance</span>
-            <small>Amount still payable</small>
+          <div class="cu-upi-details__row">
+            <span>{{ 'CUSTOMER_PAYMENT.SUBMITTED_AMOUNT' | translate }}</span>
+            <strong>₹{{ tx.amount }}</strong>
           </div>
-          <strong>₹{{ remainingAmount() }}</strong>
-        </div>
 
-        @if (error()) {
-          <div class="cu-payment__error">
-            <i class="fa-solid fa-circle-exclamation"></i>
-            <span>{{ error() }}</span>
+          @if (tx.verifiedAmount !== null) {
+          <div class="cu-upi-details__row">
+            <span>{{ 'CUSTOMER_PAYMENT.VERIFIED_AMOUNT' | translate }}</span>
+            <strong>₹{{ tx.verifiedAmount }}</strong>
           </div>
+          }
+
+          <div class="cu-upi-details__row">
+            <span>{{ 'CUSTOMER_PAYMENT.STATUS' | translate }}</span>
+            <strong>{{ tx.status | titlecase }}</strong>
+          </div>
+
+          <div class="cu-upi-details__row">
+            <span>{{ 'CUSTOMER_PAYMENT.SUBMITTED_ON' | translate }}</span>
+            <strong>{{ tx.createdAt | date:'medium' }}</strong>
+          </div>
+        </div>
         }
+      </div>
+      }
 
-        @if (transactions().length > 0) {
-          <div class="cu-upi cu-history">
-            <div class="cu-upi__heading">
-              <div class="cu-upi__icon">
-                <i class="fa-solid fa-clock-rotate-left"></i>
-              </div>
-              <div>
-                <h3>Payment history</h3>
-                <p>Track your submitted UPI transactions.</p>
-              </div>
-            </div>
+      @if (utrSubmitted()) {
+      <div class="cu-upi__submitted">
+        <div class="cu-upi__submitted-icon">
+          <i class="fa-solid fa-clock"></i>
+        </div>
 
-            @for (tx of transactions(); track tx.id) {
-              <div class="cu-upi-details">
-                <div class="cu-upi-details__row">
-                  <span>Transaction ID</span>
-                  <strong>{{ tx.txnId }}</strong>
-                </div>
+        <h4>{{ 'CUSTOMER_PAYMENT.SUBMITTED_SUCCESS' | translate }}</h4>
+        <p>{{ 'CUSTOMER_PAYMENT.SUBMITTED_DESCRIPTION' | translate }}</p>
+        <span>
+          {{ 'CUSTOMER_PAYMENT.TRANSACTION_ID' | translate }}: {{ transactionId() }}
+        </span>
+      </div>
 
-                <div class="cu-upi-details__row">
-                  <span>Submitted amount</span>
-                  <strong>₹{{ tx.amount }}</strong>
-                </div>
+      <button type="button" class="cu-payment__primary cu-payment__pay" (click)="makeAnotherPayment()">
+        <i class="fa-solid fa-plus"></i>
+        {{ 'CUSTOMER_PAYMENT.MAKE_ANOTHER_PAYMENT' | translate }}
+      </button>
 
-                @if (tx.verifiedAmount !== null) {
-                  <div class="cu-upi-details__row">
-                    <span>Verified amount</span>
-                    <strong>₹{{ tx.verifiedAmount }}</strong>
-                  </div>
-                }
+      } @else {
 
-                <div class="cu-upi-details__row">
-                  <span>Status</span>
-                  <strong>{{ tx.status | titlecase }}</strong>
-                </div>
+      <div class="cu-upi">
 
-                <div class="cu-upi-details__row">
-                  <span>Submitted on</span>
-                  <strong>{{ tx.createdAt | date:'medium' }}</strong>
-                </div>
-              </div>
-            }
+        <div class="cu-upi__heading">
+          <div class="cu-upi__icon">
+            <i class="fa-solid fa-mobile-screen-button"></i>
           </div>
-        }
-
-        @if (utrSubmitted()) {
-          <div class="cu-upi__submitted">
-            <div class="cu-upi__submitted-icon">
-              <i class="fa-solid fa-clock"></i>
-            </div>
-
-            <h4>Payment submitted successfully</h4>
-            <p>
-              Your UTR has been submitted for admin verification.
-              Your verified balance will update after confirmation.
-            </p>
-            <span>Transaction ID: {{ transactionId() }}</span>
+          <div>
+            <h3>{{ 'CUSTOMER_PAYMENT.PAY_USING_UPI' | translate }}</h3>
+            <p>{{ 'CUSTOMER_PAYMENT.UPI_DESCRIPTION' | translate }}</p>
           </div>
+        </div>
 
-          <button
-            type="button"
-            class="cu-payment__primary cu-payment__pay"
-            (click)="makeAnotherPayment()">
-            <i class="fa-solid fa-plus"></i>
-            Make another payment
-          </button>
+        @if (!upiOrder()) {
+
+        <div class="cu-upi-details">
+          <label for="paymentAmount">
+            {{ 'CUSTOMER_PAYMENT.ENTER_AMOUNT' | translate }}
+          </label>
+
+          <input id="paymentAmount" type="number" min="1" [max]="remainingAmount()" step="1"
+            [value]="paymentAmount() ?? ''" (input)="updatePaymentAmount($any($event.target).value)"
+            [placeholder]="'CUSTOMER_PAYMENT.AMOUNT_PLACEHOLDER' | translate" />
+
+          <small>
+            {{ 'CUSTOMER_PAYMENT.AMOUNT_HINT' | translate: { amount: remainingAmount() } }}
+          </small>
+        </div>
+
+        <button type="button" class="cu-payment__primary cu-payment__pay"
+          [disabled]="paying() || remainingAmount() <= 0" (click)="startUpiPayment()">
+
+          @if (paying()) {
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          {{ 'CUSTOMER_PAYMENT.PREPARING_PAYMENT' | translate }}
+          } @else {
+          <i class="fa-solid fa-indian-rupee-sign"></i>
+          {{ 'CUSTOMER_PAYMENT.GENERATE_PAYMENT' | translate }}
+          }
+        </button>
 
         } @else {
 
-          <div class="cu-upi">
+        @if (upiOrder(); as order) {
 
-            <div class="cu-upi__heading">
-              <div class="cu-upi__icon">
-                <i class="fa-solid fa-mobile-screen-button"></i>
-              </div>
-              <div>
-                <h3>Pay using UPI</h3>
-                <p>Google Pay, PhonePe, Paytm or any UPI app.</p>
-              </div>
-            </div>
-
-            @if (!upiOrder()) {
-
-              <div class="cu-upi-details">
-                <label for="paymentAmount">Enter payment amount (₹)</label>
-
-                <input
-                  id="paymentAmount"
-                  type="number"
-                  min="1"
-                  [max]="remainingAmount()"
-                  step="1"
-                  [value]="paymentAmount() ?? ''"
-                  (input)="updatePaymentAmount($any($event.target).value)"
-                  placeholder="Enter amount" />
-
-                <small>
-                  You can pay any whole amount up to ₹{{ remainingAmount() }}.
-                </small>
-              </div>
-
-              <button
-                type="button"
-                class="cu-payment__primary cu-payment__pay"
-                [disabled]="paying() || remainingAmount() <= 0"
-                (click)="startUpiPayment()">
-
-                @if (paying()) {
-                  <i class="fa-solid fa-spinner fa-spin"></i>
-                  Preparing payment...
-                } @else {
-                  <i class="fa-solid fa-indian-rupee-sign"></i>
-                  Generate UPI Payment
-                }
-              </button>
-
-            } @else {
-
-              @if (upiOrder(); as order) {
-
-                <div class="cu-upi-details">
-                  <div class="cu-upi-details__row">
-                    <span>Payee name</span>
-                    <strong>{{ order.payeeName }}</strong>
-                  </div>
-
-                  <div class="cu-upi-details__row">
-                    <span>UPI ID</span>
-                    <strong>{{ order.upiId }}</strong>
-                  </div>
-
-                  <div class="cu-upi-details__row">
-                    <span>Amount</span>
-                    <strong class="cu-upi__amount">₹{{ order.amount }}</strong>
-                  </div>
-
-                  <div class="cu-upi-details__row">
-                    <span>Payment reference</span>
-                    <strong>{{ order.reference }}</strong>
-                  </div>
-                </div>
-
-                <a
-                  class="cu-payment__primary cu-payment__pay"
-                  [href]="order.upiUrl"
-                  target="_self">
-                  <i class="fa-solid fa-mobile-screen-button"></i>
-                  Open UPI App
-                </a>
-
-                <p class="cu-upi__instruction">
-                  Complete the payment in your UPI app. Return here
-                  after payment and enter your transaction ID.
-                </p>
-
-                <div class="cu-utr">
-                  <label for="transactionId">UPI transaction ID / UTR</label>
-
-                  <input
-                    id="transactionId"
-                    type="text"
-                    [value]="transactionId()"
-                    (input)="transactionId.set($any($event.target).value)"
-                    placeholder="Enter transaction ID"
-                    autocomplete="off" />
-
-                  <button
-                    type="button"
-                    class="cu-payment__primary cu-payment__pay"
-                    [disabled]="submittingUtr()"
-                    (click)="submitTransactionId()">
-
-                    @if (submittingUtr()) {
-                      <i class="fa-solid fa-spinner fa-spin"></i>
-                      Submitting...
-                    } @else {
-                      <i class="fa-solid fa-paper-plane"></i>
-                      Submit Transaction ID
-                    }
-                  </button>
-
-                  <p class="cu-utr__note">
-                    Submit the transaction ID only after completing
-                    the payment.
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  class="cu-upi__change"
-                  (click)="retryPayment()">
-                  <i class="fa-solid fa-rotate-left"></i>
-                  Change payment amount
-                </button>
-              }
-
-            }
-
+        <div class="cu-upi-details">
+          <div class="cu-upi-details__row">
+            <span>{{ 'CUSTOMER_PAYMENT.PAYEE_NAME' | translate }}</span>
+            <strong>{{ order.payeeName }}</strong>
           </div>
-        }
 
-        <div class="cu-payment__secure">
-          <i class="fa-solid fa-shield-halved"></i>
-          <div>
-            <strong>UPI payment</strong>
-            <span>
-              Verify the payee and amount in your UPI app before paying.
-            </span>
+          <div class="cu-upi-details__row">
+            <span>{{ 'CUSTOMER_PAYMENT.UPI_ID' | translate }}</span>
+            <strong>{{ order.upiId }}</strong>
+          </div>
+
+          <div class="cu-upi-details__row">
+            <span>{{ 'CUSTOMER_PAYMENT.AMOUNT' | translate }}</span>
+            <strong class="cu-upi__amount">₹{{ order.amount }}</strong>
+          </div>
+
+          <div class="cu-upi-details__row">
+            <span>{{ 'CUSTOMER_PAYMENT.PAYMENT_REFERENCE' | translate }}</span>
+            <strong>{{ order.reference }}</strong>
           </div>
         </div>
 
-        <p class="cu-payment__bottom-note">
-          <i class="fa-solid fa-circle-info"></i>
-          Payment will be confirmed after manual verification.
+        <a class="cu-payment__primary cu-payment__pay" [href]="order.upiUrl" target="_self">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          {{ 'CUSTOMER_PAYMENT.OPEN_UPI' | translate }}
+        </a>
+
+        <p class="cu-upi__instruction">
+          {{ 'CUSTOMER_PAYMENT.UPI_INSTRUCTION' | translate }}
         </p>
 
+        <div class="cu-utr">
+          <label for="transactionId">
+            {{ 'CUSTOMER_PAYMENT.UTR_LABEL' | translate }}
+          </label>
+
+          <input id="transactionId" type="text" [value]="transactionId()"
+            (input)="transactionId.set($any($event.target).value)"
+            [placeholder]="'CUSTOMER_PAYMENT.UTR_PLACEHOLDER' | translate" autocomplete="off" />
+
+          <button type="button" class="cu-payment__primary cu-payment__pay" [disabled]="submittingUtr()"
+            (click)="submitTransactionId()">
+
+            @if (submittingUtr()) {
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            {{ 'CUSTOMER_PAYMENT.SUBMITTING' | translate }}
+            } @else {
+            <i class="fa-solid fa-paper-plane"></i>
+            {{ 'CUSTOMER_PAYMENT.SUBMIT_TRANSACTION' | translate }}
+            }
+          </button>
+
+          <p class="cu-utr__note">
+            {{ 'CUSTOMER_PAYMENT.UTR_NOTE' | translate }}
+          </p>
+        </div>
+
+        <button type="button" class="cu-upi__change" (click)="retryPayment()">
+          <i class="fa-solid fa-rotate-left"></i>
+          {{ 'CUSTOMER_PAYMENT.CHANGE_AMOUNT' | translate }}
+        </button>
+        }
+
+        }
+
       </div>
+      }
+
+      <div class="cu-payment__secure">
+        <i class="fa-solid fa-shield-halved"></i>
+        <div>
+          <strong>{{ 'CUSTOMER_PAYMENT.SECURE_UPI' | translate }}</strong>
+          <span>{{ 'CUSTOMER_PAYMENT.SECURE_DESCRIPTION' | translate }}</span>
+        </div>
+      </div>
+
+      <p class="cu-payment__bottom-note">
+        <i class="fa-solid fa-circle-info"></i>
+        {{ 'CUSTOMER_PAYMENT.VERIFICATION_NOTE' | translate }}
+      </p>
+
     </div>
+  </div>
 
   } @else {
 
-    <div class="cu-payment__container">
-      <div class="cu-payment__not-found">
-        <div class="cu-payment__not-found-icon">
-          <i class="fa-solid fa-calendar-xmark"></i>
-        </div>
-
-        <h2>Booking not found</h2>
-        <p>We couldn't find this booking. Please check your booking details.</p>
-
-        <a routerLink="/customer/my-bookings" class="cu-payment__primary">
-          Back to my bookings
-        </a>
+  <div class="cu-payment__container">
+    <div class="cu-payment__not-found">
+      <div class="cu-payment__not-found-icon">
+        <i class="fa-solid fa-calendar-xmark"></i>
       </div>
+
+      <h2>{{ 'CUSTOMER_PAYMENT.NOT_FOUND' | translate }}</h2>
+      <p>{{ 'CUSTOMER_PAYMENT.NOT_FOUND_DESCRIPTION' | translate }}</p>
+
+      <a routerLink="/customer/my-bookings" class="cu-payment__primary">
+        {{ 'CUSTOMER_PAYMENT.BACK_TO_BOOKINGS' | translate }}
+      </a>
     </div>
+  </div>
 
   }
 

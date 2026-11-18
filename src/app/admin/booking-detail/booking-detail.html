@@ -1,329 +1,310 @@
-
 <div class="bd-page">
 
-  <!-- Back navigation -->
   <a class="bd-back" routerLink="/admin/bookings">
     <i class="fa-solid fa-arrow-left"></i>
-    All bookings
+    {{ 'BOOKING_DETAIL.BACK' | translate }}
   </a>
 
   @if (loading()) {
-    <div class="bd-loading">
-      <app-loader />
-    </div>
+  <div class="bd-loading">
+    <app-loader />
+  </div>
   } @else if (b(); as j) {
 
-    <!-- Booking header -->
-    <div class="bd-header">
-      <div class="bd-heading">
-        <span class="bd-eyebrow">
-          <i class="fa-solid fa-calendar-check"></i>
-          BOOKING DETAILS
-        </span>
+  <div class="bd-header">
+    <div class="bd-heading">
+      <span class="bd-eyebrow">
+        <i class="fa-solid fa-calendar-check"></i>
+        {{ 'BOOKING_DETAIL.EYEBROW' | translate }}
+      </span>
 
-        <div class="bd-title-row">
-          <h1>Booking #{{ j.id }}</h1>
-          <app-status-badge [status]="j.status" />
-        </div>
-
-        <h2>{{ j.service.title }}</h2>
-
-        <p>
-          <i class="fa-solid fa-layer-group"></i>
-          {{ j.service.category.name }}
-          <span class="bd-separator">•</span>
-          <i class="fa-regular fa-calendar"></i>
-          Created {{ j.createdAt | date: 'd MMM y, h:mm a' }}
-        </p>
+      <div class="bd-title-row">
+        <h1>{{ 'BOOKING_DETAIL.BOOKING_NUMBER' | translate: { id: j.id } }}</h1>
+        <app-status-badge [status]="j.status" />
       </div>
 
-      <div class="bd-header-icon">
-        <i class="fa-solid fa-clipboard-list"></i>
-      </div>
+      <h2>{{ j.service.title }}</h2>
+
+      <p>
+        <i class="fa-solid fa-layer-group"></i>
+        {{ j.service.category.name }}
+        <span class="bd-separator">•</span>
+        <i class="fa-regular fa-calendar"></i>
+        {{ 'BOOKING_DETAIL.CREATED' | translate }}
+        {{ j.createdAt | date: 'd MMM y, h:mm a' }}
+      </p>
     </div>
 
-    <!-- Error -->
-    @if (error()) {
-      <div class="bd-alert">
-        <i class="fa-solid fa-circle-exclamation"></i>
-        {{ error() }}
-      </div>
-    }
+    <div class="bd-header-icon">
+      <i class="fa-solid fa-clipboard-list"></i>
+    </div>
+  </div>
 
-    <!-- Cancelled / rejected -->
-    @if (j.status === 'rejected' || j.status === 'cancelled') {
-      <div class="bd-cancelled">
-        <span class="bd-cancelled-icon">
-          <i class="fa-solid fa-circle-xmark"></i>
+  @if (error()) {
+  <div class="bd-alert">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    {{ error() }}
+  </div>
+  }
+
+  @if (j.status === 'rejected' || j.status === 'cancelled') {
+  <div class="bd-cancelled">
+    <span class="bd-cancelled-icon">
+      <i class="fa-solid fa-circle-xmark"></i>
+    </span>
+    <div>
+      <strong>
+        {{ 'BOOKING_DETAIL.CANCELLED_TITLE' | translate: { status: j.status } }}
+      </strong>
+      <p>{{ 'BOOKING_DETAIL.NO_LONGER_ACTIVE' | translate }}</p>
+    </div>
+  </div>
+  } @else {
+
+  <section class="bd-section">
+    <div class="bd-section-heading">
+      <div>
+        <span class="bd-section-eyebrow">
+          {{ 'BOOKING_DETAIL.JOURNEY' | translate }}
         </span>
-        <div>
-          <strong>Booking {{ j.status }}</strong>
-          <p>This booking is no longer active.</p>
-        </div>
+        <h3>{{ 'BOOKING_DETAIL.PROGRESS' | translate }}</h3>
       </div>
-    } @else {
+      <span class="bd-progress-label">
+        {{ (j.status === 'completed' ? 'BOOKING_DETAIL.COMPLETED' : 'BOOKING_DETAIL.IN_PROGRESS') | translate }}
+      </span>
+    </div>
 
-      <!-- Booking progress -->
-      <section class="bd-section">
-        <div class="bd-section-heading">
-          <div>
-            <span class="bd-section-eyebrow">BOOKING JOURNEY</span>
-            <h3>Booking progress</h3>
-          </div>
-          <span class="bd-progress-label">
-            {{ j.status === 'completed' ? 'Completed' : 'In progress' }}
+    <div class="bd-timeline">
+      @for (s of steps; track s; let i = $index) {
+      <div class="bd-step" [class.done]="i <= stepIndex()" [class.current]="i === stepIndex()">
+
+        <div class="bd-step-track">
+          <span class="bd-dot">
+            @if (i < stepIndex() || (i===stepIndex() && j.status==='completed' )) { <i class="fa-solid fa-check"></i>
+              } @else {
+              {{ i + 1 }}
+              }
           </span>
-        </div>
-
-        <div class="bd-timeline">
-          @for (s of steps; track s; let i = $index) {
-            <div
-              class="bd-step"
-              [class.done]="i <= stepIndex()"
-              [class.current]="i === stepIndex()">
-
-              <div class="bd-step-track">
-                <span class="bd-dot">
-                  @if (i < stepIndex() || (i === stepIndex() && j.status === 'completed')) {
-                    <i class="fa-solid fa-check"></i>
-                  } @else {
-                    {{ i + 1 }}
-                  }
-                </span>
-                @if (i !== steps.length - 1) {
-                  <span class="bd-connector"></span>
-                }
-              </div>
-
-              <span class="bd-step-label">{{ s }}</span>
-            </div>
+          @if (i !== steps.length - 1) {
+          <span class="bd-connector"></span>
           }
         </div>
-      </section>
-    }
 
-    <!-- Main details -->
-    <div class="bd-grid">
-
-      <!-- Job details -->
-      <section class="bd-card">
-        <div class="bd-card-heading">
-          <span class="bd-card-icon blue">
-            <i class="fa-solid fa-briefcase"></i>
-          </span>
-          <div>
-            <h3>Service details</h3>
-            <p>Scheduled job information</p>
-          </div>
-        </div>
-
-        <div class="bd-info-list">
-          <div class="bd-info">
-            <span><i class="fa-regular fa-calendar"></i> Date</span>
-            <strong>{{ j.scheduledAt | date: 'EEE, d MMM y' }}</strong>
-          </div>
-
-          <div class="bd-info">
-            <span><i class="fa-regular fa-clock"></i> Time</span>
-            <strong>{{ j.scheduledAt | date: 'h:mm a' }}</strong>
-          </div>
-
-          <div class="bd-info">
-            <span><i class="fa-solid fa-hourglass-half"></i> Duration</span>
-            <strong>{{ j.service.durationMin }} minutes</strong>
-          </div>
-
-          <div class="bd-info vertical">
-            <span><i class="fa-solid fa-location-dot"></i> Service address</span>
-            <strong>{{ j.address }}</strong>
-          </div>
-
-          @if (j.notes) {
-            <div class="bd-info vertical">
-              <span><i class="fa-regular fa-note-sticky"></i> Customer notes</span>
-              <strong>{{ j.notes }}</strong>
-            </div>
-          }
-        </div>
-      </section>
-
-      <!-- Payment details -->
-      <section class="bd-card bd-payment-card">
-        <div class="bd-card-heading">
-          <span class="bd-card-icon green">
-            <i class="fa-solid fa-wallet"></i>
-          </span>
-          <div>
-            <h3>Payment details</h3>
-            <p>Transaction and payment information</p>
-          </div>
-        </div>
-
-        <div class="bd-amount-box">
-          <span>Total booking amount</span>
-          <strong>₹{{ j.total | number }}</strong>
-          <span
-            class="bd-payment-status"
-            [class.paid]="paid()"
-            [class.unpaid]="!paid()">
-            <i class="fa-solid"
-              [class.fa-circle-check]="paid()"
-              [class.fa-clock]="!paid()">
-            </i>
-            {{ paid() ? 'Payment received' : 'Payment pending' }}
-          </span>
-        </div>
-
-        <div class="bd-info-list">
-          <div class="bd-info">
-            <span>Payment status</span>
-            <strong>
-              <span class="bd-inline-status" [class.paid]="paid()" [class.unpaid]="!paid()">
-                {{ paid() ? 'Paid' : 'Not paid' }}
-              </span>
-            </strong>
-          </div>
-
-          @if (j.payment?.txnId) {
-            <div class="bd-info vertical">
-              <span>Transaction ID</span>
-              <strong class="bd-transaction">{{ j.payment?.txnId }}</strong>
-            </div>
-          }
-
-          @if (j.payment?.paidAt) {
-            <div class="bd-info">
-              <span>Paid on</span>
-              <strong>{{ j.payment?.paidAt | date: 'd MMM y, h:mm a' }}</strong>
-            </div>
-          }
-        </div>
-      </section>
-
-      <!-- Customer details -->
-      <section class="bd-card">
-        <div class="bd-card-heading">
-          <span class="bd-card-icon purple">
-            <i class="fa-solid fa-user"></i>
-          </span>
-          <div>
-            <h3>Customer</h3>
-            <p>Person who requested the service</p>
-          </div>
-        </div>
-
-        <div class="bd-person">
-          <div class="bd-person-avatar customer">
-            {{ j.customer.name.charAt(0).toUpperCase() }}
-          </div>
-          <strong>{{ j.customer.name }}</strong>
-          <span>Customer account</span>
-        </div>
-
-        <div class="bd-info-list">
-          <div class="bd-info vertical">
-            <span><i class="fa-regular fa-envelope"></i> Email address</span>
-            <strong>{{ j.customer.email }}</strong>
-          </div>
-
-          <div class="bd-info vertical">
-            <span><i class="fa-solid fa-phone"></i> Phone number</span>
-            <strong>{{ j.customer.phone || 'Not provided' }}</strong>
-          </div>
-        </div>
-      </section>
-
-      <!-- Provider details -->
-      <section class="bd-card">
-        <div class="bd-card-heading">
-          <span class="bd-card-icon orange">
-            <i class="fa-solid fa-user-gear"></i>
-          </span>
-          <div>
-            <h3>Service provider</h3>
-            <p>Professional assigned to this booking</p>
-          </div>
-        </div>
-
-        <div class="bd-person">
-          <div class="bd-person-avatar provider">
-            {{ j.provider.name.charAt(0).toUpperCase() }}
-          </div>
-          <strong>{{ j.provider.name }}</strong>
-          <span>Provider account</span>
-        </div>
-
-        <div class="bd-info-list">
-          <div class="bd-info vertical">
-            <span><i class="fa-regular fa-envelope"></i> Email address</span>
-            <strong>{{ j.provider.email }}</strong>
-          </div>
-
-          <div class="bd-info vertical">
-            <span><i class="fa-solid fa-phone"></i> Phone number</span>
-            <strong>{{ j.provider.phone || 'Not provided' }}</strong>
-          </div>
-        </div>
-      </section>
-
-      <!-- Customer review -->
-      @if (j.review) {
-        <section class="bd-card bd-review-card">
-          <div class="bd-card-heading">
-            <span class="bd-card-icon yellow">
-              <i class="fa-solid fa-star"></i>
-            </span>
-            <div>
-              <h3>Customer review</h3>
-              <p>Feedback received for this booking</p>
-            </div>
-          </div>
-
-          <div class="bd-rating">
-            <strong>{{ j.review.rating }}</strong>
-            <span>★</span>
-            <small>out of 5</small>
-          </div>
-
-          @if (j.review.comment) {
-            <p class="bd-review-comment">"{{ j.review.comment }}"</p>
-          }
-        </section>
+        <span class="bd-step-label">
+          {{ ('BOOKING_DETAIL.' + s.toUpperCase().replace(' ', '_')) | translate }}
+        </span>
+      </div>
       }
-
     </div>
+  </section>
+  }
 
-    <!-- Actions -->
-    @if (canCancel()) {
-      <div class="bd-action-bar">
+  <div class="bd-grid">
+
+    <section class="bd-card">
+      <div class="bd-card-heading">
+        <span class="bd-card-icon blue">
+          <i class="fa-solid fa-briefcase"></i>
+        </span>
         <div>
-          <strong>Booking actions</strong>
-          <p>Cancel this booking if it should no longer proceed.</p>
+          <h3>{{ 'BOOKING_DETAIL.SERVICE_DETAILS' | translate }}</h3>
+          <p>{{ 'BOOKING_DETAIL.SCHEDULED_JOB' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="bd-info-list">
+        <div class="bd-info">
+          <span><i class="fa-regular fa-calendar"></i> {{ 'BOOKING_DETAIL.DATE' | translate }}</span>
+          <strong>{{ j.scheduledAt | date: 'EEE, d MMM y' }}</strong>
         </div>
 
-        <button
-          type="button"
-          class="bd-cancel-btn"
-          [disabled]="busy()"
-          (click)="cancel()">
-          @if (busy()) {
-            <i class="fa-solid fa-spinner fa-spin"></i>
-            Processing...
-          } @else {
-            <i class="fa-solid fa-ban"></i>
-            Cancel booking
-          }
-        </button>
+        <div class="bd-info">
+          <span><i class="fa-regular fa-clock"></i> {{ 'BOOKING_DETAIL.TIME' | translate }}</span>
+          <strong>{{ j.scheduledAt | date: 'h:mm a' }}</strong>
+        </div>
+
+        <div class="bd-info">
+          <span><i class="fa-solid fa-hourglass-half"></i> {{ 'BOOKING_DETAIL.DURATION' | translate }}</span>
+          <strong>{{ j.service.durationMin }} {{ 'BOOKING_DETAIL.MINUTES' | translate }}</strong>
+        </div>
+
+        <div class="bd-info vertical">
+          <span><i class="fa-solid fa-location-dot"></i> {{ 'BOOKING_DETAIL.ADDRESS' | translate }}</span>
+          <strong>{{ j.address }}</strong>
+        </div>
+
+        @if (j.notes) {
+        <div class="bd-info vertical">
+          <span><i class="fa-regular fa-note-sticky"></i> {{ 'BOOKING_DETAIL.CUSTOMER_NOTES' | translate }}</span>
+          <strong>{{ j.notes }}</strong>
+        </div>
+        }
       </div>
+    </section>
+
+    <section class="bd-card bd-payment-card">
+      <div class="bd-card-heading">
+        <span class="bd-card-icon green">
+          <i class="fa-solid fa-wallet"></i>
+        </span>
+        <div>
+          <h3>{{ 'BOOKING_DETAIL.PAYMENT_DETAILS' | translate }}</h3>
+          <p>{{ 'BOOKING_DETAIL.TRANSACTION_INFO' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="bd-amount-box">
+        <span>{{ 'BOOKING_DETAIL.TOTAL_AMOUNT' | translate }}</span>
+        <strong>₹{{ j.total | number }}</strong>
+        <span class="bd-payment-status" [class.paid]="paid()" [class.unpaid]="!paid()">
+          <i class="fa-solid" [class.fa-circle-check]="paid()" [class.fa-clock]="!paid()">
+          </i>
+          {{ (paid() ? 'BOOKING_DETAIL.PAYMENT_RECEIVED' : 'BOOKING_DETAIL.PAYMENT_PENDING') | translate }}
+        </span>
+      </div>
+
+      <div class="bd-info-list">
+        <div class="bd-info">
+          <span>{{ 'BOOKING_DETAIL.PAYMENT_STATUS' | translate }}</span>
+          <strong>
+            <span class="bd-inline-status" [class.paid]="paid()" [class.unpaid]="!paid()">
+              {{ (paid() ? 'BOOKING_DETAIL.PAID' : 'BOOKING_DETAIL.NOT_PAID') | translate }}
+            </span>
+          </strong>
+        </div>
+
+        @if (j.payment?.txnId) {
+        <div class="bd-info vertical">
+          <span>{{ 'BOOKING_DETAIL.TRANSACTION_ID' | translate }}</span>
+          <strong class="bd-transaction">{{ j.payment?.txnId }}</strong>
+        </div>
+        }
+
+        @if (j.payment?.paidAt) {
+        <div class="bd-info">
+          <span>{{ 'BOOKING_DETAIL.PAID_ON' | translate }}</span>
+          <strong>{{ j.payment?.paidAt | date: 'd MMM y, h:mm a' }}</strong>
+        </div>
+        }
+      </div>
+    </section>
+
+    <section class="bd-card">
+      <div class="bd-card-heading">
+        <span class="bd-card-icon purple">
+          <i class="fa-solid fa-user"></i>
+        </span>
+        <div>
+          <h3>{{ 'BOOKING_DETAIL.CUSTOMER' | translate }}</h3>
+          <p>{{ 'BOOKING_DETAIL.CUSTOMER_DESCRIPTION' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="bd-person">
+        <div class="bd-person-avatar customer">
+          {{ j.customer.name.charAt(0).toUpperCase() }}
+        </div>
+        <strong>{{ j.customer.name }}</strong>
+        <span>{{ 'BOOKING_DETAIL.CUSTOMER_ACCOUNT' | translate }}</span>
+      </div>
+
+      <div class="bd-info-list">
+        <div class="bd-info vertical">
+          <span><i class="fa-regular fa-envelope"></i> {{ 'BOOKING_DETAIL.EMAIL' | translate }}</span>
+          <strong>{{ j.customer.email }}</strong>
+        </div>
+
+        <div class="bd-info vertical">
+          <span><i class="fa-solid fa-phone"></i> {{ 'BOOKING_DETAIL.PHONE' | translate }}</span>
+          <strong>{{ j.customer.phone || ('BOOKING_DETAIL.NOT_PROVIDED' | translate) }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="bd-card">
+      <div class="bd-card-heading">
+        <span class="bd-card-icon orange">
+          <i class="fa-solid fa-user-gear"></i>
+        </span>
+        <div>
+          <h3>{{ 'BOOKING_DETAIL.PROVIDER' | translate }}</h3>
+          <p>{{ 'BOOKING_DETAIL.PROVIDER_DESCRIPTION' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="bd-person">
+        <div class="bd-person-avatar provider">
+          {{ j.provider.name.charAt(0).toUpperCase() }}
+        </div>
+        <strong>{{ j.provider.name }}</strong>
+        <span>{{ 'BOOKING_DETAIL.PROVIDER_ACCOUNT' | translate }}</span>
+      </div>
+
+      <div class="bd-info-list">
+        <div class="bd-info vertical">
+          <span><i class="fa-regular fa-envelope"></i> {{ 'BOOKING_DETAIL.EMAIL' | translate }}</span>
+          <strong>{{ j.provider.email }}</strong>
+        </div>
+
+        <div class="bd-info vertical">
+          <span><i class="fa-solid fa-phone"></i> {{ 'BOOKING_DETAIL.PHONE' | translate }}</span>
+          <strong>{{ j.provider.phone || ('BOOKING_DETAIL.NOT_PROVIDED' | translate) }}</strong>
+        </div>
+      </div>
+    </section>
+
+    @if (j.review) {
+    <section class="bd-card bd-review-card">
+      <div class="bd-card-heading">
+        <span class="bd-card-icon yellow">
+          <i class="fa-solid fa-star"></i>
+        </span>
+        <div>
+          <h3>{{ 'BOOKING_DETAIL.REVIEW' | translate }}</h3>
+          <p>{{ 'BOOKING_DETAIL.REVIEW_DESCRIPTION' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="bd-rating">
+        <strong>{{ j.review.rating }}</strong>
+        <span>★</span>
+        <small>{{ 'BOOKING_DETAIL.OUT_OF_FIVE' | translate }}</small>
+      </div>
+
+      @if (j.review.comment) {
+      <p class="bd-review-comment">"{{ j.review.comment }}"</p>
+      }
+    </section>
     }
+
+  </div>
+
+  @if (canCancel()) {
+  <div class="bd-action-bar">
+    <div>
+      <strong>{{ 'BOOKING_DETAIL.ACTIONS' | translate }}</strong>
+      <p>{{ 'BOOKING_DETAIL.CANCEL_DESCRIPTION' | translate }}</p>
+    </div>
+
+    <button type="button" class="bd-cancel-btn" [disabled]="busy()" (click)="cancel()">
+      @if (busy()) {
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      {{ 'BOOKING_DETAIL.PROCESSING' | translate }}
+      } @else {
+      <i class="fa-solid fa-ban"></i>
+      {{ 'BOOKING_DETAIL.CANCEL_BOOKING' | translate }}
+      }
+    </button>
+  </div>
+  }
 
   }
 
   @if (!loading() && !b() && error()) {
-    <div class="bd-alert">
-      <i class="fa-solid fa-circle-exclamation"></i>
-      {{ error() }}
-    </div>
+  <div class="bd-alert">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    {{ error() }}
+  </div>
   }
 
 </div>

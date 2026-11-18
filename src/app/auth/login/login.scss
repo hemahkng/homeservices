@@ -1,4 +1,3 @@
-
 :host {
   display: block;
   min-height: 100vh;
@@ -10,7 +9,7 @@
 
 .login-page {
   min-height: 100vh;
-  padding: 24px;
+  padding: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,7 +34,7 @@
 .brand-panel {
   position: relative;
   overflow: hidden;
-  padding: 48px;
+  padding: 30px 40px;
   display: flex;
   flex-direction: column;
   color: #fff;
@@ -75,7 +74,7 @@
 
 .welcome-content {
   margin: auto 0;
-  padding: 55px 0;
+  padding: 40px 0;
 }
 
 .welcome-tag,
@@ -100,7 +99,7 @@
   letter-spacing: -1.5px;
 }
 
-.welcome-content > p {
+.welcome-content>p {
   max-width: 410px;
   margin: 20px 0 38px;
   color: #d0deef;
@@ -214,7 +213,7 @@
 }
 
 .form-group {
-  margin-bottom: 23px;
+  // margin-bottom: 23px;
 }
 
 .form-group label {
@@ -330,7 +329,6 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 5px;
-  margin-top: 28px;
   color: #8793a4;
   font-size: 13px;
 }
@@ -440,5 +438,33 @@
 
   .mobile-brand {
     margin-bottom: 48px;
+  }
+}
+
+
+.forgot-password-link {
+  width: 100%;
+  max-width: 390px;
+  text-align: center;
+  margin-top: 28px;
+  margin-bottom: 10px;
+
+  a {
+    color: #286db4;
+    font-size: 13px;
+    font-weight: 650;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #174d83;
+      text-decoration: underline;
+    }
+  }
+}
+
+@media (max-width: 650px) {
+  .forgot-password-link {
+    max-width: 430px;
   }
 }

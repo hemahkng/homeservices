@@ -1,4 +1,3 @@
-
 <div class="ad-shell">
 
   @if (open()) {
@@ -11,16 +10,20 @@
       <div class="ad-logo">
         <i class="fa-solid fa-house-chimney"></i>
       </div>
+
       <div class="ad-brand-text">
         <b>HomeServices</b>
-        <small>ADMIN PANEL</small>
+        <small>{{ 'ADMIN.PANEL' | translate }}</small>
       </div>
+
       <button class="ad-close" type="button" (click)="open.set(false)">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
 
-    <div class="ad-section-label">MAIN MENU</div>
+    <div class="ad-section-label">
+      {{ 'ADMIN.MAIN_MENU' | translate }}
+    </div>
 
     <nav class="ad-nav">
       @for (l of links; track l.path) {
@@ -65,7 +68,7 @@
             }
           </span>
 
-          <span class="ad-link-label">{{ l.label }}</span>
+          <span class="ad-link-label">{{ l.label | translate }}</span>
 
           @if (l.path === '/admin/provider-approvals' && pending() > 0) {
             <span class="ad-count">{{ pending() > 99 ? '99+' : pending() }}</span>
@@ -82,15 +85,18 @@
 
         <div class="ad-user-info">
           <b>{{ auth.currentUser()?.name }}</b>
-          <small><span></span> Administrator</small>
+          <small>
+            <span></span>
+            {{ 'COMMON.ADMINISTRATOR' | translate }}
+          </small>
         </div>
 
         <button
           type="button"
           class="ad-logout"
           (click)="auth.logout()"
-          title="Logout"
-          aria-label="Logout"
+          [title]="'COMMON.LOGOUT' | translate"
+          [attr.aria-label]="'COMMON.LOGOUT' | translate"
         >
           <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </button>
@@ -113,17 +119,29 @@
         </button>
 
         <div class="ad-page-heading">
-          <span>Workspace</span>
+          <span>{{ 'ADMIN.WORKSPACE' | translate }}</span>
           <i class="fa-solid fa-chevron-right"></i>
-          <b>Admin Console</b>
+          <b>{{ 'ADMIN.CONSOLE' | translate }}</b>
         </div>
       </div>
 
       <div class="ad-top-right">
+
+        <select
+          class="ad-language-select"
+          [value]="language()"
+          (change)="changeLanguage($any($event.target).value)"
+          aria-label="Select language"
+        >
+          <option value="en">English</option>
+          <option value="ta">தமிழ்</option>
+        </select>
+
         <div class="ad-admin-label">
           <i class="fa-solid fa-shield-halved"></i>
-          Admin
+          {{ 'COMMON.ADMIN' | translate }}
         </div>
+
         <div class="ad-avatar top-avatar">{{ initial() }}</div>
       </div>
     </header>

@@ -1247,15 +1247,15 @@
     },
     "AUTH_FORGOT_PASSWORD": {
         "TITLE": "Forgot your password?",
-        "DESCRIPTION": "Enter your registered email address to reset your password.",
+        "DESCRIPTION": "Enter your registered email address. Contact the administrator to get your recovery code.",
         "EMAIL": "Email address",
-        "EMAIL_PLACEHOLDER": "Enter your email",
+        "EMAIL_PLACEHOLDER": "Enter your registered email",
         "EMAIL_REQUIRED": "Email is required.",
         "EMAIL_INVALID": "Please enter a valid email address.",
-        "SUBMIT": "Send reset link",
-        "SENDING": "Sending...",
+        "SUBMIT": "Continue",
+        "SENDING": "Processing...",
         "BACK_LOGIN": "Back to login",
-        "SUCCESS": "If an account exists with this email, password reset instructions will be sent.",
+        "SUCCESS": "Your request has been submitted. Please contact the administrator for your recovery code.",
         "ERROR": "Unable to process your request. Please try again."
     },
     "AUTH_REGISTER": {
@@ -1395,7 +1395,14 @@
     },
     "AUTH_RESET_PASSWORD": {
         "TITLE": "Reset your password",
-        "DESCRIPTION": "Create a new password for your account.",
+        "DESCRIPTION": "Enter your email, administrator-provided recovery code and new password.",
+        "EMAIL": "Email address",
+        "EMAIL_PLACEHOLDER": "Enter your registered email",
+        "EMAIL_REQUIRED": "Email is required.",
+        "EMAIL_INVALID": "Please enter a valid email address.",
+        "RECOVERY_CODE": "Recovery code",
+        "RECOVERY_CODE_PLACEHOLDER": "Enter your recovery code",
+        "RECOVERY_CODE_REQUIRED": "Recovery code is required.",
         "NEW_PASSWORD": "New password",
         "NEW_PASSWORD_PLACEHOLDER": "Enter your new password",
         "CONFIRM_PASSWORD": "Confirm password",
@@ -1407,7 +1414,7 @@
         "SUBMIT": "Reset password",
         "SUBMITTING": "Resetting password...",
         "SUCCESS": "Your password has been reset successfully.",
-        "ERROR": "Unable to reset your password. Please try again.",
+        "ERROR": "Unable to reset your password. Please check your details and try again.",
         "BACK_LOGIN": "Back to login"
     }
 }

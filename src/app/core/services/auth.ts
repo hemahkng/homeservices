@@ -1,3 +1,4 @@
+
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -29,12 +30,24 @@ export class Auth {
 
   login(email: string, password: string) {
     return this.http
-      .post<AuthResponse>(`${environment.apiUrl}/auth/login`, { email, password })
+      .post<AuthResponse>(`${environment.apiUrl}/auth/login`, {
+        email,
+        password,
+      })
       .pipe(tap((res) => this.saveSession(res)));
   }
 
-  register(data: { name: string; email: string; phone: string; password: string; role: Role }) {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, data);
+  register(data: {
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+    role: Role;
+  }) {
+    return this.http.post<AuthResponse>(
+      `${environment.apiUrl}/auth/register`,
+      data
+    );
   }
 
   logout() {
@@ -67,22 +80,28 @@ export class Auth {
   patchUser(p: Partial<User>) {
     const u = this._user();
     if (!u) return;
+
     const next = { ...u, ...p };
+
     localStorage.setItem(USER_KEY, JSON.stringify(next));
     this._user.set(next);
   }
 
   forgotPassword(email: string) {
-    return this.http.post<{ message: string; resetUrl?: string }>(
+    return this.http.post<{ message: string }>(
       `${environment.apiUrl}/auth/forgot-password`,
       { email }
     );
   }
 
-  resetPassword(token: string, password: string) {
+  resetPassword(email: string, recoveryCode: string, password: string) {
     return this.http.post<{ message: string }>(
       `${environment.apiUrl}/auth/reset-password`,
-      { token, password }
+      {
+        email,
+        recoveryCode,
+        password,
+      }
     );
   }
 }

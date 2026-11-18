@@ -1,6 +1,6 @@
 
 import { Component, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import {
   AbstractControl,
   FormBuilder,
@@ -30,31 +30,23 @@ const passwordMatchValidator: ValidatorFn = (
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    RouterLink,
-    TranslatePipe,
-  ],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   templateUrl: './reset-password.html',
   styleUrl: './reset-password.scss',
 })
 export class ResetPassword {
   private fb = inject(FormBuilder);
-  private route = inject(ActivatedRoute);
   private auth = inject(Auth);
 
   loading = signal(false);
   success = signal(false);
   error = signal('');
 
-  private token = this.route.snapshot.queryParamMap.get('token') || '';
-
   form = this.fb.group(
     {
-      password: ['', [
-        Validators.required,
-        Validators.minLength(6),
-      ]],
+      email: ['', [Validators.required, Validators.email]],
+      recoveryCode: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
     },
     {
@@ -65,27 +57,22 @@ export class ResetPassword {
   submit() {
     this.error.set('');
 
-    if (!this.token) {
-      this.error.set(
-        'Reset link is missing. Please request a new password reset.'
-      );
-      return;
-    }
-
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
+    const email = this.form.controls.email.value?.trim();
+    const recoveryCode = this.form.controls.recoveryCode.value?.trim();
     const password = this.form.controls.password.value;
 
-    if (!password) {
+    if (!email || !recoveryCode || !password) {
       return;
     }
 
     this.loading.set(true);
 
-    this.auth.resetPassword(this.token, password).subscribe({
+    this.auth.resetPassword(email, recoveryCode, password).subscribe({
       next: () => {
         this.loading.set(false);
         this.success.set(true);
@@ -94,7 +81,7 @@ export class ResetPassword {
         this.loading.set(false);
         this.error.set(
           err.error?.message ||
-          'Unable to reset password. Please request a new link.'
+          'Unable to reset password. Please check your email and recovery code.'
         );
       },
     });

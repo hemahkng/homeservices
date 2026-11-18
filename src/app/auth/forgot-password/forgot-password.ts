@@ -8,11 +8,7 @@ import { Auth } from '../../core/services/auth';
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [
-    RouterLink,
-    ReactiveFormsModule,
-    TranslatePipe,
-  ],
+  imports: [RouterLink, ReactiveFormsModule, TranslatePipe],
   templateUrl: './forgot-password.html',
   styleUrl: './forgot-password.scss',
 })
@@ -23,18 +19,13 @@ export class ForgotPassword {
   loading = signal(false);
   success = signal(false);
   error = signal('');
-  resetUrl = signal('');
 
   form = this.fb.group({
-    email: ['', [
-      Validators.required,
-      Validators.email,
-    ]],
+    email: ['', [Validators.required, Validators.email]],
   });
 
   submit() {
     this.error.set('');
-    this.resetUrl.set('');
     this.success.set(false);
 
     if (this.form.invalid) {
@@ -42,25 +33,24 @@ export class ForgotPassword {
       return;
     }
 
-    const email = this.form.controls.email.value;
+    const email = this.form.controls.email.value?.trim();
 
-    if (!email) return;
+    if (!email) {
+      return;
+    }
 
     this.loading.set(true);
 
     this.auth.forgotPassword(email).subscribe({
-      next: (res) => {
+      next: () => {
         this.loading.set(false);
         this.success.set(true);
-
-        if (res.resetUrl) {
-          this.resetUrl.set(res.resetUrl);
-        }
       },
       error: (err) => {
         this.loading.set(false);
         this.error.set(
-          err.error?.message || 'Unable to process your request. Please try again.'
+          err.error?.message ||
+          'Unable to process your request. Please try again.'
         );
       },
     });
